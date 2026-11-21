@@ -1,0 +1,42 @@
+# llama-swap on :8080 (start-llama-swap.bat): one endpoint for every local model; a request's "model" picks
+# which server runs, and only one runs at a time (12 GB VRAM). Each entry mirrors a start-*.bat it replaced
+# (__PI_HOME__\llama\, C:\Strata); those still work on their own with llama-swap stopped.
+# Model IDs are the old --alias names, so Pi's models.json and the pi-* launchers need no change.
+# Trimmed to 3 models on 2026-11-19 (plan/review Gyro-S, exec Qwen3.6 IQ3, fallback planner Swift); backup config.yaml.bak-20261119-3models.
+healthCheckTimeout: 600   # Strata loads 23-50 GB into RAM: 1-3 min, longer on a cold disk cache
+logLevel: info
+startPort: 10001
+globalTTL: 0
+
+macros:
+  "rocm": __PI_HOME__\llama-mainline\b11869-rocm-th102\llama-server.exe --host 127.0.0.1 --port ${PORT}
+  "rocm1": __PI_HOME__\llama-mainline\b12445-rocm-th102\llama-server.exe --host 127.0.0.1 --port ${PORT}
+  "mtp2": --spec-type draft-mtp --spec-draft-n-max 2
+  "qwen27-sampling": >-
+    --jinja --chat-template-kwargs "{\"reasoning_effort\":\"medium\"}"
+    --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.0
+  "swift27": E:\models\ukisai\Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF
+  "kill-tree": powershell -NoProfile -ExecutionPolicy Bypass -File C:\llama-swap\kill-tree.ps1 -Id ${PID}
+
+models:
+  # ---- Qwen3.8 27B dense, all in VRAM (ROCm mainline b11869) ----
+  "swift27-xs-64k":
+    cmd: >-
+      ${rocm} --model ${swift27}\Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_XS-mtp.gguf --gpu-layers 99 --fit off
+      --ctx-size 49152 --cache-type-k q4_0 --cache-type-v q4_0 --flash-attn on --parallel 1 --threads 6
+      ${mtp2} ${qwen27-sampling}
+  # ---- MoE with experts partly in RAM ----
+  "qwen3.6-iq3-local":
+    cmd: >-
+      ${rocm1} --model E:\models\unsloth\Qwen3.6-35B-A3B-GGUF\Qwen3.6-35B-A3B-UD-IQ3_XXS.gguf --ctx-size 131072
+      --gpu-layers 99 --fit off --n-cpu-moe 16 --moe-cache-mib 1000 --load-mode none --threads 6 --flash-attn on -b 2048 -ub 2048
+      --cache-type-k q4_0 --cache-type-v q4_0 --cache-ram 0 --parallel 1 --jinja --reasoning on --reasoning-budget 8192
+      --temp 0.6 --top-k 20 --top-p 0.95 --min-p 0.0 --presence-penalty 1.5 --repeat-penalty 1.0 --n-predict 32768
+  # ---- Qwen3.8-Flash-Next 125B (Strata engines: python wrapper > strata.exe; settings live in their JSON) ----
+  "qwen3.8-flash-next-gyro-gyro-s":
+    name: "Strata Gyro-S (HIP)"
+    cmd: >-
+      C:\Strata\.venv\Scripts\python.exe C:\Strata\serve\server.py --engine strata
+      --config C:\Strata\strata-gyro-gyro-s.json --port ${PORT}
+    cmdStop: ${kill-tree}
+    aliases: ["qwen3.8-flash-next-gyro-s"]   # the id in Pi's strata provider

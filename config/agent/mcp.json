@@ -1,0 +1,54 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firecrawl-mcp@3.30.0"
+      ],
+      "env": {
+        "FIRECRAWL_API_URL": "http://192.168.0.117:3002",
+        "FIRECRAWL_NO_SEARCH_FEEDBACK": "1",
+        "FIRECRAWL_NO_ENDPOINT_FEEDBACK": "1"
+      }
+    },
+    "aseprite": {
+      "command": "__PI_HOME__/aseprite-mcp/.venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "aseprite_mcp"
+      ],
+      "env": {
+        "PYTHONPATH": "__PI_HOME__/aseprite-mcp"
+      }
+    },
+    "davinci-resolve": {
+      "command": "__PI_HOME__/davinci-mcp-bridge/venv/Scripts/python.exe",
+      "args": [
+        "__PI_HOME__/davinci-mcp-bridge/src/resolve_mcp_bridge.py"
+      ]
+    },
+    "retrodiffusion": {
+      "url": "https://mcp.retrodiffusion.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer ${RD_API_KEY}"
+      }
+    },
+    "browse": {
+      "command": "__PI_HOME__/.local/bin/browse.exe",
+      "args": [
+        "mcp"
+      ],
+      "env": {
+        "OPENCODE_BROWSER_RUNTIME": "auto-update"
+      }
+    }
+  }
+}

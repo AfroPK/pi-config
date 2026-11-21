@@ -1,0 +1,60 @@
+{
+  "lastChangelogVersion": "1.6.0",
+  "theme": "dark",
+  "packages": [
+    "npm:@juanibiapina/pi-plan",
+    "npm:pi-paster",
+    "npm:pi-mcp-adapter",
+    "npm:@oresk/pi-remote-tools",
+    "npm:pi-ssh",
+    "npm:pi-token-speed",
+    "npm:pi-skillful",
+    "npm:pi-loop-police@1.14.1",
+    "npm:pi-ghost-text",
+    "npm:@lanlance/pi-btw"
+  ],
+  "defaultProvider": "openrouter",
+  "defaultModel": "deepseek/deepseek-v4.1-flash-1017",
+  "enabledModels": [
+    "openrouter/deepseek/deepseek-v4.1-flash-1017",
+    "openrouter/moonshotai/kimi-k3.1-pro",
+    "openrouter/qwen/qwen3.8-flash",
+    "openrouter/z-ai/glm-5.3-flash",
+    "qwen3.8-flash-next-gyro-s",
+    "qwen3.6-iq3-local",
+    "qwen27/swift27-xs-64k",
+    "claude-cli/claude-fable-5-2",
+    "claude-cli/claude-opus-5-5",
+    "claude-cli/claude-sonnet-5-5",
+    "claude-cli/claude-haiku-5-5"
+  ],
+  "shellPath": "C:\\\\Users\\\\Freddy\\\\scoop\\\\apps\\\\git\\\\current\\\\bin\\\\bash.exe",
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 16384,
+    "keepRecentTokens": 6000,
+    "modelOverrides": {
+      "qwen27/swift27-xs-64k": {
+        "reserveTokens": 10240,
+        "keepRecentTokens": 10000
+      }
+    }
+  },
+  "defaultThinkingLevel": "medium",
+  "extensions": [
+    "-builtin:mcp"
+  ],
+  "thinkingBudgets": {
+    "minimal": 1024,
+    "low": 2048,
+    "medium": 4096,
+    "high": 16384
+  },
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:pi-mcp-adapter\",\"scope\":\"user\"}": "7.0.1",
+    "{\"source\":\"npm:pi-skillful\",\"scope\":\"user\"}": "0.5.2"
+  },
+  "skills": [
+    "!**/.agents/skills/**"
+  ]
+}

@@ -1,0 +1,21 @@
+# pi-loop per-machine settings (sourced by ~/pi-loop/linux/_common.sh). Windows PC, 2026-11-02.
+# Same tool rules as the live Windows launchers in ~/.pi (pi-plan.cmd / pi-review.cmd / pi-exec.cmd).
+PI_EXTRA_TOOLS=firecrawl_search,firecrawl_scrape,look   # look: see pages/images via the HomeLab vision model (planner + both reviewers; exec has all tools)
+PI_EXCLUDE_TOOLS='ssh-*,call_model,mcp__*'
+PI_EXEC_EXCLUDE_TOOLS='ssh-*,call_model'
+# 2026-11-19 (Freddy): back to local models, the same 3 roles as ~/.pi/pi-plan / pi-review / pi-exec:
+#   planner + plan review + code review = Strata Gyro-S (64K) at medium; executor = Qwen3.6 35B-A3B IQ3 (128K, thinking low).
+#   Fallback planner if Gyro writes code instead of PLAN.md: PI_PLAN_MODEL=qwen27/swift27-xs-64k, PI_PLAN_SWAP_ID=swift27-xs-64k.
+#   SWAP_IDs are llama-swap's own ids (its /running lists those, not aliases), so a loaded model is not reloaded.
+#   Previous cloud setup (DeepSeek V4.1 Flash + GLM-5.3-Flash on OpenRouter): env.bak-20261119-local3.
+PI_PLAN_MODEL=strata/qwen3.8-flash-next-gyro-s
+PI_PLAN_SWAP_ID=qwen3.8-flash-next-gyro-gyro-s
+PI_PLAN_THINKING=medium
+PI_REVIEW_MODEL=strata/qwen3.8-flash-next-gyro-s
+PI_REVIEW_SWAP_ID=qwen3.8-flash-next-gyro-gyro-s
+PI_REVIEW_THINKING=medium
+# Gyro decodes ~25 tok/s and Strata takes no thinking budget, only levels: give both reviews 15 minutes.
+PI_REVIEW_TIMEOUT=900
+PI_CODE_REVIEW_TIMEOUT=900
+PI_EXEC_MODEL=qwen36iq3/qwen3.6-iq3-local
+PI_EXEC_SWAP_ID=qwen3.6-iq3-local

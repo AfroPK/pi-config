@@ -1,0 +1,17 @@
+# Pi local-model launchers. Source this file from ~/.bashrc after adding ~/.pi to PATH.
+export PATH="$HOME/.pi:$PATH"
+alias pi-models='pi-models.cmd'
+alias pi-bonsai='pi-bonsai.cmd'
+alias pi-qwen38='pi-qwen38.cmd'
+alias pi-strata='pi-strata.cmd'
+alias pi-antiloop='pi-antiloop.cmd'
+alias pi-qwen27='pi-qwen27.cmd'
+alias pi-qwen27-s-24k='pi-qwen27-s-24k.cmd'
+alias pi-qwen27-s-40k='pi-qwen27-s-40k.cmd'
+alias pi-qwen27-xs-40k='pi-qwen27-xs-40k.cmd'
+alias pi-qwen27-xs-64k='pi-qwen27-xs-64k.cmd'
+alias pi-stop='pi-stop.cmd'
+alias pi-durable='pi-durable.cmd'
+alias pi-plan='pi-plan.cmd'
+alias pi-exec='pi-exec.cmd'
+alias pi-pe='pi-pe.cmd'

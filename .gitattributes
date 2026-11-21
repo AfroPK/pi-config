@@ -1,0 +1,3 @@
+# Preserve snapshot bytes so manifest hashes also match a fresh checkout.
+# Treat CRLF as a line ending, not trailing whitespace, in diff checks.
+* -text whitespace=cr-at-eol

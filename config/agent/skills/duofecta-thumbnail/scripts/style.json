@@ -1,0 +1,21 @@
+{
+  "size": [
+    1280,
+    720
+  ],
+  "zoom": 2.2,
+  "blur_sigma": 10,
+  "focus_target": [
+    0.5,
+    0.42
+  ],
+  "host_height_mult": 1.0,
+  "left_centre_x": 350,
+  "right_centre_x": 900,
+  "out_dir": "D:/DuoFecta/Thumbnail",
+  "face_target_px": 200,
+  "zoom_range": [
+    1.9,
+    3.2
+  ]
+}

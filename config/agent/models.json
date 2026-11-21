@@ -1,0 +1,278 @@
+{
+  "providers": {
+    "omnirouter": {
+      "baseUrl": "http://localhost:20128/v1",
+      "api": "openai-completions",
+      "apiKey": "${OMNIROUTER_API_KEY}",
+      "models": [
+        {
+          "id": "claude",
+          "name": "Claude Round Robbin"
+        },
+        {
+          "id": "openrouter/poolside/laguna-s-2.1:free",
+          "name": "Laguna S 2.1"
+        },
+        {
+          "id": "gemini/gemini-3.5-flash",
+          "name": "Gemini 3.5 Flash"
+        },
+        {
+          "id": "agy/claude-sonnet-4-6",
+          "name": "Claude Sonnet 4.6"
+        },
+        {
+          "id": "baseten/moonshotai/Kimi-K2.7-Code",
+          "name": "Kimi K2.7 Code",
+          "supportsTools": true,
+          "tools": true
+        },
+        {
+          "id": "agy/gemini-2.5-flash",
+          "name": "Gemini 2.5 Flash"
+        },
+        {
+          "id": "coding-combo",
+          "name": "Jarvis"
+        },
+        {
+          "id": "free-general-combo",
+          "name": "Ultron"
+        },
+        {
+          "id": "free-auto-balanced",
+          "name": "Vision",
+          "tools": true
+        },
+        {
+          "id": "baseten/moonshotai/Kimi-K2.6",
+          "name": "Kimi K2.6"
+        }
+      ]
+    },
+    "strata": {
+      "baseUrl": "http://127.0.0.1:8080/v1",
+      "api": "openai-completions",
+      "apiKey": "local",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": true,
+        "supportsUsageInStreaming": true,
+        "maxTokensField": "max_tokens",
+        "thinkingFormat": "openai"
+      },
+      "models": [
+        {
+          "id": "qwen3.8-flash-next-gyro-s",
+          "name": "Strata Qwen3.8-Flash-Next Gyro-S 64K (local gfx1031, ~33 tok/s)",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 65536,
+          "maxTokens": 32768,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": "low",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "max"
+          }
+        }
+      ]
+    },
+    "qwen27": {
+      "baseUrl": "http://127.0.0.1:8080/v1",
+      "api": "openai-completions",
+      "apiKey": "local",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": true,
+        "maxTokensField": "max_tokens",
+        "thinkingFormat": "chat-template",
+        "chatTemplateKwargs": {
+          "enable_thinking": {
+            "$var": "thinking.enabled"
+          },
+          "reasoning_effort": {
+            "$var": "thinking.effort",
+            "omitWhenOff": true
+          },
+          "preserve_thinking": true
+        }
+      },
+      "models": [
+        {
+          "id": "swift27-xs-64k",
+          "name": "Swift 1.5 Qwen3.8-27B IQ2_XS MTP, 48K q4_0 (ukisai post-train; plan/exec default; id kept from 64K)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 49152,
+          "maxTokens": 32768,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "minimal": "low",
+            "low": "low",
+            "medium": "medium",
+            "high": "xhigh",
+            "xhigh": "xhigh"
+          }
+        }
+      ]
+    },
+    "qwen36iq3": {
+      "baseUrl": "http://127.0.0.1:8080/v1",
+      "api": "openai-completions",
+      "apiKey": "local",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": true,
+        "maxTokensField": "max_tokens",
+        "thinkingFormat": "chat-template",
+        "chatTemplateKwargs": {
+          "enable_thinking": {
+            "$var": "thinking.enabled"
+          },
+          "preserve_thinking": true
+        },
+        "thinkingTokenBudgetField": "thinking_budget_tokens"
+      },
+      "models": [
+        {
+          "id": "qwen3.6-iq3-local",
+          "name": "Qwen3.6 35B-A3B UD-IQ3_XXS ncmoe16 (local)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 131072,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    "kaggle": {
+      "baseUrl": "https://diversity-gregory-barry-blacks.trycloudflare.com/v1",
+      "api": "openai-completions",
+      "apiKey": "${KAGGLE_API_KEY}",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": true,
+        "maxTokensField": "max_tokens",
+        "thinkingFormat": "chat-template",
+        "chatTemplateKwargs": {
+          "enable_thinking": {
+            "$var": "thinking.enabled"
+          },
+          "reasoning_effort": {
+            "$var": "thinking.effort",
+            "omitWhenOff": true
+          },
+          "preserve_thinking": true
+        }
+      },
+      "models": [
+        {
+          "id": "qwen27-q6-mtp",
+          "name": "Qwen3.8 27B Unsloth UD-Q6_K + MTP, 128K q8_0 (Kaggle 2x T4 tensor split via Cloudflare tunnel)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 131072,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "minimal": "low",
+            "low": "low",
+            "medium": "medium",
+            "high": "xhigh",
+            "xhigh": "xhigh"
+          }
+        }
+      ]
+    },
+    "kaggle-strata": {
+      "baseUrl": "https://strings-bryant-rays-mission.trycloudflare.com/v1",
+      "api": "openai-completions",
+      "apiKey": "${KAGGLE_STRATA_API_KEY}",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": true,
+        "supportsUsageInStreaming": true,
+        "maxTokensField": "max_tokens",
+        "thinkingFormat": "openai"
+      },
+      "models": [
+        {
+          "id": "gyro-s",
+          "name": "Strata Qwen3.8-Flash-Next Gyro-S, 64K (Kaggle 2x T4 via Cloudflare tunnel)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 65536,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": "low",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "max"
+          }
+        }
+      ]
+    },
+    "openrouter": {
+      "modelOverrides": {
+        "z-ai/glm-5.3-flash": {
+          "compat": {
+            "openRouterRouting": {
+              "quantizations": [
+                "fp8",
+                "bf16"
+              ],
+              "sort": "price",
+              "allow_fallbacks": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "outputGuard": {
+      "maxBytes": 16384
+    },
+    "namespaceProxyTools": false
+  },
+  "mcpServers": {
+    "firecrawl": {
+      "directTools": [
+        "firecrawl_search",
+        "firecrawl_scrape"
+      ],
+      "includeTools": [
+        "firecrawl_search",
+        "firecrawl_scrape",
+        "firecrawl_map",
+        "firecrawl_crawl",
+        "firecrawl_check_crawl_status"
+      ]
+    },
+    "davinci-resolve": {
+      "lifecycle": "lazy-keep-alive",
+      "directTools": [
+        "get_resolve_status",
+        "get_current_page"
+      ]
+    }
+  }
+}

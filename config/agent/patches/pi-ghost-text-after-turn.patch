@@ -1,0 +1,65 @@
+--- a/src/client.ts
++++ b/src/client.ts
+@@ -23,7 +23,8 @@
+ - If partial input is provided, your output MUST begin with that exact text, unchanged.
+ - Keep it short: one line, at most two sentences.
+ - Be specific to the conversation. Prefer concrete next steps (run the tests, commit, fix the file just discussed) over generic requests.
+-- If there is no confident prediction, output exactly: NONE`;
++- Coding sessions almost always have an obvious next step (run or fix the tests, commit, open the file just discussed, continue to the next task). Propose that next step.
++- Output NONE only when the work is clearly finished and nothing is pending.`;
+ 
+ export type ResponseClass =
+ 	| { ok: true; text: string }
+--- a/src/editor.ts
++++ b/src/editor.ts
+@@ -26,7 +26,7 @@
+ 	TEMPERATURE,
+ 	systemPromptFor,
+ } from "./client.ts";
+-import { extractSuggestion, isEligible, parseCandidates } from "./normalize.ts";
++import { extractSuggestion, isEligible, isNoneSentinelPrefix, parseCandidates } from "./normalize.ts";
+ import { debug } from "./debug.ts";
+ import { isCursorAtEnd, renderGhostText } from "./render.ts";
+ 
+@@ -154,9 +154,10 @@
+ 
+ 	private onTextChanged(text: string): void {
+ 		// Shrink the ghost locally while the typed text still prefixes the suggestion.
++		// An empty baseText is the after-turn case: the first character typed must
++		// shrink the ghost, not drop it.
+ 		if (
+ 			this.suggestionFull &&
+-			this.baseText &&
+ 			text.startsWith(this.baseText) &&
+ 			this.suggestionFull.startsWith(text)
+ 		) {
+@@ -293,6 +294,7 @@
+ 
+ 	/** Show the accumulated text as a partial ghost while streaming. */
+ 	private updateStreamingGhost(acc: string, baseText: string): void {
++		if (isNoneSentinelPrefix(acc)) return; // don't flash the NONE sentinel
+ 		if (this.getText() !== baseText) return; // user typed more; ignore this stream
+ 		if (!acc.startsWith(baseText)) return; // model deviated; wait for final validation
+ 		const remainder = acc.slice(baseText.length);
+--- a/src/normalize.ts
++++ b/src/normalize.ts
+@@ -110,6 +110,19 @@
+ 	return text;
+ }
+ 
++/**
++ * True while streamed text is still an incomplete NONE sentinel ("N", "no", "none").
++ *
++ * The streaming path shows model output as it arrives, so without this the
++ * sentinel flashes in the input box and then vanishes, which reads as a broken
++ * ghost rather than as "the model declined".
++ */
++export function isNoneSentinelPrefix(text: string): boolean {
++	const trimmed = text.trim();
++	if (!trimmed || trimmed.length > "NONE".length) return false;
++	return "NONE".startsWith(trimmed.toUpperCase());
++}
++
+ /** Whether the current editor text is eligible for a suggestion. */
+ export function isEligible(text: string, allowEmpty: boolean): boolean {
+ 	if (text.startsWith("/") || text.startsWith("!")) return false; // commands
