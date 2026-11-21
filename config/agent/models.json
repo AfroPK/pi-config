@@ -258,6 +258,53 @@
         }
       ]
     },
+    "hipfire": {
+      "baseUrl": "http://127.0.0.1:8080/v1",
+      "api": "openai-completions",
+      "apiKey": "local",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": true,
+        "maxTokensField": "max_tokens",
+        "thinkingFormat": "chat-template",
+        "chatTemplateKwargs": {
+          "enable_thinking": {
+            "$var": "thinking.enabled"
+          },
+          "reasoning_effort": {
+            "$var": "thinking.effort",
+            "omitWhenOff": true
+          },
+          "preserve_thinking": true
+        }
+      },
+      "models": [
+        {
+          "id": "ornith-1.5-9b.mq6",
+          "name": "Ornith 1.5 9B MQ6 MTP2, 72K (Hipfire local gfx1031)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 73728,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "minimal": "low",
+            "low": "low",
+            "medium": "medium",
+            "high": "xhigh",
+            "xhigh": "xhigh"
+          }
+        }
+      ]
+    },
     "openrouter": {
       "modelOverrides": {
         "z-ai/glm-5.3-flash": {
@@ -273,6 +320,49 @@
           }
         }
       }
+    },
+    "inkling": {
+      "baseUrl": "http://127.0.0.1:8080/v1",
+      "api": "openai-completions",
+      "apiKey": "local",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": true,
+        "maxTokensField": "max_tokens",
+        "thinkingFormat": "chat-template",
+        "chatTemplateKwargs": {
+          "reasoning_effort": {
+            "$var": "thinking.effort"
+          }
+        }
+      },
+      "models": [
+        {
+          "id": "inkling2-mini-64k",
+          "name": "Inkling 2 Mini IQ2_XXS, 64K (local, ~42 tok/s)",
+          "reasoning": true,
+          "input": [
+            "text"
+          ],
+          "contextWindow": 65536,
+          "maxTokens": 16384,
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": "minimal",
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh"
+          }
+        }
+      ]
     }
   }
 }

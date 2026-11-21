@@ -13,7 +13,7 @@
 
 **`{ pi-config }`**: my whole Pi setup, sanitized and in one repo, with an installer that puts it back.
 
-201 captured files, 31 skills, 11 local extension entry points, 10 Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
+218 captured files, 32 skills, 11 local extension entry points, 12 Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
 
 > [!NOTE]
 > No keys, tokens, sessions or logs are committed. Provider keys in `models.json` are environment-variable references. Run the verification script before publishing.
@@ -42,11 +42,11 @@ Files-only restore: add `-SkipPackages -SkipPiInstall`. Machine integrations (ll
 | Area | Path | Contents |
 |---|---|---|
 | Core preferences | `config/agent/settings.json` | Theme, default/scoped models, thinking budgets, compaction, packages, MCP adapter |
-| Model endpoints | `config/agent/models.json` | OpenRouter overrides, OmniRoute, three local models, two Kaggle tunnels |
+| Model endpoints | `config/agent/models.json` | OpenRouter overrides, OmniRoute, five local models, two Kaggle tunnels |
 | MCP | `config/agent/mcp.json` | Context7, Firecrawl, Aseprite, DaVinci Resolve, Retro Diffusion, Browse |
 | Global instructions | `config/agent/AGENTS.md` | Engineering rules, verification, safety, Git and tool conventions |
 | Extensions | `config/agent/extensions/` | Browser, web search/fetch, vision, image generation, Claude CLI, guards, snippets |
-| Skills | `config/agent/skills/` | All 31 active skills with scripts, references, tests and templates |
+| Skills | `config/agent/skills/` | All 32 active skills with scripts, references, tests and templates |
 | Patches | `config/agent/patches/` | Both ghost-text patches and the patched renderer |
 | Machine integration | `config/machine/` | llama-swap config, three model launch profiles, Strata config, process cleanup |
 

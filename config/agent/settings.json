@@ -11,7 +11,9 @@
     "npm:pi-skillful",
     "npm:pi-loop-police@1.14.1",
     "npm:pi-ghost-text",
-    "npm:@lanlance/pi-btw"
+    "npm:@lanlance/pi-btw",
+    "npm:@gwynnnplaine/pi-discord-presence",
+    "npm:pi-antigravity-acp-provider"
   ],
   "defaultProvider": "openrouter",
   "defaultModel": "deepseek/deepseek-v4.1-flash-1017",
@@ -22,11 +24,19 @@
     "openrouter/z-ai/glm-5.3-flash",
     "qwen3.8-flash-next-gyro-s",
     "qwen3.6-iq3-local",
+    "hipfire/ornith-1.5-9b.mq6",
     "qwen27/swift27-xs-64k",
+    "inkling/inkling2-mini-64k",
     "claude-cli/claude-fable-5-2",
     "claude-cli/claude-opus-5-5",
     "claude-cli/claude-sonnet-5-5",
-    "claude-cli/claude-haiku-5-5"
+    "claude-cli/claude-haiku-5-5",
+    "antigravity-acp/gemini-3.1-pro",
+    "antigravity-acp/gemini-3.6-flash",
+    "antigravity-acp/gemini-3.7-flash",
+    "antigravity-acp/gemini-3.8-flash",
+    "antigravity-acp/gemini-4-argon",
+    "antigravity-acp/gemini-4-hydrogen"
   ],
   "shellPath": "C:\\\\Users\\\\Freddy\\\\scoop\\\\apps\\\\git\\\\current\\\\bin\\\\bash.exe",
   "compaction": {
@@ -35,6 +45,10 @@
     "keepRecentTokens": 6000,
     "modelOverrides": {
       "qwen27/swift27-xs-64k": {
+        "reserveTokens": 10240,
+        "keepRecentTokens": 10000
+      },
+      "hipfire/ornith-1.5-9b.mq6": {
         "reserveTokens": 10240,
         "keepRecentTokens": 10000
       }
@@ -56,5 +70,6 @@
   },
   "skills": [
     "!**/.agents/skills/**"
-  ]
+  ],
+  "hideThinkingBlock": false
 }

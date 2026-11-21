@@ -89,6 +89,7 @@ if ($IncludeMachineIntegrations) {
     Copy-PortableTree (Join-Path $Config "machine\llama-swap") "$MachineDrive\llama-swap"
     Copy-PortableTree (Join-Path $Config "machine\Strata") "$MachineDrive\Strata"
     Copy-PortableTree (Join-Path $Config "machine\llama") (Join-Path $DestinationHome "llama")
+    Copy-PortableTree (Join-Path $Config "machine\hipfire-test") (Join-Path $DestinationHome "hipfire-test")
     Copy-PortableTree (Join-Path $Config "machine\pi-local") (Join-Path $DestinationHome ".config\pi-local")
 } else {
     Write-Host "[2/5] Skipping machine integrations (use -IncludeMachineIntegrations to include them)."

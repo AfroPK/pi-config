@@ -26,6 +26,8 @@ AGENT_FILES = (
     "mcp-adapter.json",
     "prompt-suggestions.json",
     "trust.json",
+    # Provider preferences only; its sessions.json is per-machine state.
+    "antigravity-acp-provider/config.json",
 )
 TEXT_SUFFIXES = {
     ".bat", ".cmd", ".css", ".env", ".gitignore", ".glsl", ".html", ".js",
@@ -41,6 +43,7 @@ LOCAL_FILES = (
     ("C:/Strata/strata-gyro-gyro-s.json", "Strata/strata-gyro-gyro-s.json"),
     ("llama/start-qwen36-iq3.bat", "llama/start-qwen36-iq3.bat"),
     ("llama/start-swift27-xs-64k.bat", "llama/start-swift27-xs-64k.bat"),
+    ("hipfire-test/serve-ornith.cmd", "hipfire-test/serve-ornith.cmd"),
 )
 
 

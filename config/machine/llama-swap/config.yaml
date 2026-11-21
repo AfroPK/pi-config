@@ -11,6 +11,9 @@ globalTTL: 0
 macros:
   "rocm": __PI_HOME__\llama-mainline\b11869-rocm-th102\llama-server.exe --host 127.0.0.1 --port ${PORT}
   "rocm1": __PI_HOME__\llama-mainline\b12445-rocm-th102\llama-server.exe --host 127.0.0.1 --port ${PORT}
+  # Unsloth's llama.cpp prebuilt (Windows ROCm gfx103X, bundles its own runtime): the only build that runs the
+  # looped Inkling 2 Mini GGUFs correctly today (mainline needs open PR #32704).
+  "rocm-unsloth": __PI_HOME__\llama-mainline\b12588-unsloth-rocm-gfx103X\llama-server.exe --host 127.0.0.1 --port ${PORT}
   "mtp2": --spec-type draft-mtp --spec-draft-n-max 2
   "qwen27-sampling": >-
     --jinja --chat-template-kwargs "{\"reasoning_effort\":\"medium\"}"
@@ -40,3 +43,15 @@ models:
       --config C:\Strata\strata-gyro-gyro-s.json --port ${PORT}
     cmdStop: ${kill-tree}
     aliases: ["qwen3.8-flash-next-gyro-s"]   # the id in Pi's strata provider
+  # ---- Inkling 2 Mini UD-IQ2_XXS (26B MoE, looped), all in VRAM, 64K, text-only, no drafter (2026-11-21) ----
+  # 42 tok/s short / 34.7 tok/s with 55K in context, prefill ~176-255 tok/s, 9.35 GB VRAM flat.
+  # ub 64: q4 KV makes the compute buffer scale with ubatch x context. Sweep: E:\models\thinkingmachines\Inkling-2-Mini-GGUF\README.md
+  "inkling2-mini-64k":
+    cmd: >-
+      ${rocm-unsloth} --model E:\models\thinkingmachines\Inkling-2-Mini-GGUF\Inkling-2-Mini-UD-IQ2_XXS.gguf
+      --gpu-layers 99 --fit off --ctx-size 65536 --cache-type-k q4_0 --cache-type-v q4_0 --flash-attn on
+      -b 64 -ub 64 --parallel 1 --threads 6 --jinja --temp 1.0 --top-p 1.0 --top-k 0 --min-p 0.0
+  # ---- Ornith 1.5 9B MQ6, fully resident, Hipfire native Windows + MTP K=2 ----
+  "ornith-1.5-9b.mq6":
+    cmd: __PI_HOME__\hipfire-test\serve-ornith.cmd ${PORT}
+    cmdStop: ${kill-tree}

@@ -27,11 +27,13 @@ The capture process converted literal remote provider keys to these names:
 | `KAGGLE_STRATA_API_KEY` | `kaggle-strata` | Ephemeral key printed by the Strata Kaggle notebook |
 | `RD_API_KEY` | Retro Diffusion MCP | Used in the HTTP `Authorization: Bearer ${RD_API_KEY}` header |
 
-The three local OpenAI-compatible providers use the intentionally non-secret dummy value `local`:
+The five local OpenAI-compatible providers use the intentionally non-secret dummy value `local`:
 
 - `strata` at `http://127.0.0.1:8080/v1`;
 - `qwen27` at `http://127.0.0.1:8080/v1`;
-- `qwen36iq3` at `http://127.0.0.1:8080/v1`.
+- `qwen36iq3` at `http://127.0.0.1:8080/v1`;
+- `hipfire` at `http://127.0.0.1:8080/v1`;
+- `inkling` at `http://127.0.0.1:8080/v1`.
 
 OpenRouter is a built-in provider and has no key in `models.json`. Its normal authentication is in Pi's excluded `auth.json`.
 

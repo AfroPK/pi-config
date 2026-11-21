@@ -9,25 +9,25 @@ See `manifest.json` for the machine-readable source of truth. It records:
 - required provider/MCP environment references;
 - every captured file's size and SHA-256 hash.
 
-The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Python 3.12.10, and Git 2.56.0.windows.4. It contains 201 files (approximately 1.6 MB before repository documentation).
+The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Python 3.12.10, and Git 2.56.0.windows.4. It contains 218 files (approximately 4.6 MB before repository documentation).
 
 ## Included files
 
 | Area | Files | Notes |
 |---|---:|---|
-| Agent directory, total | 154 | Includes the categories below |
-| Agent top-level | 8 | AGENTS, settings, models, MCP, adapter, keybindings, suggestions, trust |
+| Agent directory, total | 168 | Includes the categories below |
+| Agent top-level | 9 | AGENTS, settings, models, MCP, adapter, keybindings, suggestions, trust, Antigravity provider preferences |
 | Local extensions | 33 | Source, READMEs, manifests/lockfiles, snippets, shim, tests; no logs/profiles |
-| Skills | 105 | 31 skill directories and supporting source/assets; no venv/bytecode |
+| Skills | 118 | 32 skill directories and supporting source/assets; no venv/bytecode |
 | Package npm directory | 3 | `.gitignore`, package manifest, package lock |
 | Patches | 4 | README, two diffs, patched renderer |
 | Agent tests | 1 | ask-guard test |
-| `.pi` root | 37 | Active launchers, role prompts, notes, PowerShell helpers |
-| Machine integrations | 8 | llama-swap, Strata, standalone model launchers, pi-loop env |
+| `.pi` root | 39 | Active launchers, role prompts, notes, PowerShell helpers |
+| Machine integrations | 9 | llama-swap, Strata, standalone model launchers, Hipfire Ornith launcher, pi-loop env |
 | Shell | 1 | Extracted Pi alias/PATH block |
 | Global package inventory | 1 | Exact global npm package versions |
 
-`config/agent` counts include its immediate files and all listed subdirectories; categories are not additional to the 154-file total.
+`config/agent` counts include its immediate files and all listed subdirectories; categories are not additional to the 168-file total.
 
 ## Deliberately excluded: credentials and private state
 

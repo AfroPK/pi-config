@@ -161,7 +161,7 @@ Run structural checks:
 ```powershell
 python .\scripts\verify.py --installed-home $HOME
 pi --version                 # expected: 1.6.0
-pi list                      # lists the 10 configured user packages
+pi list                      # lists the 12 configured user packages
 pi config                    # inspect loaded resources and built-ins
 pi mcp list                  # checks configured servers; unavailable services may fail
 ```

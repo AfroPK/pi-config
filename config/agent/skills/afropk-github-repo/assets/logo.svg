@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><clipPath id="c"><circle cx="500" cy="500" r="500"/></clipPath></defs><g clip-path="url(#c)"><circle cx="500" cy="500" r="500" fill="#0b0608"/>
+  <text x="225" y="690" font-family="JBM" font-size="560" fill="#d6246e" text-anchor="middle">{</text>
+  <text x="775" y="690" font-family="JBM" font-size="560" fill="#d6246e" text-anchor="middle">}</text>
+  <rect x="345" y="465" width="150" height="50" rx="8" fill="#fff"/><rect x="395" y="415" width="50" height="150" rx="8" fill="#fff"/>
+  <circle cx="590" cy="455" r="36" fill="#fff"/><circle cx="660" cy="530" r="36" fill="#d6246e"/></g></svg>

@@ -16,9 +16,10 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 | `compaction.enabled` | `true` | Automatic compaction |
 | `compaction.reserveTokens` | 16384 | Default free-context reserve |
 | `compaction.keepRecentTokens` | 6000 | Default unsummarized recent context |
-| Swift compaction override | 10240 / 10000 | Reserve/recent tokens for `qwen27/swift27-xs-64k` |
+| Swift/Ornith compaction override | 10240 / 10000 | Reserve/recent tokens for `qwen27/swift27-xs-64k` and `hipfire/ornith-1.5-9b.mq6` |
+| `hideThinkingBlock` | `false` | Thinking blocks are shown |
 | `shellPath` | Scoop Git Bash under the home directory | Shell used by Pi's bash tool; installer rewrites the home prefix |
-| `packages` | 10 npm declarations | Pi-managed extensions/resources |
+| `packages` | 12 npm declarations (adds `@gwynnnplaine/pi-discord-presence`, `pi-antigravity-acp-provider`) | Pi-managed extensions/resources |
 | `extensions` | `-builtin:mcp` | Disables built-in MCP because `pi-mcp-adapter` supplies `/mcp` |
 | `skills` | `!**/.agents/skills/**` | Excludes nested `.agents` skill trees from discovery |
 | `lastChangelogVersion` | `1.6.0` | UI changelog state |
@@ -34,13 +35,21 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 4. `openrouter/z-ai/glm-5.3-flash`
 5. `qwen3.8-flash-next-gyro-s` (local Strata)
 6. `qwen3.6-iq3-local` (local executor)
-7. `qwen27/swift27-xs-64k` (local fallback planner)
-8. `claude-cli/claude-fable-5-2`
-9. `claude-cli/claude-opus-5-5`
-10. `claude-cli/claude-sonnet-5-5`
-11. `claude-cli/claude-haiku-5-5`
+7. `hipfire/ornith-1.5-9b.mq6` (local, Hipfire)
+8. `qwen27/swift27-xs-64k` (local fallback planner)
+9. `inkling/inkling2-mini-64k` (local, Unsloth llama.cpp build)
+10. `claude-cli/claude-fable-5-2`
+11. `claude-cli/claude-opus-5-5`
+12. `claude-cli/claude-sonnet-5-5`
+13. `claude-cli/claude-haiku-5-5`
+14. `antigravity-acp/gemini-3.1-pro`
+15. `antigravity-acp/gemini-3.6-flash`
+16. `antigravity-acp/gemini-3.7-flash`
+17. `antigravity-acp/gemini-3.8-flash`
+18. `antigravity-acp/gemini-4-argon`
+19. `antigravity-acp/gemini-4-hydrogen`
 
-The first seven are configured directly or through OpenRouter. The last four are registered by the local `claude-cli` extension and require its external dependencies.
+The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`; its `sessions.json` is not captured) and need a signed-in Antigravity install.
 
 ## Model providers
 
@@ -53,6 +62,8 @@ Source: `config/agent/models.json`.
 | `strata` | `127.0.0.1:8080/v1` | `qwen3.8-flash-next-gyro-s`; text + image | 65,536 / 32,768 | dummy `local` |
 | `qwen27` | `127.0.0.1:8080/v1` | `swift27-xs-64k`; text | 49,152 / 32,768 | dummy `local` |
 | `qwen36iq3` | `127.0.0.1:8080/v1` | `qwen3.6-iq3-local`; text | 131,072 / 16,384 | dummy `local` |
+| `hipfire` | `127.0.0.1:8080/v1` | `ornith-1.5-9b.mq6`; text | 73,728 / 16,384 | dummy `local` |
+| `inkling` | `127.0.0.1:8080/v1` | `inkling2-mini-64k`; text | 65,536 / 16,384 | dummy `local` |
 | `kaggle` | Captured temporary Cloudflare tunnel | `qwen27-q6-mtp` | 131,072 / 16,384 | `${KAGGLE_API_KEY}` |
 | `kaggle-strata` | Captured temporary Cloudflare tunnel | `gyro-s` | 65,536 / 16,384 | `${KAGGLE_STRATA_API_KEY}` |
 
@@ -130,9 +141,9 @@ No `SYSTEM.md`, `APPEND_SYSTEM.md`, custom `prompts/`, or custom `themes/` exist
 
 ## Skills
 
-All 31 active directories are in `config/agent/skills/`:
+All 32 active directories are in `config/agent/skills/`:
 
-- **Agent/workflow:** `agent-desktop`, `analyze-sessions`, `local-spec`, `node-project`, `python-project`, `spec-writer`, `web-debug`, `web-design`.
+- **Agent/workflow:** `afropk-github-repo`, `agent-desktop`, `analyze-sessions`, `local-spec`, `node-project`, `python-project`, `spec-writer`, `web-debug`, `web-design`.
 - **Games/art:** `animated-sprites`, `ayo-rules`, `game-dev`, `game-ui`, `love2d`, `love2d-core`, `pixel-art`, `pixel-art-animator`, `roguelike-design`, `threejs-gltf-loading`, `threejs-materials-lighting`, `threejs-scene-setup`.
 - **Local AI:** `local-llm-rocm`.
 - **Media/content:** `clip-factory`, `clip-hunter`, `davinci-resolve`, `duofecta-thumbnail`, `gta-reel-editor`, `saber-cutout`, `vice-clips-review`, `youtube-transcript`.
@@ -158,7 +169,7 @@ The role prompts are appended with `--append-system-prompt`; they do not replace
 ## Other launchers and helpers
 
 - `pi-models.cmd`: menu/dispatcher for Strata, Qwen3.6, plan/review/exec, fallback planner, loop, and Kaggle.
-- `pi-strata.cmd`, `pi-qwen36.cmd`: call `ensure-server.ps1` and start Pi with role-specific local prompts.
+- `pi-strata.cmd`, `pi-qwen36.cmd`, `pi-ornith.cmd`, `pi-inkling.cmd`: call `ensure-server.ps1` and start Pi with role-specific local prompts.
 - `pi-kaggle.cmd`, `pi-kaggle-strata.cmd`: use remote Kaggle providers.
 - `ensure-server.ps1`: ensures llama-swap listens on port 8080, requests the required alias, and waits for health.
 - `pi-stop.cmd`: local-model cleanup helper. Review before using on a shared machine.
@@ -179,6 +190,8 @@ These files are captured as active source, including their historical comments. 
 - `Strata/start-strata-pi.bat`: standalone Strata starter;
 - `llama/start-qwen36-iq3.bat`: 128K Qwen3.6 MoE configuration;
 - `llama/start-swift27-xs-64k.bat`: 48K Swift 27B fallback configuration (legacy 64K alias retained);
+- `hipfire-test/serve-ornith.cmd`: Hipfire server for Ornith 1.5 9B MQ6 (MTP K=2, 72K), started by llama-swap. Hipfire itself, its ROCm path and the model are external;
+- the `inkling2-mini-64k` llama-swap entry needs Unsloth's ROCm gfx103X llama.cpp prebuilt (`rocm-unsloth` macro), which is not captured;
 - `pi-local/env`: pi-loop role model, swap ID, tools, thinking, and timeout settings.
 
 The model binaries and engines are external. The included `local-llm-rocm` skill contains the detailed build/download/tuning guide and measured hardware notes.
