@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-23T01:27:33.489637+00:00",
+  "capturedAt": "2026-11-23T01:42:52.008654+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -101,6 +101,14 @@
       "bytes": 3939,
       "sha256": "5f4a14046948fe26dde8f65035c0a23e8aae6ede8d593d9a1e788b7bd423d454"
     },
+    "config/agent/extensions/dictate/index.ts": {
+      "bytes": 16572,
+      "sha256": "2d05dbb6b888602cad416ae26f2bc7ba3015f9ea3344c8e416759d8371b1c027"
+    },
+    "config/agent/extensions/dictate/LICENSE": {
+      "bytes": 1071,
+      "sha256": "8363e1129a2f27108723c8e31b78eea3d360b8a8ff3b19bc3a6ea89576074cf8"
+    },
     "config/agent/extensions/imagegen.ts": {
       "bytes": 13961,
       "sha256": "595f5826273744c991283c862052c00dd3e85f01dde8c08eb633bb0a527e9349"
@@ -191,11 +199,11 @@
     },
     "config/agent/npm/package-lock.json": {
       "bytes": 102174,
-      "sha256": "5d9c7001bffe19d5313f8fec2509430e7a9dc7386764554611c0efe609cbd858"
+      "sha256": "1db1c453f9453d5cb28cd67e8ce91b39a437b7ac4b7ca561b86e65a914c9a552"
     },
     "config/agent/npm/package.json": {
       "bytes": 530,
-      "sha256": "e69f4cc70f54d3fb2c709d77bdcf31763c587ccb912b01e622f90fc9e49830b1"
+      "sha256": "1bb2f58f4b7c9a60e821e3d8537ef5b531f747824f91c94a98f822b9f582cb01"
     },
     "config/agent/patches/pi-ghost-text-after-turn.patch": {
       "bytes": 2813,
@@ -205,13 +213,9 @@
       "bytes": 3172,
       "sha256": "8a57cb9f1973b9a67a01df95886f86f125a03b3e30c6529a513d64bf6dfed93c"
     },
-    "config/agent/patches/pi-interactive-subagents-windows.patch": {
-      "bytes": 2366,
-      "sha256": "57f9962322db12b6e8cd9f9f73300718a9107fbc604b76727ccc72b9160c9204"
-    },
     "config/agent/patches/README.md": {
-      "bytes": 3233,
-      "sha256": "081bab74fbfbe863203dc6a5242d9ae0e6479a854bc8c752a4a64899ba1052dc"
+      "bytes": 2136,
+      "sha256": "a342ccf172583a4e313f97887fbb2b2997dd1c2b83cff6d5a0c67f362c8a5300"
     },
     "config/agent/patches/render.patched.ts": {
       "bytes": 3076,
@@ -222,8 +226,8 @@
       "sha256": "ca85a00c6714288b6adc8cfceb5b9581e07e320103fcc1125e5cd1f0e203ca29"
     },
     "config/agent/settings.json": {
-      "bytes": 2184,
-      "sha256": "a1a59841055643b0fbe656d65d3732cfe3784b7e20261fe684ee3c27c87ae288"
+      "bytes": 2177,
+      "sha256": "0c4f34efe9da114209042c6c1e85e7988bda7b4a458809cd6fce6de0b0de6790"
     },
     "config/agent/skills/afropk-github-repo/assets/fonts/Anton-Regular.ttf": {
       "bytes": 170812,

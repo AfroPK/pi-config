@@ -82,7 +82,7 @@ The snapshot deliberately pins the installed CLI and uses lockfiles. To move ver
 1. Upgrade the live setup using Pi's normal update flow.
 2. Test all local extensions against the new Pi API.
 3. Compare `pi-ghost-text`'s new renderer with `patches/render.patched.ts`; drop or adapt the patch rather than overwriting blindly.
-   For `pi-interactive-subagents`, check `git apply --check patches/pi-interactive-subagents-windows.patch` against the new commit, then update `$subagentsCommit` in `scripts/install.ps1`.
+   `pi-interactive-subagents` comes from the AfroPK fork; merge upstream there, not in the installed copy.
 4. Recapture and update the version references in README/guides if needed.
 5. Run package/extension tests and the restore test.
 

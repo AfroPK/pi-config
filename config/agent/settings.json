@@ -14,7 +14,7 @@
     "npm:@lanlance/pi-btw",
     "npm:@gwynnnplaine/pi-discord-presence",
     "npm:pi-antigravity-acp-provider",
-    "git:github.com/amosblomqvist/pi-interactive-subagents"
+    "git:github.com/AfroPK/pi-interactive-subagents"
   ],
   "defaultProvider": "openrouter",
   "defaultModel": "deepseek/deepseek-v4.1-flash-1017",
