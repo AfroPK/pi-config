@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-23T04:02:54.916715+00:00",
+  "capturedAt": "2026-11-23T04:17:34.178676+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -214,8 +214,8 @@
       "sha256": "8a57cb9f1973b9a67a01df95886f86f125a03b3e30c6529a513d64bf6dfed93c"
     },
     "config/agent/patches/README.md": {
-      "bytes": 2206,
-      "sha256": "ee06c38aa8baf03a1254c54768545e647eecab1f550b30898d70a65a9488e24c"
+      "bytes": 2228,
+      "sha256": "616e992bfc78096f19788d63808f6c86efb5b26c8922431f8b212d37ee6af9ef"
     },
     "config/agent/patches/render.patched.ts": {
       "bytes": 3076,
@@ -715,7 +715,7 @@
     },
     "config/global-npm-packages.json": {
       "bytes": 419,
-      "sha256": "0a95f379b4c111385d5e75c9b478aceea9ce50c494955b7c8fe0011a4597ce1b"
+      "sha256": "2f43558d9b13db1bf1eae8ad53f949403b7993876392afce76bff687f01d3eb5"
     },
     "config/machine/hipfire-test/serve-ornith.cmd": {
       "bytes": 537,
