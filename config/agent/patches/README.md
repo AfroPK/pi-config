@@ -36,7 +36,7 @@ behaves. Worth reporting upstream (jcv/pi-ghost-text) so the patch can be droppe
 
 ## pi-interactive-subagents — now a fork, no local patch
 
-The Windows/psmux fixes (LF checkout, split guard, mid-turn `/subagent`) are committed in
-https://github.com/AfroPK/pi-interactive-subagents (commit 3b1a92c), which `settings.json` installs.
+The Windows/psmux fixes (Git Bash instead of WSL, LF checkout, split guard, mid-turn `/subagent`) are committed in
+https://github.com/AfroPK/pi-interactive-subagents (commit ef9ff9e), which `settings.json` installs.
 `pi update --extensions` pulls the fork, so nothing needs reapplying. Model/thinking overrides for the
 bundled agents live in `~/.pi/agent/agents/{scout,researcher,worker}.md` (DeepSeek v4.1 flash, `xhigh`).

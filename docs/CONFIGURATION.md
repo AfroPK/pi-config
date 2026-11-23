@@ -105,7 +105,7 @@ Declared in `settings.json`; exact installed dependency trees are locked in `con
 | `pi-ghost-text` | 0.1.2 + local patch | Inline and next-prompt ghost suggestions |
 | `@lanlance/pi-btw` | 0.2.0 | Side questions in an overlay while the main agent runs |
 | `@gwynnnplaine/pi-discord-presence` | 0.1.1 | Discord Rich Presence: live activity, project · model, session timer; `/presence on\|off\|status` |
-| `git:github.com/AfroPK/pi-interactive-subagents` | 3.7.2 fork (`3b1a92c`) | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
+| `git:github.com/AfroPK/pi-interactive-subagents` | 3.7.2 fork (`ef9ff9e`) | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
 
 `@shog-lab/pi-toolkit` 0.6.1 is also present in the npm manifest/lockfile as a supporting dependency. `skillful-install.json` records its last reported version.
 
@@ -221,15 +221,16 @@ Agent definitions in `config/agent/agents/` override the three bundled agents (g
 | `researcher` | `web_search`, `web_fetch`, `safe_bash` | Web research with sources (uses the local `web-search`/`web-fetch` extensions) |
 | `worker` | `read`, `write`, `edit`, `bash`, `web_search`, `web_fetch`, may spawn `scout`/`researcher` | General implementer |
 
-Pi installs it from Freddy's fork [AfroPK/pi-interactive-subagents](https://github.com/AfroPK/pi-interactive-subagents) (upstream: amosblomqvist/pi-interactive-subagents, `c3e8b53`). The fork commits three Windows fixes, so `pi update --extensions` keeps them:
+Pi installs it from Freddy's fork [AfroPK/pi-interactive-subagents](https://github.com/AfroPK/pi-interactive-subagents) (upstream: amosblomqvist/pi-interactive-subagents, `c3e8b53`). The fork commits four Windows fixes, so `pi update --extensions` keeps them:
 
+- **Git Bash, not WSL.** Subagents are launched by typing a bash command into a new pane, whose shell is PowerShell. There a bare `bash` is `C:\Windows\System32ash.exe` (WSL; Git Bash is not on the system PATH), which strips the backslashes from the script path (`/bin/bash: C:UsersFreddy...sh: No such file or directory`). The subagent hangs at "starting" and its pane never closes. The fork resolves Git Bash (`PI_SUBAGENT_BASH`, Pi's `shellPath`, standard installs) and types `& '<git bash>' '<script>'`.
 - **Line endings.** `.gitattributes` forces LF. With `core.autocrlf` the agent `.md` files otherwise check out as CRLF, the frontmatter parser only matches LF, and every agent is "not found".
 - **psmux split.** When a window has no room for another pane, psmux's `split-window` exits 0 and prints the *target* pane id instead of failing. Upstream then types the subagent command into the parent Pi pane and later kills it. The fork rejects any pane id that already existed.
 - **`/subagent` mid-turn.** Upstream calls `sendUserMessage` without `deliverAs`, so `/subagent` typed while the agent is busy errors with "Agent is already processing". The fork steers it in.
 
 To pull upstream changes: `git fetch upstream && git merge upstream/main` in a clone of the fork, re-run the tests, push, then `pi update git:github.com/AfroPK/pi-interactive-subagents`.
 
-Verified 2026-11-22 on psmux: upstream unit tests 147/148 (the failure is a forward-slash path assertion), lifecycle integration tests 7/7 on DeepSeek, surface tests 6/7 (PowerShell 5.1 writes the test's file as UTF-16), plus live scout, researcher and worker runs.
+Verified 2026-11-22 on psmux: unit tests 148/148 on the fork, lifecycle integration tests 7/7 on DeepSeek, surface tests 6/7 (PowerShell 5.1 writes the test's file as UTF-16), plus live scout, researcher and worker runs.
 
 ## Discord presence
 
