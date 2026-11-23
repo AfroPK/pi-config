@@ -19,7 +19,7 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 | Swift/Ornith compaction override | 10240 / 10000 | Reserve/recent tokens for `qwen27/swift27-xs-64k` and `hipfire/ornith-1.5-9b.mq6` |
 | `hideThinkingBlock` | `false` | Thinking blocks are shown |
 | `shellPath` | Scoop Git Bash under the home directory | Shell used by Pi's bash tool; installer rewrites the home prefix |
-| `packages` | 12 npm declarations (adds `@gwynnnplaine/pi-discord-presence`, `pi-antigravity-acp-provider`) | Pi-managed extensions/resources |
+| `packages` | 12 npm declarations (adds `@gwynnnplaine/pi-discord-presence`, `pi-antigravity-acp-provider`) plus the `AfroPK/pi-interactive-subagents` git fork | Pi-managed extensions/resources |
 | `extensions` | `-builtin:mcp` | Disables built-in MCP because `pi-mcp-adapter` supplies `/mcp` |
 | `skills` | `!**/.agents/skills/**` | Excludes nested `.agents` skill trees from discovery |
 | `lastChangelogVersion` | `1.6.0` | UI changelog state |
@@ -104,6 +104,7 @@ Declared in `settings.json`; exact installed dependency trees are locked in `con
 | `pi-loop-police` | 1.14.1 | Detect/interrupt thinking and tool-call loops |
 | `pi-ghost-text` | 0.1.2 + local patch | Inline and next-prompt ghost suggestions |
 | `@lanlance/pi-btw` | 0.2.0 | Side questions in an overlay while the main agent runs |
+| `@gwynnnplaine/pi-discord-presence` | 0.1.1 | Discord Rich Presence: live activity, project · model, session timer; `/presence on\|off\|status` |
 | `git:github.com/AfroPK/pi-interactive-subagents` | 3.7.2 fork (`3b1a92c`) | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
 
 `@shog-lab/pi-toolkit` 0.6.1 is also present in the npm manifest/lockfile as a supporting dependency. `skillful-install.json` records its last reported version.
@@ -229,6 +230,12 @@ Pi installs it from Freddy's fork [AfroPK/pi-interactive-subagents](https://gith
 To pull upstream changes: `git fetch upstream && git merge upstream/main` in a clone of the fork, re-run the tests, push, then `pi update git:github.com/AfroPK/pi-interactive-subagents`.
 
 Verified 2026-11-22 on psmux: upstream unit tests 147/148 (the failure is a forward-slash path assertion), lifecycle integration tests 7/7 on DeepSeek, surface tests 6/7 (PowerShell 5.1 writes the test's file as UTF-16), plus live scout, researcher and worker runs.
+
+## Discord presence
+
+`@gwynnnplaine/pi-discord-presence` runs with its built-in defaults (Discord app id `1520833162148712580`); there is no `~/.pi/agent/discord-presence.json`. It only acts in interactive TUI sessions and shows filenames and the project name, so use `/presence off` or a per-project `.pi/discord-presence.json` with `{ "enabled": false }` for private repos.
+
+**Discord must not run as administrator.** Pi talks to Discord over the `\\.\pipe\discord-ipc-0` named pipe, and Windows refuses a normal-rights process access to an elevated app's pipe (`EPERM`, surfaced as "Could not connect to Discord client"). Discord has no run-as-admin flag here and its Run-key autostart is unelevated, so this only happens when it is launched from an elevated terminal or app. Fix: quit it from the tray and start it normally. Verified 2026-11-22: pipe connect `EPERM` while elevated, `connect OK` after a normal restart, and the Pi card appeared in Discord.
 
 ## Git Bash aliases
 
