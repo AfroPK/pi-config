@@ -105,7 +105,7 @@ Declared in `settings.json`; exact installed dependency trees are locked in `con
 | `pi-ghost-text` | 0.1.2 + local patch | Inline and next-prompt ghost suggestions |
 | `@lanlance/pi-btw` | 0.2.0 | Side questions in an overlay while the main agent runs |
 | `@gwynnnplaine/pi-discord-presence` | 0.1.1 | Discord Rich Presence: live activity, project · model, session timer; `/presence on\|off\|status` |
-| `git:github.com/AfroPK/pi-interactive-subagents` | 3.7.2 fork (`4bef41e`) | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
+| `git:github.com/AfroPK/pi-interactive-subagents` | 3.7.2 fork (`7d69925`) | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
 
 `@shog-lab/pi-toolkit` 0.6.1 is also present in the npm manifest/lockfile as a supporting dependency. `skillful-install.json` records its last reported version.
 
@@ -224,6 +224,9 @@ Agent definitions in `config/agent/agents/` override the three bundled agents (g
 Pi installs it from Freddy's fork [AfroPK/pi-interactive-subagents](https://github.com/AfroPK/pi-interactive-subagents) (upstream: amosblomqvist/pi-interactive-subagents, `c3e8b53`). The fork commits these fixes, so `pi update --extensions` keeps them:
 
 - **Git Bash, not WSL.** Subagents are launched by typing a bash command into a new pane, whose shell is PowerShell. There a bare `bash` is `C:\Windows\System32\bash.exe` (WSL; Git Bash is not on the system PATH), which strips the backslashes from the script path (`/bin/bash: C:UsersFreddy...sh: No such file or directory`). The subagent hangs at "starting" and its pane never closes. The fork resolves Git Bash (`PI_SUBAGENT_BASH`, Pi's `shellPath`, standard installs) and types `& '<git bash>' '<script>'`.
+- **`subagent_stop` tool.** The orchestrator can stop a running subagent by name: the pane closes, the last progress message is returned immediately, and the session stays resumable with `subagent_message`. It no longer needs to kill panes with bash.
+- **Pane-close resume block.** A subagent whose pane was closed from outside (user, crash) is marked stopped in the name registry, and `subagent_message` refuses to resume it unless the call passes `userRequested: true` — i.e. only when the user asked. `subagent_stop` does not set this mark, so deliberate stops stay freely resumable.
+- **Process-tree kill on stop.** Windows does not end child processes with their parent, so closing a pane also runs `taskkill /T` on the pane's process tree (never the parent Pi's pane). Note this only reaches processes still in the pane's tree; a tool process orphaned earlier (e.g. Pi's bash tool timing out) is already outside it.
 - **Killed panes.** Upstream only finished a watch when the subagent printed its done sentinel, so a pane closed by the user or the orchestrator left a ghost "active" entry in the widget forever. The fork checks every poll that the pane still exists and, after two misses, reports "Stopped: the subagent's pane was closed" to the orchestrator.
 - **Per-session pane ids.** psmux numbers panes per session (`%1` exists in every session), so pane lookups use `list-panes -s` on the parent's session, not `list-panes -a`.
 - **Line endings.** `.gitattributes` forces LF. With `core.autocrlf` the agent `.md` files otherwise check out as CRLF, the frontmatter parser only matches LF, and every agent is "not found".
@@ -232,7 +235,7 @@ Pi installs it from Freddy's fork [AfroPK/pi-interactive-subagents](https://gith
 
 To pull upstream changes: `git fetch upstream && git merge upstream/main` in a clone of the fork, re-run the tests, push, then `pi update git:github.com/AfroPK/pi-interactive-subagents`.
 
-Verified 2026-11-22 on psmux: unit tests 148/148 on the fork, lifecycle integration tests 7/7 on DeepSeek, surface tests 6/7 (PowerShell 5.1 writes the test's file as UTF-16), plus live scout, researcher and worker runs.
+Verified 2026-11-22 on psmux: unit tests 150/150 on the fork, lifecycle integration tests 7/7 on DeepSeek, surface tests 6/7 (PowerShell 5.1 writes the test's file as UTF-16), plus live scout, researcher and worker runs.
 
 ## Discord presence
 
