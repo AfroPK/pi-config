@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-23T02:16:08.474743+00:00",
+  "capturedAt": "2026-11-23T03:43:58.606342+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -214,8 +214,8 @@
       "sha256": "8a57cb9f1973b9a67a01df95886f86f125a03b3e30c6529a513d64bf6dfed93c"
     },
     "config/agent/patches/README.md": {
-      "bytes": 2161,
-      "sha256": "b93b17353b70c3d8d4b7601541e8d3408435ca4e4018117f7320f674a2494847"
+      "bytes": 2206,
+      "sha256": "da652347f4a6c7bffa9d12ddfc5d4f8d0a250c994f5e9ae9ec089564d58a48f3"
     },
     "config/agent/patches/render.patched.ts": {
       "bytes": 3076,
