@@ -104,6 +104,7 @@ Declared in `settings.json`; exact installed dependency trees are locked in `con
 | `pi-loop-police` | 1.14.1 | Detect/interrupt thinking and tool-call loops |
 | `pi-ghost-text` | 0.1.2 + local patch | Inline and next-prompt ghost suggestions |
 | `@lanlance/pi-btw` | 0.2.0 | Side questions in an overlay while the main agent runs |
+| `git:github.com/amosblomqvist/pi-interactive-subagents` | 3.7.2 (`c3e8b53`) + local patch | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
 
 `@shog-lab/pi-toolkit` 0.6.1 is also present in the npm manifest/lockfile as a supporting dependency. `skillful-install.json` records its last reported version.
 
@@ -201,6 +202,30 @@ The model binaries and engines are external. The included `local-llm-rocm` skill
 `config/agent/patches/` preserves two diffs, the patched `render.ts`, and a README. Pi 1.6.0's fake-cursor APC markers prevented `pi-ghost-text` 0.1.2 from rendering suggestions. The patch skips those markers and avoids mutating the render lines.
 
 The installer copies `render.patched.ts` over the installed package after `npm ci`. Reapply it after reinstalling/upgrading that package; first compare the new upstream renderer rather than blindly overwriting a different version.
+
+## Interactive subagents
+
+`pi-interactive-subagents` spawns subagents in tmux panes and steers each result back into the main session. On this PC `tmux` is psmux 3.4.0, so **start Pi inside it** or every spawn fails with "tmux is required":
+
+```bash
+tmux new -A -s pi pi
+```
+
+Agent definitions in `config/agent/agents/` override the three bundled agents (global beats bundled and survives `pi update`). All three run `openrouter/deepseek/deepseek-v4.1-flash-1017` with `thinking: xhigh`; Pi clamps that to the model's top level, `max`.
+
+| Agent | Tools | Role |
+|---|---|---|
+| `scout` | `read`, `grep`, `find`, `ls` | Read-only codebase recon |
+| `researcher` | `web_search`, `web_fetch`, `safe_bash` | Web research with sources (uses the local `web-search`/`web-fetch` extensions) |
+| `worker` | `read`, `write`, `edit`, `bash`, `web_search`, `web_fetch`, may spawn `scout`/`researcher` | General implementer |
+
+Three Windows issues need local handling (`patches/pi-interactive-subagents-windows.patch`, explained in `patches/README.md`):
+
+- **Line endings.** With `core.autocrlf` the agent `.md` files check out as CRLF, the frontmatter parser only matches LF, and every agent is "not found". The clone sets `core.autocrlf=false` and `core.eol=lf` locally.
+- **psmux split.** When a window has no room for another pane, psmux's `split-window` exits 0 and prints the *target* pane id instead of failing. Upstream then types the subagent command into the parent Pi pane and later kills it. The patch rejects any pane id that already existed.
+- **`/subagent` mid-turn.** Upstream calls `sendUserMessage` without `deliverAs`, so `/subagent` typed while the agent is busy errors with "Agent is already processing". The patch steers it in.
+
+Verified 2026-11-22 on psmux: upstream unit tests 147/148 (the failure is a forward-slash path assertion), lifecycle integration tests 7/7 on DeepSeek, surface tests 6/7 (PowerShell 5.1 writes the test's file as UTF-16), plus live scout, researcher and worker runs.
 
 ## Git Bash aliases
 

@@ -221,7 +221,7 @@
       ]
     },
     "kaggle-strata": {
-      "baseUrl": "https://strings-bryant-rays-mission.trycloudflare.com/v1",
+      "baseUrl": "https://changes-laser-ought-usual.trycloudflare.com/v1",
       "api": "openai-completions",
       "apiKey": "${KAGGLE_STRATA_API_KEY}",
       "compat": {
@@ -233,13 +233,13 @@
       },
       "models": [
         {
-          "id": "gyro-s",
-          "name": "Strata Qwen3.8-Flash-Next Gyro-S, 64K (Kaggle 2x T4 via Cloudflare tunnel)",
+          "id": "qwen3.8-flash-next-coder-iq1_m",
+          "name": "Strata Qwen3.8-Flash-Next Coder IQ1_M, 128K (Kaggle 2x T4 via Cloudflare tunnel)",
           "reasoning": true,
           "input": [
             "text"
           ],
-          "contextWindow": 65536,
+          "contextWindow": 131072,
           "maxTokens": 16384,
           "cost": {
             "input": 0,
@@ -339,13 +339,13 @@
       },
       "models": [
         {
-          "id": "inkling2-mini-64k",
-          "name": "Inkling 2 Mini IQ2_XXS, 64K (local, ~42 tok/s)",
+          "id": "inkling2-mini-113k",
+          "name": "Inkling 2 Mini IQ2_XXS, 113K (local, ~40 tok/s)",
           "reasoning": true,
           "input": [
             "text"
           ],
-          "contextWindow": 65536,
+          "contextWindow": 115712,
           "maxTokens": 16384,
           "cost": {
             "input": 0,

@@ -32,7 +32,7 @@ python .\scripts\verify.py --installed-home $HOME
 1. The installer backs up every file it would replace to `~/.pi-config-backups/<timestamp>/`.
 2. It restores `config/agent/` to `~/.pi/agent/` and `config/pi/` to `~/.pi/`, swapping `__PI_HOME__` for your home path.
 3. It installs Pi 1.6.0 and the core global tools, then installs exact package versions from each `package-lock.json`.
-4. It reapplies the local `pi-ghost-text` patch.
+4. It reapplies the local `pi-ghost-text` patch and prepares `pi-interactive-subagents` (LF checkout + Windows patch).
 5. Restart the terminal, start Pi, run `/login` for OpenRouter.
 
 Files-only restore: add `-SkipPackages -SkipPiInstall`. Machine integrations (llama-swap, Strata, llama.cpp launchers): `-IncludeMachineIntegrations`. Test home: `-DestinationHome C:\Temp\pi-restore-test`.
@@ -47,7 +47,8 @@ Files-only restore: add `-SkipPackages -SkipPiInstall`. Machine integrations (ll
 | Global instructions | `config/agent/AGENTS.md` | Engineering rules, verification, safety, Git and tool conventions |
 | Extensions | `config/agent/extensions/` | Browser, web search/fetch, vision, image generation, Claude CLI, guards, snippets |
 | Skills | `config/agent/skills/` | All 32 active skills with scripts, references, tests and templates |
-| Patches | `config/agent/patches/` | Both ghost-text patches and the patched renderer |
+| Subagent definitions | `config/agent/agents/` | `scout`, `researcher`, `worker` on DeepSeek v4.1 flash, `xhigh` |
+| Patches | `config/agent/patches/` | Ghost-text patches and renderer, pi-interactive-subagents Windows patch |
 | Machine integration | `config/machine/` | llama-swap config, three model launch profiles, Strata config, process cleanup |
 
 <p><img src=".github/assets/section-everyday-commands.png" alt="04 Everyday commands" width="100%"></p>

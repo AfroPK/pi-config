@@ -177,7 +177,8 @@ Expected package declarations:
 - `pi-skillful`;
 - `pi-loop-police@1.14.1`;
 - `pi-ghost-text`;
-- `@lanlance/pi-btw`.
+- `@lanlance/pi-btw`;
+- `pi-interactive-subagents` (git package; run Pi inside `tmux new -A -s pi pi` to use it).
 
 Run local extension tests after package installation:
 

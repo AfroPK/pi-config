@@ -4,7 +4,7 @@
   Restores this repository's Pi configuration on Windows.
 .DESCRIPTION
   Backs up every replaced file, expands __PI_HOME__ to the destination home,
-  installs pinned dependencies, and reapplies the local ghost-text patch.
+  installs pinned dependencies, and reapplies the local ghost-text and subagents patches.
   Run with -SkipPackages -SkipPiInstall for a files-only restore or a test.
 #>
 [CmdletBinding()]
@@ -147,8 +147,37 @@ if (-not $SkipPackages) {
         Copy-Item -LiteralPath $patchedRender -Destination $installedRender -Force
         Write-Host "      Reapplied pi-ghost-text fake-cursor patch."
     }
+
+    # pi-interactive-subagents is a git package. Its agent-frontmatter parser only matches LF, so the
+    # clone must not use autocrlf; the Windows patch guards psmux splits and mid-turn /subagent.
+    $subagentsRepo = "https://github.com/amosblomqvist/pi-interactive-subagents"
+    $subagentsCommit = "c3e8b53"
+    $subagentsDir = Join-Path $DestinationHome ".pi\agent\git\github.com\amosblomqvist\pi-interactive-subagents"
+    $subagentsPatch = Join-Path $DestinationHome ".pi\agent\patches\pi-interactive-subagents-windows.patch"
+    if (Test-Path -LiteralPath $subagentsPatch) {
+        Assert-Command "git"
+        if (-not (Test-Path -LiteralPath (Join-Path $subagentsDir ".git"))) {
+            & git -c core.autocrlf=false clone --quiet $subagentsRepo $subagentsDir
+            if ($LASTEXITCODE) { throw "Cloning pi-interactive-subagents failed" }
+        }
+        & git -C $subagentsDir config core.autocrlf false
+        & git -C $subagentsDir config core.eol lf
+        & git -C $subagentsDir diff --quiet
+        if ($LASTEXITCODE -eq 0) {
+            & git -C $subagentsDir checkout --quiet $subagentsCommit
+            if ($LASTEXITCODE) { throw "Checking out pi-interactive-subagents $subagentsCommit failed" }
+            # Re-checkout so files written earlier with CRLF are rewritten with LF.
+            & git -C $subagentsDir rm -r --cached --quiet .
+            & git -C $subagentsDir reset --quiet --hard $subagentsCommit
+            & git -C $subagentsDir apply $subagentsPatch
+            if ($LASTEXITCODE) { throw "Applying the pi-interactive-subagents Windows patch failed" }
+            Write-Host "      Prepared pi-interactive-subagents $subagentsCommit with the Windows patch."
+        } else {
+            Write-Host "      pi-interactive-subagents already has local changes; left as is."
+        }
+    }
 } else {
-    Write-Host "[4/5] Skipping package installation and the ghost-text patch."
+    Write-Host "[4/5] Skipping package installation and the local package patches."
 }
 
 if ($InstallBashAliases) {

@@ -192,7 +192,7 @@ def capture(source_home: Path, repo: Path) -> dict[str, Any]:
         sanitize_models(models)
         models_path.write_text(json.dumps(models, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    for name in ("extensions", "skills", "tests"):
+    for name in ("extensions", "skills", "tests", "agents"):
         copied.extend(copy_tree(agent / name, config / "agent" / name, source_home))
     for name in ("patches", "npm"):
         copied.extend(copy_tree(agent / name, config / "agent" / name, source_home))

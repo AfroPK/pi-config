@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-21T09:26:04.946891+00:00",
+  "capturedAt": "2026-11-23T01:27:33.489637+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -17,6 +17,18 @@
     "RD_API_KEY"
   ],
   "files": {
+    "config/agent/agents/researcher.md": {
+      "bytes": 2015,
+      "sha256": "75b9dcaf6499335e4dda222e509e81b876c2faf0d0d7c3a5f845dc8578ff856a"
+    },
+    "config/agent/agents/scout.md": {
+      "bytes": 1325,
+      "sha256": "3f44f2f2728f5fb125b178b252733039869c7a8dcfafdbf7078b11143551cbbe"
+    },
+    "config/agent/agents/worker.md": {
+      "bytes": 4680,
+      "sha256": "3fd08a22240070e05127d0d8024ae5ab5ea89d18d46f3e62c9f22a8be35986eb"
+    },
     "config/agent/AGENTS.md": {
       "bytes": 9258,
       "sha256": "612719d6d0b453e0f5d5cd35776e1bca90f03f5e2ac8780e3501e63bb86c5826"
@@ -170,8 +182,8 @@
       "sha256": "9301d593f69f3b8431656437eff9ddee8e51e378455f5625aca90aa3e25a9760"
     },
     "config/agent/models.json": {
-      "bytes": 10183,
-      "sha256": "f594239d6160ec59f4a5099a4ee59618e5ce637e771bfdd4b1ed004fdc424020"
+      "bytes": 10215,
+      "sha256": "333d7cbea2e36ba93177850706ed7ca5848efb23ef544b4f2716bb51e28bf618"
     },
     "config/agent/npm/.gitignore": {
       "bytes": 14,
@@ -193,9 +205,13 @@
       "bytes": 3172,
       "sha256": "8a57cb9f1973b9a67a01df95886f86f125a03b3e30c6529a513d64bf6dfed93c"
     },
+    "config/agent/patches/pi-interactive-subagents-windows.patch": {
+      "bytes": 2366,
+      "sha256": "57f9962322db12b6e8cd9f9f73300718a9107fbc604b76727ccc72b9160c9204"
+    },
     "config/agent/patches/README.md": {
-      "bytes": 1676,
-      "sha256": "2ba42cf583b80f19555a93841a338564b2d42d694cfac0944006aa7e1679b6db"
+      "bytes": 3233,
+      "sha256": "081bab74fbfbe863203dc6a5242d9ae0e6479a854bc8c752a4a64899ba1052dc"
     },
     "config/agent/patches/render.patched.ts": {
       "bytes": 3076,
@@ -206,8 +222,8 @@
       "sha256": "ca85a00c6714288b6adc8cfceb5b9581e07e320103fcc1125e5cd1f0e203ca29"
     },
     "config/agent/settings.json": {
-      "bytes": 2196,
-      "sha256": "f7a626dd9ac9c9dc20a8685fe2cd4ef8a96320984e7015aab27cd2826018c129"
+      "bytes": 2184,
+      "sha256": "a1a59841055643b0fbe656d65d3732cfe3784b7e20261fe684ee3c27c87ae288"
     },
     "config/agent/skills/afropk-github-repo/assets/fonts/Anton-Regular.ttf": {
       "bytes": 170812,
@@ -328,6 +344,10 @@
     "config/agent/skills/ayo-rules/SKILL.md": {
       "bytes": 4575,
       "sha256": "4a17ad9c55698363bc62d85dccd367485859ff6e5de4d3c4444fb1be3ad96746"
+    },
+    "config/agent/skills/balatro-llm/SKILL.md": {
+      "bytes": 4475,
+      "sha256": "0cbf5ca4e607daf77266cc21da8dca7829a4789bef905d08d3f19fda45589484"
     },
     "config/agent/skills/clip-factory/SKILL.md": {
       "bytes": 5347,
@@ -690,8 +710,8 @@
       "sha256": "ef55821eebeee6d7dc49aeb3d265a2d356814bb540fea86226bc2a3f37559aef"
     },
     "config/global-npm-packages.json": {
-      "bytes": 381,
-      "sha256": "782c65b227b4efc3c678e38d05c6bc463b42b193ffd72b58d182442481b8d627"
+      "bytes": 419,
+      "sha256": "0a95f379b4c111385d5e75c9b478aceea9ce50c494955b7c8fe0011a4597ce1b"
     },
     "config/machine/hipfire-test/serve-ornith.cmd": {
       "bytes": 537,
@@ -706,8 +726,8 @@
       "sha256": "406ce167f891e43dcaa9b22e10b3f0afbb6edd7e996a76adbb677aab07717a4c"
     },
     "config/machine/llama-swap/config.yaml": {
-      "bytes": 3876,
-      "sha256": "eda60c16370bf6a4979f752f3180ec9db585dbaa955d63e415cb47bc7244a507"
+      "bytes": 4084,
+      "sha256": "e4a676939b52fbd88c8b65aace6f7b6b830f93074f42ca5c27c285fbbf1f9ac1"
     },
     "config/machine/llama-swap/kill-tree.ps1": {
       "bytes": 553,
@@ -810,8 +830,8 @@
       "sha256": "0e14b9b6a1a67ff79687827acc55928edbbf176fc6f3ad4eb9582d70dd61b585"
     },
     "config/pi/pi-inkling.cmd": {
-      "bytes": 606,
-      "sha256": "18947d103f91206f0da8ee912d0599969efd8bfbda2fa59a7a75b08a76eba8f3"
+      "bytes": 673,
+      "sha256": "f9cff52e06d8ffa5eaaefb2f2a9e000572a879033b38e83fbc87aa9227279666"
     },
     "config/pi/pi-kaggle-strata.cmd": {
       "bytes": 782,

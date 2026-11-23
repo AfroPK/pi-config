@@ -13,7 +13,8 @@
     "npm:pi-ghost-text",
     "npm:@lanlance/pi-btw",
     "npm:@gwynnnplaine/pi-discord-presence",
-    "npm:pi-antigravity-acp-provider"
+    "npm:pi-antigravity-acp-provider",
+    "git:github.com/amosblomqvist/pi-interactive-subagents"
   ],
   "defaultProvider": "openrouter",
   "defaultModel": "deepseek/deepseek-v4.1-flash-1017",
@@ -26,7 +27,7 @@
     "qwen3.6-iq3-local",
     "hipfire/ornith-1.5-9b.mq6",
     "qwen27/swift27-xs-64k",
-    "inkling/inkling2-mini-64k",
+    "inkling/inkling2-mini-113k",
     "claude-cli/claude-fable-5-2",
     "claude-cli/claude-opus-5-5",
     "claude-cli/claude-sonnet-5-5",
