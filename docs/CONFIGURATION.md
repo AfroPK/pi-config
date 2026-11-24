@@ -47,7 +47,7 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 16. `antigravity-acp/gemini-4-hydrogen`
 17. `antigravity-acp/gemini-4-neon`
 
-The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`; its `sessions.json` is not captured) and need a signed-in Antigravity install.
+The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`, set to `permissions: "default"` so any stray Antigravity-native tool call prompts instead of bypassing Pi's guards; its `sessions.json` is not captured) and need a signed-in Antigravity install.
 
 ## Model providers
 
@@ -116,6 +116,7 @@ Source: `config/agent/extensions/`; Pi auto-discovers this directory. Local exte
 
 | Extension | Main behavior | Dependencies/notes |
 |---|---|---|
+| `antigravity-prefer-pi-tools.ts` | Steers `antigravity-acp` models to route tool calls through Pi's `pi-bridge` MCP server (with inline core argument signatures); `/antigravity-pi-tools [on\|off]` | Provider-scoped (`before_agent_start` section, zero tokens on other models); local test in `agent/tests/` |
 | `ask-guard.ts` | Guardrails around question/confirmation flows | Local test in `agent/tests/` |
 | `ask-user-question.ts` | Structured interactive questions | Used by global workflow instructions; TUI-guarded for non-TUI modes |
 | `dictate/` | Voice dictation: `alt+m` start/stop, `alt+n` cancel; `/dictate-check` | Adapted from amosblomqvist/pi-dictate; ffmpeg capture from the Focusrite, transcribed by HomeLab faster-whisper `http://192.168.0.117:8020` (`DICTATE_*` env vars override) |
@@ -173,7 +174,7 @@ The role prompts are appended with `--append-system-prompt`; they do not replace
 
 - `pi-update.cmd` / `pi-update.ps1`: safe update wrapper that backs up settings, models, keybindings, npm manifests, and `loop-police.json`, runs `pi update`, reapplies/verifies local package patches, and runs `verify-pi-compat.mjs`.
 - `pi-models.cmd`: menu/dispatcher for Strata, Qwen3.6, plan/review/exec, fallback planner, loop, and Kaggle.
-- `pi-strata.cmd`, `pi-qwen36.cmd`, `pi-ornith.cmd`, `pi-inkling.cmd`: call `ensure-server.ps1` and start Pi with role-specific local prompts.
+- `pi-strata.cmd`, `pi-qwen36.cmd`, `pi-ornith.cmd`, `pi-inkling.cmd`: call `ensure-server.ps1` and start Pi with role-specific local prompts (`pi-inkling.cmd` defaults to `--thinking minimal`).
 - `pi-kaggle.cmd`, `pi-kaggle-strata.cmd`: use remote Kaggle providers.
 - `ensure-server.ps1`: ensures llama-swap listens on port 8080, requests the required alias, and waits for health.
 - `pi-stop.cmd`: local-model cleanup helper. Review before using on a shared machine.
@@ -195,7 +196,7 @@ These files are captured as active source, including their historical comments. 
 - `llama/start-qwen36-iq3.bat`: 128K Qwen3.6 MoE configuration;
 - `llama/start-swift27-xs-64k.bat`: 48K Swift 27B fallback configuration (legacy 64K alias retained);
 - `hipfire-test/serve-ornith.cmd`: Hipfire server for Ornith 1.5 9B MQ6 (MTP K=2, 72K), started by llama-swap. Hipfire itself, its ROCm path and the model are external;
-- the `inkling2-mini-113k` llama-swap entry needs Unsloth's ROCm gfx103X llama.cpp prebuilt (`rocm-unsloth` macro), which is not captured;
+- the `inkling2-mini-113k` llama-swap entry needs Unsloth's ROCm gfx103X llama.cpp prebuilt (`rocm-unsloth-b12675` macro) plus the `dspark-Inkling-2-Mini-Q8_0.gguf` speculative drafter (`q4_1` KV cache, `-b 512 -ub 32`, `--reasoning-effort minimal`), which are not captured;
 - `pi-local/env`: pi-loop role model, swap ID, tools, thinking, and timeout settings.
 
 The model binaries and engines are external. The included `local-llm-rocm` skill contains the detailed build/download/tuning guide and measured hardware notes.

@@ -157,6 +157,7 @@ async function main() {
   // 6. Unit test suites
   if (!skipSubtests) {
     const suites = [
+      path.join(agentDir, "tests", "antigravity-prefer-pi-tools.test.mjs"),
       path.join(agentDir, "tests", "ask-guard.test.mjs"),
       path.join(agentDir, "tests", "loop-police-provider-exemption.test.mjs"),
       path.join(agentDir, "extensions", "bash-guard", "test", "agent-desktop.test.mjs"),

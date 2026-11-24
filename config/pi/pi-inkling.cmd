@@ -1,9 +1,10 @@
 @echo off
-REM Pi on Inkling 2 Mini (thinkingmachines, Unsloth UD-IQ2_XXS), 113K, text-only, via llama-swap :8080.
-REM ~40 tok/s short / 29.29 tok/s at 102K context, server 9.53 GB dedicated VRAM in the deep test. The model id
-REM uses inkling2-mini-113k. Thinking levels map to reasoning_effort (off=none ... xhigh).
-REM It always reasons a little. Usage: pi-inkling [pi args...]
+REM Pi on Inkling 2 Mini (thinkingmachines, Unsloth UD-IQ2_XXS + DSpark Q8_0), 113K q4_1, via llama-swap :8080.
+REM b12675 measured: 62-75 tok/s short / 46.5 tok/s at 45K, prefill 190 / 167 tok/s, 10.55 GiB ded VRAM flat.
+REM Defaults to --thinking minimal (0.1 effort; avoids the 0.7 "medium" overthinking loop). Override with --thinking <lvl>.
+REM Usage: pi-inkling [pi args...]
 setlocal
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0ensure-server.ps1" -Alias inkling2-mini-113k
 if errorlevel 1 exit /b 1
-"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js" --model inkling/inkling2-mini-113k %*
+"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js" --model inkling/inkling2-mini-113k --thinking minimal %*
+

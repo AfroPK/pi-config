@@ -340,7 +340,7 @@
       "models": [
         {
           "id": "inkling2-mini-113k",
-          "name": "Inkling 2 Mini IQ2_XXS, 113K (local, ~40 tok/s)",
+          "name": "Inkling 2 Mini IQ2_XXS + DSpark, 113K q4_1 (local b12675, ~64 tok/s; med->low 0.2)",
           "reasoning": true,
           "input": [
             "text"
@@ -357,9 +357,9 @@
             "off": "none",
             "minimal": "minimal",
             "low": "low",
-            "medium": "medium",
-            "high": "high",
-            "xhigh": "xhigh"
+            "medium": "low",
+            "high": "medium",
+            "xhigh": "high"
           }
         }
       ]

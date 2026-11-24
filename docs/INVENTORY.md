@@ -9,25 +9,25 @@ See `manifest.json` for the machine-readable source of truth. It records:
 - required provider/MCP environment references;
 - every captured file's size and SHA-256 hash.
 
-The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Python 3.12.10, and Git 2.56.0.windows.4. It contains 235 files (approximately 4.7 MB before repository documentation).
+The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Python 3.12.10, and Git 2.56.0.windows.4. It contains 237 files (approximately 4.7 MB before repository documentation).
 
 ## Included files
 
 | Area | Files | Notes |
 |---|---:|---|
-| Agent directory, total | 183 | Includes the categories below |
+| Agent directory, total | 185 | Includes the categories below |
 | Agent top-level & subagents | 12 | 9 top-level files (`AGENTS`, `settings`, `models`, `mcp`, `mcp-adapter`, `keybindings`, `prompt-suggestions`, `trust`, `antigravity-acp-provider/config.json`) + 3 `agents/*.md` |
-| Local extensions | 36 | Source (`13` entry points), READMEs, manifests/lockfiles, snippets, shim, `skillful-install.json`, `bash-guard` tests; no logs/profiles/`.lock` |
+| Local extensions | 37 | Source (`14` entry points), READMEs, manifests/lockfiles, snippets, shim, `skillful-install.json`, `bash-guard` tests; no logs/profiles/`.lock` |
 | Skills | 119 | 33 skill directories and supporting source/assets; no venv/bytecode |
 | Package npm directory | 3 | `.gitignore`, package manifest, package lock |
 | Patches | 10 | README, `patches-manifest.json`, `manage-patches.mjs`, 5 `.patch` diffs, `pi-loop-police.config.json`, `render.patched.ts` |
-| Agent tests | 3 | `ask-guard.test.mjs`, `loop-police-provider-exemption.test.mjs`, `verify-pi-compat.mjs` |
+| Agent tests | 4 | `antigravity-prefer-pi-tools.test.mjs`, `ask-guard.test.mjs`, `loop-police-provider-exemption.test.mjs`, `verify-pi-compat.mjs` |
 | `.pi` root | 41 | Active launchers (`pi-update.*` included), role prompts, notes, PowerShell helpers |
 | Machine integrations | 9 | llama-swap, Strata, standalone model launchers, Hipfire Ornith launcher, pi-loop env |
 | Shell | 1 | Extracted Pi alias/PATH block |
 | Global package inventory | 1 | Exact global npm package versions |
 
-`config/agent` counts include its immediate files and all listed subdirectories; categories are not additional to the 183-file total (`12 + 36 + 119 + 3 + 10 + 3 = 183`).
+`config/agent` counts include its immediate files and all listed subdirectories; categories are not additional to the 185-file total (`12 + 37 + 119 + 3 + 10 + 4 = 185`).
 
 ## Deliberately excluded: credentials and private state
 
