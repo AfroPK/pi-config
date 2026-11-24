@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-24T23:10:28.300473+00:00",
+  "capturedAt": "2026-11-24T23:22:51.643165+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -34,12 +34,12 @@
       "sha256": "612719d6d0b453e0f5d5cd35776e1bca90f03f5e2ac8780e3501e63bb86c5826"
     },
     "config/agent/antigravity-acp-provider/config.json": {
-      "bytes": 93,
-      "sha256": "54bf2e8411c99b1e8bc528a31a5df5856e77173e75fcde9ee524581d96c9dfd2"
+      "bytes": 90,
+      "sha256": "955fd27edd6f518134e21132fa9112e515f7f83719d4b0d319ef4d4b171da22d"
     },
     "config/agent/extensions/antigravity-prefer-pi-tools.ts": {
-      "bytes": 5076,
-      "sha256": "f3f488d20020a362f299cad120593941c8b90d3ce668c57b548572b0b00fdf20"
+      "bytes": 5827,
+      "sha256": "24f007ede83344724e4af63e85e6eccaef7aef4e6d764ecc34af2a5ef093b995"
     },
     "config/agent/extensions/ask-guard.ts": {
       "bytes": 6461,
@@ -738,8 +738,8 @@
       "sha256": "1ee13def9252fe8bd50dd3d4300f0e03ec8b53e4d7428816e737d9cc5040cc0d"
     },
     "config/agent/tests/antigravity-prefer-pi-tools.test.mjs": {
-      "bytes": 5942,
-      "sha256": "d91df6d5dab5a29d239e3d093f135b95e88019c81a65bc25c9596f7411d84e81"
+      "bytes": 7623,
+      "sha256": "1fe6d5a220d82705f35436d8e17f49008cb8a1b0036b39f5bbcc5b3b47a47247"
     },
     "config/agent/tests/ask-guard.test.mjs": {
       "bytes": 7045,
@@ -774,8 +774,8 @@
       "sha256": "406ce167f891e43dcaa9b22e10b3f0afbb6edd7e996a76adbb677aab07717a4c"
     },
     "config/machine/llama-swap/config.yaml": {
-      "bytes": 4848,
-      "sha256": "7ad6c522b5c15e62dce55de9f0756eb3d67c345183c7ccc603ab207252481814"
+      "bytes": 5073,
+      "sha256": "17a0d1c369ccbd4b3aca769c7541261d7a99159de5a80343b10fa1fc880aa1dd"
     },
     "config/machine/llama-swap/kill-tree.ps1": {
       "bytes": 553,

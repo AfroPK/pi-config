@@ -50,13 +50,15 @@ models:
   # Why q4_1 + -ub 32: on RDNA2 (no WMMA/MMA), b12675 fattn-banded.cu caps in-place q4_0 at ub=8 (ub>8 copies K/V to F16
   # in the HIP pool and grows VRAM), whereas q4_1 raises vec_max_q_conv to 32 (in-place, zero growth, higher KV precision).
   # Low-VRAM fallback (9.97 GiB flat, ~600 MiB more desktop headroom): swap -ctk/-ctv to q4_0 and -ub to 8 (43.3 t/s @ 45K).
+  # DSpark n_max=2 (Unsloth default): 128-expert MoE batch verify scales ~1.60x at batch=3 vs ~1.86x at batch=4,
+  # so n_max=2 beats n_max=3 on real coding (58.9 vs 47.7 t/s fixed-seed) while keeping deep-context speedup.
   # Defaults to --reasoning-effort minimal (0.1) to avoid the 0.7/0.9 overthinking cliff. Backup: *.bak-20261124-inklingopt
   # Sweep: E:\models\thinkingmachines\Inkling-2-Mini-GGUF\README.md
   "inkling2-mini-113k":
     cmd: >-
       ${rocm-unsloth-b12675} --model E:\models\thinkingmachines\Inkling-2-Mini-GGUF\Inkling-2-Mini-UD-IQ2_XXS.gguf
       --model-draft E:\models\thinkingmachines\Inkling-2-Mini-GGUF\dspark-Inkling-2-Mini-Q8_0.gguf
-      --spec-type draft-dspark --spec-draft-n-max 3 --spec-draft-n-ubatch 16
+      --spec-type draft-dspark --spec-draft-n-max 2 --spec-draft-n-ubatch 16
       --cache-type-k-draft q4_0 --cache-type-v-draft q4_0
       --gpu-layers 99 --fit off --ctx-size 115712 --cache-type-k q4_1 --cache-type-v q4_1 --flash-attn on
       -b 512 -ub 32 --parallel 1 --threads 6 --jinja --reasoning-effort minimal

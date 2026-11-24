@@ -8,8 +8,11 @@
 // Pi's guards (bash-guard, ask-guard, loop-police), Git Bash shell, and TUI history.
 //
 // Scope: injects `event.systemPromptOptions.sections.antigravity_pi_tools` ONLY
-// when the active provider is `antigravity-acp`, adding zero tokens to other models.
+// when the active provider is `antigravity-acp` AND `AGY_ACP_BIN` is not pointing
+// to native `agy` / `agy.exe` (native `agy acp` does not advertise HTTP MCP, so
+// `pi-bridge` is not attached). Adds zero tokens to all other models.
 
+import path from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 const TARGET_PROVIDER = "antigravity-acp";
@@ -59,6 +62,13 @@ const KNOWN_MAPPINGS: readonly ToolMapping[] = [
 	{ piTool: "mcp" },
 ];
 
+export function isNativeAntigravityBin(envValue: string | undefined): boolean {
+	const trimmed = envValue?.trim();
+	if (!trimmed) return false;
+	const base = path.basename(trimmed.replace(/\\/g, "/")).toLowerCase();
+	return base === "agy" || base === "agy.exe";
+}
+
 export function toBridgeToolName(piToolName: string): string {
 	return `pi_${piToolName}`.replace(/[^a-zA-Z0-9_-]/gu, "_").slice(0, 64);
 }
@@ -100,7 +110,7 @@ export default function antigravityPreferPiTools(pi: ExtensionAPI) {
 		const sections = event.systemPromptOptions?.sections;
 		if (!sections) return;
 
-		if (!enabled || ctx.model?.provider !== TARGET_PROVIDER) {
+		if (!enabled || ctx.model?.provider !== TARGET_PROVIDER || isNativeAntigravityBin(process.env.AGY_ACP_BIN)) {
 			delete sections[SECTION_KEY];
 			return;
 		}
@@ -118,13 +128,18 @@ export default function antigravityPreferPiTools(pi: ExtensionAPI) {
 				enabled = true;
 			}
 			const activeProvider = ctx.model?.provider ?? "unknown";
-			const activeNote =
-				activeProvider === TARGET_PROVIDER
-					? "active on current antigravity-acp model"
-					: `idle (current provider: ${activeProvider})`;
+			const nativeAgy = isNativeAntigravityBin(process.env.AGY_ACP_BIN);
+			let activeNote: string;
+			if (activeProvider !== TARGET_PROVIDER) {
+				activeNote = `idle (current provider: ${activeProvider})`;
+			} else if (nativeAgy) {
+				activeNote = "auto-skipped (AGY_ACP_BIN uses native agy, which does not attach pi-bridge)";
+			} else {
+				activeNote = "active on current antigravity-acp model";
+			}
 			ctx.ui.notify(
 				`antigravity-pi-tools ${enabled ? "ON" : "OFF"} (${activeNote}). Usage: /antigravity-pi-tools [on|off]`,
-				enabled ? "info" : "warning",
+				enabled && !nativeAgy ? "info" : "warning",
 			);
 		},
 	});

@@ -31,8 +31,16 @@ const AGENT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
 const EXT_PATH = path.join(AGENT_DIR, "extensions", "antigravity-prefer-pi-tools.ts");
 const mod = await jiti.import(EXT_PATH);
 
-const { buildAntigravityPiToolsSection, toBridgeToolName } = mod;
+const { buildAntigravityPiToolsSection, isNativeAntigravityBin, toBridgeToolName } = mod;
 const registerExtension = mod.default;
+
+// 0. Native agy detection
+assert.equal(isNativeAntigravityBin(undefined), false);
+assert.equal(isNativeAntigravityBin(""), false);
+assert.equal(isNativeAntigravityBin("__PI_HOME__\\.local\\opt\\agy-acp\\current\\agy_acp_server.exe"), false);
+assert.equal(isNativeAntigravityBin("__PI_HOME__\\AppData\\Local\\agy\\bin\\agy.exe"), true);
+assert.equal(isNativeAntigravityBin("/usr/local/bin/agy"), true);
+assert.equal(isNativeAntigravityBin("AGY.EXE"), true);
 
 // 1. Bridge naming matches pi-antigravity-acp-provider's src/mcp/bridge.ts rule
 assert.equal(toBridgeToolName("read"), "pi_read");
@@ -73,51 +81,78 @@ assert.equal(typeof toggleCmd?.handler, "function");
 assert.doesNotThrow(() => beforeStart({}, { model: { provider: "antigravity-acp" } }));
 assert.doesNotThrow(() => beforeStart({ systemPromptOptions: {} }, { model: { provider: "antigravity-acp" } }));
 
-// Active on antigravity-acp
-const agyEvent = { systemPromptOptions: { sections: {}, selectedTools: ["read", "bash"] } };
-beforeStart(agyEvent, { model: { provider: "antigravity-acp" } });
-assert.ok(agyEvent.systemPromptOptions.sections.antigravity_pi_tools);
-assert.match(agyEvent.systemPromptOptions.sections.antigravity_pi_tools, /`pi_bash`/);
+const prevAgyBin = process.env.AGY_ACP_BIN;
+try {
+  delete process.env.AGY_ACP_BIN;
 
-// Deleted (zero tokens) on non-antigravity providers or missing model
-for (const provider of ["openrouter", "claude-cli", "llama-swap", undefined]) {
-  const otherEvent = {
-    systemPromptOptions: {
-      sections: { antigravity_pi_tools: "stale", keep_me: "ok" },
-      selectedTools: ["read", "bash"],
-    },
+  // Active on antigravity-acp when using managed agy_acp_server
+  const agyEvent = { systemPromptOptions: { sections: {}, selectedTools: ["read", "bash"] } };
+  beforeStart(agyEvent, { model: { provider: "antigravity-acp" } });
+  assert.ok(agyEvent.systemPromptOptions.sections.antigravity_pi_tools);
+  assert.match(agyEvent.systemPromptOptions.sections.antigravity_pi_tools, /`pi_bash`/);
+
+  // Auto-skipped when AGY_ACP_BIN points to native agy.exe (no HTTP pi-bridge)
+  process.env.AGY_ACP_BIN = "__PI_HOME__\\AppData\\Local\\agy\\bin\\agy.exe";
+  const nativeAgyEvent = {
+    systemPromptOptions: { sections: { antigravity_pi_tools: "stale", keep_me: "ok" }, selectedTools: ["read", "bash"] },
   };
-  beforeStart(otherEvent, provider ? { model: { provider } } : {});
-  assert.equal("antigravity_pi_tools" in otherEvent.systemPromptOptions.sections, false);
-  assert.equal(otherEvent.systemPromptOptions.sections.keep_me, "ok");
+  beforeStart(nativeAgyEvent, { model: { provider: "antigravity-acp" } });
+  assert.equal("antigravity_pi_tools" in nativeAgyEvent.systemPromptOptions.sections, false);
+  assert.equal(nativeAgyEvent.systemPromptOptions.sections.keep_me, "ok");
+
+  const nativeNotes = [];
+  await toggleCmd.handler("", {
+    model: { provider: "antigravity-acp" },
+    ui: { notify: (msg, level) => nativeNotes.push({ msg, level }) },
+  });
+  assert.match(nativeNotes.at(-1).msg, /auto-skipped/);
+  assert.equal(nativeNotes.at(-1).level, "warning");
+
+  delete process.env.AGY_ACP_BIN;
+
+  // Deleted (zero tokens) on non-antigravity providers or missing model
+  for (const provider of ["openrouter", "claude-cli", "llama-swap", undefined]) {
+    const otherEvent = {
+      systemPromptOptions: {
+        sections: { antigravity_pi_tools: "stale", keep_me: "ok" },
+        selectedTools: ["read", "bash"],
+      },
+    };
+    beforeStart(otherEvent, provider ? { model: { provider } } : {});
+    assert.equal("antigravity_pi_tools" in otherEvent.systemPromptOptions.sections, false);
+    assert.equal(otherEvent.systemPromptOptions.sections.keep_me, "ok");
+  }
+
+  // Command toggle off / status / on
+  const notes = [];
+  const makeCtx = (provider) => ({
+    model: provider ? { provider } : undefined,
+    ui: { notify: (msg, level) => notes.push({ msg, level }) },
+  });
+
+  await toggleCmd.handler("off", makeCtx("antigravity-acp"));
+  assert.match(notes.at(-1).msg, /OFF/);
+  assert.equal(notes.at(-1).level, "warning");
+
+  const offEvent = {
+    systemPromptOptions: { sections: { antigravity_pi_tools: "stale" }, selectedTools: ["read", "bash"] },
+  };
+  beforeStart(offEvent, { model: { provider: "antigravity-acp" } });
+  assert.equal("antigravity_pi_tools" in offEvent.systemPromptOptions.sections, false);
+
+  await toggleCmd.handler("", makeCtx("openrouter"));
+  assert.match(notes.at(-1).msg, /OFF.*idle \(current provider: openrouter\)/);
+
+  await toggleCmd.handler("on", makeCtx("antigravity-acp"));
+  assert.match(notes.at(-1).msg, /ON.*active on current antigravity-acp model/);
+  assert.equal(notes.at(-1).level, "info");
+
+  beforeStart(offEvent, { model: { provider: "antigravity-acp" } });
+  assert.ok(offEvent.systemPromptOptions.sections.antigravity_pi_tools);
+} finally {
+  if (prevAgyBin === undefined) delete process.env.AGY_ACP_BIN;
+  else process.env.AGY_ACP_BIN = prevAgyBin;
 }
-
-// Command toggle off / status / on
-const notes = [];
-const makeCtx = (provider) => ({
-  model: provider ? { provider } : undefined,
-  ui: { notify: (msg, level) => notes.push({ msg, level }) },
-});
-
-await toggleCmd.handler("off", makeCtx("antigravity-acp"));
-assert.match(notes.at(-1).msg, /OFF/);
-assert.equal(notes.at(-1).level, "warning");
-
-const offEvent = {
-  systemPromptOptions: { sections: { antigravity_pi_tools: "stale" }, selectedTools: ["read", "bash"] },
-};
-beforeStart(offEvent, { model: { provider: "antigravity-acp" } });
-assert.equal("antigravity_pi_tools" in offEvent.systemPromptOptions.sections, false);
-
-await toggleCmd.handler("", makeCtx("openrouter"));
-assert.match(notes.at(-1).msg, /OFF.*idle \(current provider: openrouter\)/);
-
-await toggleCmd.handler("on", makeCtx("antigravity-acp"));
-assert.match(notes.at(-1).msg, /ON.*active on current antigravity-acp model/);
-assert.equal(notes.at(-1).level, "info");
-
-beforeStart(offEvent, { model: { provider: "antigravity-acp" } });
-assert.ok(offEvent.systemPromptOptions.sections.antigravity_pi_tools);
 
 // 4. antigravity-acp-provider/config.json permissions validity (when present)
 const agyConfigPath = path.join(AGENT_DIR, "antigravity-acp-provider", "config.json");

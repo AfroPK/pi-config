@@ -47,7 +47,7 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 16. `antigravity-acp/gemini-4-hydrogen`
 17. `antigravity-acp/gemini-4-neon`
 
-The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`, set to `permissions: "default"` so any stray Antigravity-native tool call prompts instead of bypassing Pi's guards; its `sessions.json` is not captured) and need a signed-in Antigravity install.
+The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`, set to `permissions: "yolo"` for native `agy.exe` via User env var `AGY_ACP_BIN` so model thoughts stream as Pi thinking blocks; its `sessions.json` is not captured) and need a signed-in Antigravity install.
 
 ## Model providers
 
@@ -116,7 +116,7 @@ Source: `config/agent/extensions/`; Pi auto-discovers this directory. Local exte
 
 | Extension | Main behavior | Dependencies/notes |
 |---|---|---|
-| `antigravity-prefer-pi-tools.ts` | Steers `antigravity-acp` models to route tool calls through Pi's `pi-bridge` MCP server (with inline core argument signatures); `/antigravity-pi-tools [on\|off]` | Provider-scoped (`before_agent_start` section, zero tokens on other models); local test in `agent/tests/` |
+| `antigravity-prefer-pi-tools.ts` | Steers `antigravity-acp` models to route tool calls through Pi's `pi-bridge` MCP server (with inline core argument signatures); `/antigravity-pi-tools [on\|off]` | Provider-scoped (zero tokens on other models); auto-skips when `AGY_ACP_BIN` uses native `agy` (no HTTP `pi-bridge`); local test in `agent/tests/` |
 | `ask-guard.ts` | Guardrails around question/confirmation flows | Local test in `agent/tests/` |
 | `ask-user-question.ts` | Structured interactive questions | Used by global workflow instructions; TUI-guarded for non-TUI modes |
 | `dictate/` | Voice dictation: `alt+m` start/stop, `alt+n` cancel; `/dictate-check` | Adapted from amosblomqvist/pi-dictate; ffmpeg capture from the Focusrite, transcribed by HomeLab faster-whisper `http://192.168.0.117:8020` (`DICTATE_*` env vars override) |
