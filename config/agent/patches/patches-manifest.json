@@ -10,8 +10,14 @@
           "file": "pi-ghost-text-fake-cursor.patch",
           "description": "Skip pi-tui >= 1.6 FAKE_CURSOR APC markers and return copied lines array",
           "markers": [
-            { "file": "src/render.ts", "contains": "FAKE_CURSOR_START" },
-            { "file": "src/render.ts", "contains": "return [...lines]" }
+            {
+              "file": "src/render.ts",
+              "contains": "FAKE_CURSOR_START"
+            },
+            {
+              "file": "src/render.ts",
+              "contains": "return [...lines]"
+            }
           ],
           "hashes": {
             "src/render.ts": "7de2e5c324e3081e50f8fe2ee9dc810c8d956ee60bde1ae3fff9a7aecc97266c"
@@ -21,9 +27,18 @@
           "file": "pi-ghost-text-after-turn.patch",
           "description": "Enable after-turn ghost suggestions on empty baseText without flashing NONE sentinel",
           "markers": [
-            { "file": "src/client.ts", "contains": "Coding sessions almost always have an obvious next step" },
-            { "file": "src/editor.ts", "contains": "isNoneSentinelPrefix" },
-            { "file": "src/normalize.ts", "contains": "export function isNoneSentinelPrefix" }
+            {
+              "file": "src/client.ts",
+              "contains": "Coding sessions almost always have an obvious next step"
+            },
+            {
+              "file": "src/editor.ts",
+              "contains": "isNoneSentinelPrefix"
+            },
+            {
+              "file": "src/normalize.ts",
+              "contains": "export function isNoneSentinelPrefix"
+            }
           ],
           "hashes": {
             "src/client.ts": "b5af7eacce74902abf9b0caea081384c2feaf1480db5163dd07f545fe2f3fae2",
@@ -42,8 +57,14 @@
           "file": "pi-loop-police-local.patch",
           "description": "Defer recovery to agent_settled and add EXEMPT_PROVIDERS bypass",
           "markers": [
-            { "file": "extensions/loop-police.ts", "contains": "pendingRecovery" },
-            { "file": "extensions/loop-police.ts", "contains": "function isExemptProvider" }
+            {
+              "file": "extensions/loop-police.ts",
+              "contains": "pendingRecovery"
+            },
+            {
+              "file": "extensions/loop-police.ts",
+              "contains": "function isExemptProvider"
+            }
           ],
           "hashes": {
             "extensions/loop-police.ts": "cc8391f2118c3fbd2e43515190f0d3fc7d049da9d4d407840c34a6a8c7a10a76",
@@ -69,14 +90,24 @@
       "patches": [
         {
           "file": "pi-antigravity-acp-provider-native-agy.patch",
-          "description": "Support native agy 1.5+ CLI (agy acp --dangerously-skip-permissions for yolo mode)",
+          "description": "Support native agy 1.5+ CLI (agy acp --dangerously-skip-permissions for yolo mode, HTTP pi-bridge MCP support)",
           "markers": [
-            { "file": "src/acp/antigravity.ts", "contains": "isNativeAntigravityCli" },
-            { "file": "src/runtime.ts", "contains": "wirePermissionMode" }
+            {
+              "file": "src/acp/antigravity.ts",
+              "contains": "isNativeAntigravityCli"
+            },
+            {
+              "file": "src/runtime.ts",
+              "contains": "wirePermissionMode"
+            },
+            {
+              "file": "src/runtime.ts",
+              "contains": "supportsMcpHttp"
+            }
           ],
           "hashes": {
             "src/acp/antigravity.ts": "8f01616f2031026bc35f7e35409c3308a8b1602fbb5e8bf434f80d7d5f4d8519",
-            "src/runtime.ts": "3bba8e4154229191be6eaf7af4fa9326c6f89f8e79914654789f1010dc921016",
+            "src/runtime.ts": "620846d086048fd1af2cc913c2f93e3f7c9a8a711d620966e90b51da8771da40",
             "README.md": "816d6ac11e5219366b6bf749d5a1e14ffb7d40477740d549dfe01ecb104f784f"
           }
         }
@@ -91,7 +122,10 @@
           "file": "pi-btw-model-runtime.patch",
           "description": "Share parent modelRuntime with /btw side session so extension-registered providers resolve",
           "markers": [
-            { "file": "extensions/btw.ts", "contains": "modelRuntime: (ctx.modelRegistry as any).runtime" }
+            {
+              "file": "extensions/btw.ts",
+              "contains": "modelRuntime: (ctx.modelRegistry as any).runtime"
+            }
           ],
           "hashes": {
             "extensions/btw.ts": "5bd5325b8d8408b28f060f634fa61d1d34dd106e1a0a8a23fce78df9ae4efbb7"

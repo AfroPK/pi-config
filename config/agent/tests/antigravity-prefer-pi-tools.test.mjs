@@ -49,15 +49,31 @@ assert.equal(toBridgeToolName("ssh-bash"), "pi_ssh-bash");
 assert.equal(toBridgeToolName("foo.bar/baz"), "pi_foo_bar_baz");
 assert.equal(toBridgeToolName("a".repeat(80)).length, 64);
 
-// 2. Section builder filters to selectedTools, inlines core signatures, and is deterministic
-const subset = buildAntigravityPiToolsSection(["read", "bash", "edit", "write", "ask_user_question"]);
-assert.equal(subset, buildAntigravityPiToolsSection(["read", "bash", "edit", "write", "ask_user_question"]));
-assert.match(subset, /`pi_read` instead of native `view_file`/);
-assert.match(subset, /`pi_bash` instead of native `run_command`/);
-assert.match(subset, /`pi_edit` instead of native `replace_file_content`/);
-assert.match(subset, /`pi_write` instead of native `write_to_file`/);
-assert.match(subset, /`pi_ask_user_question` instead of native `ask_question`/);
-assert.doesNotMatch(subset, /`pi_subagent`/);
+// 2. Section builder: managed agy_acp_server (call_mcp_tool) mode
+const subsetServer = buildAntigravityPiToolsSection(["read", "bash", "edit", "write", "ask_user_question"]);
+assert.equal(subsetServer, buildAntigravityPiToolsSection(["read", "bash", "edit", "write", "ask_user_question"]));
+assert.match(subsetServer, /`pi_read` instead of native `view_file`/);
+assert.match(subsetServer, /`pi_bash` instead of native `run_command`/);
+assert.match(subsetServer, /`pi_edit` instead of native `replace_file_content`/);
+assert.match(subsetServer, /`pi_write` instead of native `write_to_file`/);
+assert.match(subsetServer, /`pi_ask_user_question` instead of native `ask_question`/);
+assert.doesNotMatch(subsetServer, /`pi_subagent`/);
+
+// 2b. Section builder: native agy.exe (direct mcp_pi-bridge_pi_*) mode
+const subsetNative = buildAntigravityPiToolsSection(["read", "bash", "edit", "write", "ask_user_question"], {
+  nativeAgy: true,
+});
+assert.equal(
+  subsetNative,
+  buildAntigravityPiToolsSection(["read", "bash", "edit", "write", "ask_user_question"], { nativeAgy: true }),
+);
+assert.match(subsetNative, /`mcp_pi-bridge_pi_read` instead of native `read_file`/);
+assert.match(subsetNative, /`mcp_pi-bridge_pi_bash` instead of native `run_command`/);
+assert.match(subsetNative, /`mcp_pi-bridge_pi_edit` instead of native `edit_file`/);
+assert.match(subsetNative, /`mcp_pi-bridge_pi_write` instead of native `write_file`/);
+assert.match(subsetNative, /`mcp_pi-bridge_pi_ask_user_question` instead of native `ask_question`/);
+assert.doesNotMatch(subsetNative, /call_mcp_tool/);
+assert.doesNotMatch(subsetNative, /mcp_pi-bridge_pi_subagent/);
 
 const allTools = buildAntigravityPiToolsSection(undefined);
 assert.match(allTools, /`pi_subagent` instead of native `invoke_subagent`/);
@@ -85,28 +101,28 @@ const prevAgyBin = process.env.AGY_ACP_BIN;
 try {
   delete process.env.AGY_ACP_BIN;
 
-  // Active on antigravity-acp when using managed agy_acp_server
+  // Managed agy_acp_server mode
   const agyEvent = { systemPromptOptions: { sections: {}, selectedTools: ["read", "bash"] } };
   beforeStart(agyEvent, { model: { provider: "antigravity-acp" } });
   assert.ok(agyEvent.systemPromptOptions.sections.antigravity_pi_tools);
   assert.match(agyEvent.systemPromptOptions.sections.antigravity_pi_tools, /`pi_bash`/);
+  assert.match(agyEvent.systemPromptOptions.sections.antigravity_pi_tools, /call_mcp_tool/);
 
-  // Auto-skipped when AGY_ACP_BIN points to native agy.exe (no HTTP pi-bridge)
+  // Native agy.exe mode -> injects direct mcp_pi-bridge_pi_* instructions
   process.env.AGY_ACP_BIN = "__PI_HOME__\\AppData\\Local\\agy\\bin\\agy.exe";
-  const nativeAgyEvent = {
-    systemPromptOptions: { sections: { antigravity_pi_tools: "stale", keep_me: "ok" }, selectedTools: ["read", "bash"] },
-  };
+  const nativeAgyEvent = { systemPromptOptions: { sections: {}, selectedTools: ["read", "bash"] } };
   beforeStart(nativeAgyEvent, { model: { provider: "antigravity-acp" } });
-  assert.equal("antigravity_pi_tools" in nativeAgyEvent.systemPromptOptions.sections, false);
-  assert.equal(nativeAgyEvent.systemPromptOptions.sections.keep_me, "ok");
+  assert.ok(nativeAgyEvent.systemPromptOptions.sections.antigravity_pi_tools);
+  assert.match(nativeAgyEvent.systemPromptOptions.sections.antigravity_pi_tools, /`mcp_pi-bridge_pi_bash`/);
+  assert.doesNotMatch(nativeAgyEvent.systemPromptOptions.sections.antigravity_pi_tools, /call_mcp_tool/);
 
   const nativeNotes = [];
   await toggleCmd.handler("", {
     model: { provider: "antigravity-acp" },
     ui: { notify: (msg, level) => nativeNotes.push({ msg, level }) },
   });
-  assert.match(nativeNotes.at(-1).msg, /auto-skipped/);
-  assert.equal(nativeNotes.at(-1).level, "warning");
+  assert.match(nativeNotes.at(-1).msg, /native agy direct mcp_pi-bridge_pi_\* mode/);
+  assert.equal(nativeNotes.at(-1).level, "info");
 
   delete process.env.AGY_ACP_BIN;
 
@@ -144,7 +160,7 @@ try {
   assert.match(notes.at(-1).msg, /OFF.*idle \(current provider: openrouter\)/);
 
   await toggleCmd.handler("on", makeCtx("antigravity-acp"));
-  assert.match(notes.at(-1).msg, /ON.*active on current antigravity-acp model/);
+  assert.match(notes.at(-1).msg, /ON.*agy_acp_server call_mcp_tool mode/);
   assert.equal(notes.at(-1).level, "info");
 
   beforeStart(offEvent, { model: { provider: "antigravity-acp" } });

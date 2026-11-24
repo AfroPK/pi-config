@@ -47,7 +47,7 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 16. `antigravity-acp/gemini-4-hydrogen`
 17. `antigravity-acp/gemini-4-neon`
 
-The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`, set to `permissions: "yolo"` because `agy_acp_server` otherwise gates `pi-bridge` MCP calls behind confirmation prompts; its `sessions.json` is not captured) and need a signed-in Antigravity install. Leaving `AGY_ACP_BIN` unset keeps the managed `agy_acp_server` runtime with `pi-bridge` so `antigravity-acp` models use Pi's tools (`antigravity-prefer-pi-tools.ts`).
+The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`, set to `permissions: "yolo"` so `pi-bridge` MCP calls run without Antigravity confirmation prompts while Pi's own guards handle safety; its `sessions.json` is not captured) and need a signed-in Antigravity install. Setting Windows User env var `AGY_ACP_BIN` to `agy.exe` (1.5+) enables both streamed model thinking blocks (`agent_thought_chunk`) and direct `pi-bridge` Pi tools (`mcp_pi-bridge_pi_*`) via the local `pi-antigravity-acp-provider-native-agy.patch` and `antigravity-prefer-pi-tools.ts`.
 
 ## Model providers
 
@@ -116,7 +116,7 @@ Source: `config/agent/extensions/`; Pi auto-discovers this directory. Local exte
 
 | Extension | Main behavior | Dependencies/notes |
 |---|---|---|
-| `antigravity-prefer-pi-tools.ts` | Steers `antigravity-acp` models to route tool calls through Pi's `pi-bridge` MCP server (with inline core argument signatures); `/antigravity-pi-tools [on\|off]` | Provider-scoped (zero tokens on other models); auto-skips when `AGY_ACP_BIN` uses native `agy` (no HTTP `pi-bridge`); local test in `agent/tests/` |
+| `antigravity-prefer-pi-tools.ts` | Steers `antigravity-acp` models to route tool calls through Pi's `pi-bridge` MCP server (`mcp_pi-bridge_pi_*` under native `agy.exe`, `call_mcp_tool` under `agy_acp_server`); `/antigravity-pi-tools [on\|off]` | Provider-scoped (zero tokens on other models); local test in `agent/tests/` |
 | `ask-guard.ts` | Guardrails around question/confirmation flows | Local test in `agent/tests/` |
 | `ask-user-question.ts` | Structured interactive questions | Used by global workflow instructions; TUI-guarded for non-TUI modes |
 | `dictate/` | Voice dictation: `alt+m` start/stop, `alt+n` cancel; `/dictate-check` | Adapted from amosblomqvist/pi-dictate; ffmpeg capture from the Focusrite, transcribed by HomeLab faster-whisper `http://192.168.0.117:8020` (`DICTATE_*` env vars override) |
@@ -207,7 +207,7 @@ Four npm packages carry local patches inside `agent/npm/node_modules/`. Rather t
 
 - `pi-ghost-text@0.1.2`: `pi-ghost-text-fake-cursor.patch` (skips Pi >= 1.6 `FAKE_CURSOR` APC markers without mutating line arrays) and `pi-ghost-text-after-turn.patch` (after-turn suggestions on empty input without flashing `NONE`); `render.patched.ts` is kept for reference.
 - `pi-loop-police@1.14.1`: `pi-loop-police-local.patch` (defers recovery until `agent_settled` and adds `EXEMPT_PROVIDERS` bypass) plus `pi-loop-police.config.json` (restores `extensions/loop-police.json` with `EXEMPT_PROVIDERS: "antigravity-acp"` and sanitized `HOOK_LOG`).
-- `pi-antigravity-acp-provider@0.1.22`: `pi-antigravity-acp-provider-native-agy.patch` (supports native `agy 1.5+` CLI `acp --dangerously-skip-permissions`).
+- `pi-antigravity-acp-provider@0.1.22`: `pi-antigravity-acp-provider-native-agy.patch` (supports native `agy 1.5+` CLI `acp --dangerously-skip-permissions` and enables HTTP `pi-bridge` MCP tools alongside streamed thinking blocks).
 - `@lanlance/pi-btw@0.2.0`: `pi-btw-model-runtime.patch` (passes parent `modelRuntime` to `/btw` side sessions so extension-registered providers resolve).
 
 `patches-manifest.json` records patch descriptors, required code markers, and normalized SHA-256 hashes; `manage-patches.mjs` (`status` / `check` / `apply`) uses `git apply --ignore-whitespace --check` and refuses blind overwrites if upstream code conflicts. At runtime, `extensions/patch-guard.ts` verifies markers on `session_start` and provides `/patch-status` and `/patch-apply`.

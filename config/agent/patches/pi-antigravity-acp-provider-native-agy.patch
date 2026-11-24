@@ -1,6 +1,8 @@
+diff --git a/README.md b/README.md
+index 2712685..5d8378b 100644
 --- a/README.md
 +++ b/README.md
-@@ -49,7 +49,7 @@
+@@ -49,7 +49,7 @@ In Pi:
  9. Press **Shift+Tab** to choose the reasoning effort. Only tiers advertised by Antigravity are exposed. A model with a single tier (for example Argon Medium during rollout) remains a reasoning model with that tier; the provider does not invent Low/High variants.
  10. Send a prompt. The default permission mode is `yolo`, so Antigravity-native commands and edits can run without confirmation.
  
@@ -9,9 +11,11 @@
  
  Loopback MCP traffic is exempted from proxies in the ACP child environment. Explicit `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` (and lowercase variants) are preserved. On macOS, when none are explicitly set, the provider probes enabled system HTTP proxy settings to avoid automatic SOCKS selection unsupported by the bundled Python runtime. Set `PI_ANTIGRAVITY_ACP_PROXY` to an absolute HTTP/HTTPS proxy URL to explicitly override child proxy settings; the provider does not log the override or change its parent environment. Existing `NO_PROXY` lists and TLS certificate overrides are retained.
  
+diff --git a/src/acp/antigravity.ts b/src/acp/antigravity.ts
+index feeb478..d6a9d81 100644
 --- a/src/acp/antigravity.ts
 +++ b/src/acp/antigravity.ts
-@@ -2,6 +2,7 @@
+@@ -2,6 +2,7 @@ import fs from "node:fs";
  import os from "node:os";
  import path from "node:path";
  
@@ -19,7 +23,7 @@
  import { AntigravityAcpError } from "./errors.js";
  
  export interface AntigravityLaunch {
-@@ -14,7 +15,14 @@
+@@ -14,7 +15,14 @@ export function resolveAntigravityAcpLaunch(): AntigravityLaunch {
  	const env = process.env.AGY_ACP_BIN?.trim();
  	if (env) {
  		const command = expandHome(env);
@@ -35,7 +39,7 @@
  	}
  
  	// Prefer the provider's verified active release over ambient executables.
-@@ -145,6 +153,20 @@
+@@ -145,6 +153,20 @@ export function clearAntigravityCredentials(
  	}
  }
  
@@ -56,9 +60,11 @@
  function directOrWrapper(command: string, source: AntigravityLaunch["source"]): AntigravityLaunch {
  	try {
  		const fd = fs.openSync(command, "r");
+diff --git a/src/runtime.ts b/src/runtime.ts
+index 10e030b..081124d 100644
 --- a/src/runtime.ts
 +++ b/src/runtime.ts
-@@ -22,6 +22,7 @@
+@@ -22,6 +22,7 @@ import {
  	clearAntigravityCredentials,
  	inspectAntigravityAuth,
  	removeConversation,
@@ -66,7 +72,7 @@
  	type AntigravityAuthHealth,
  } from "./acp/antigravity.js";
  import { AntigravityAcpConnection, type AntigravityConnectionOptions } from "./acp/connection.js";
-@@ -429,10 +430,17 @@
+@@ -429,10 +430,17 @@ export class AntigravityRuntime {
  			this.permissionMode = mode;
  			await Promise.all([...this.resolvedBindings].map(async (binding) => {
  				if (binding.mode === mode && this.confirmedMode(binding) === mode) return;
@@ -86,7 +92,31 @@
  						if (this.confirmedMode(binding) === mode) { binding.mode = mode; return; }
  					} catch { /* Close below; the next turn must negotiate again. */ }
  				}
-@@ -927,12 +935,13 @@
+@@ -472,7 +480,7 @@ export class AntigravityRuntime {
+ 					waitingForPermission: binding.permission !== undefined,
+ 					waitingForTools: binding.pendingTools.size,
+ 					agentVersion: binding.initialize.agentInfo?.version,
+-					mcpHttp: binding.initialize.agentCapabilities?.mcpCapabilities?.http === true,
++					mcpHttp: this.supportsMcpHttp(binding.initialize),
+ 					restored: binding.restored,
+ 					ignoredStdoutNoiseLines: binding.connection.process.ignoredStdoutNoiseLines,
+ 					...(includeStderr ? { stderrTail: binding.connection.process.stderrTail } : {}),
+@@ -888,11 +896,12 @@ export class AntigravityRuntime {
+ 			this.assertSessionEpoch(key, epoch, sessionEpoch);
+ 			await authenticateForCredential(connection, initialize, apiKey, signal);
+ 			this.assertSessionEpoch(key, epoch, sessionEpoch);
+-			const omittedTools = initialize.agentCapabilities?.mcpCapabilities?.http === true
++			const mcpHttpSupported = this.supportsMcpHttp(initialize);
++			const omittedTools = mcpHttpSupported
+ 				? planToolProjection(tools)
+ 				: tools.filter((tool) => tool.name !== PERMISSION_TOOL_NAME).map((tool) => ({ name: tool.name, reason: "Agent did not advertise MCP over HTTP" }));
+ 			let mcpServer;
+-			if (tools.length > 0 && initialize.agentCapabilities?.mcpCapabilities?.http === true) {
++			if (tools.length > 0 && mcpHttpSupported) {
+ 				bridge = new PiMcpBridge({
+ 					tools,
+ 					onCall: (invocation) => this.requestPiTool(binding, invocation),
+@@ -927,12 +936,13 @@ export class AntigravityRuntime {
  			session ??= await connection.newSession(cwd, signal, mcpServers);
  			this.assertSessionEpoch(key, epoch, sessionEpoch);
  			const mode = this.permissionMode;
@@ -104,10 +134,16 @@
  				throw new AntigravityAcpError("protocol", "Antigravity did not confirm the requested permission mode");
  			}
  			const currentModel = sessionModels(session)?.currentModelId;
-@@ -1181,8 +1190,14 @@
+@@ -1181,8 +1191,20 @@ export class AntigravityRuntime {
  		});
  	}
  
++	private supportsMcpHttp(initialize: InitializeResponse): boolean {
++		// Native agy 1.5+ supports HTTP mcpServers in session/new even though
++		// its initialize response omits agentCapabilities.mcpCapabilities.http.
++		return initialize.agentCapabilities?.mcpCapabilities?.http === true || usesNativeAntigravityCli();
++	}
++
 +	private wirePermissionMode(mode: PermissionMode): PermissionMode {
 +		// agy acp exposes auto-approval as a launch flag, not as a yolo mode.
 +		return mode === "yolo" && usesNativeAntigravityCli() ? "default" : mode;

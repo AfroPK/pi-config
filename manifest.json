@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-24T23:29:16.731769+00:00",
+  "capturedAt": "2026-11-24T23:43:02.192840+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -38,8 +38,8 @@
       "sha256": "955fd27edd6f518134e21132fa9112e515f7f83719d4b0d319ef4d4b171da22d"
     },
     "config/agent/extensions/antigravity-prefer-pi-tools.ts": {
-      "bytes": 5827,
-      "sha256": "24f007ede83344724e4af63e85e6eccaef7aef4e6d764ecc34af2a5ef093b995"
+      "bytes": 7691,
+      "sha256": "01c24744dbbc4fe963427ffdb023070da206edf2cf5dcb75eb9287c6103b555f"
     },
     "config/agent/extensions/ask-guard.ts": {
       "bytes": 6461,
@@ -218,12 +218,12 @@
       "sha256": "e635784a5d60e92697efed8af97db6a2acdf1cef7e2afb7d95c7517445298cf9"
     },
     "config/agent/patches/patches-manifest.json": {
-      "bytes": 4122,
-      "sha256": "6f2fea22d9c5e54bf75aebc4b2e8c5de2e623ce27743db2495c3be334698e69b"
+      "bytes": 4663,
+      "sha256": "8b6891a4aa92d74b794c49e45b08f8750ba16835eeb3c2f83bf008f3be29c85f"
     },
     "config/agent/patches/pi-antigravity-acp-provider-native-agy.patch": {
-      "bytes": 7152,
-      "sha256": "fe64423b97c27b561e00df81b85023af6e220c4e8c7c8dae66b46415dddd21fd"
+      "bytes": 9432,
+      "sha256": "b2e13013c6454d6b1d391bac56195c3b6c5ba31a61658bd1dbbfb7e6169ae3be"
     },
     "config/agent/patches/pi-btw-model-runtime.patch": {
       "bytes": 526,
@@ -738,8 +738,8 @@
       "sha256": "1ee13def9252fe8bd50dd3d4300f0e03ec8b53e4d7428816e737d9cc5040cc0d"
     },
     "config/agent/tests/antigravity-prefer-pi-tools.test.mjs": {
-      "bytes": 7623,
-      "sha256": "1fe6d5a220d82705f35436d8e17f49008cb8a1b0036b39f5bbcc5b3b47a47247"
+      "bytes": 8704,
+      "sha256": "3eda347678fab27678b61407ce22f3ef16deb674eac4b3465ace457552e2297b"
     },
     "config/agent/tests/ask-guard.test.mjs": {
       "bytes": 7045,
