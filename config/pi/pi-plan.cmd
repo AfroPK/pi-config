@@ -45,7 +45,7 @@ echo Archived the finished PLAN.md as PLAN.done-%N%.md
 :server
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0ensure-server.ps1" -Alias qwen3.8-flash-next-gyro-gyro-s
 if errorlevel 1 exit /b 1
-set PI="C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js" --model strata/qwen3.8-flash-next-gyro-s --thinking medium --no-skills --tools "read,grep,find,ls,write,edit,bash,firecrawl_search,firecrawl_scrape" --exclude-tools "ssh-*,call_model,mcp__*" --append-system-prompt "%USERPROFILE%\.pi\strata-local.md" --append-system-prompt "%USERPROFILE%\.pi\environment.md" --append-system-prompt "%USERPROFILE%\.pi\planner.md" --name "plan"
+set PI="C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js" --model strata/qwen3.8-flash-next-gyro-s --thinking medium --no-skills --tools "read,grep,find,ls,write,edit,bash,firecrawl_search,firecrawl_scrape" --exclude-tools "ssh-*,call_model,mcp__*" --append-system-prompt "%USERPROFILE%\.pi\strata-local.md" --append-system-prompt "%USERPROFILE%\.pi\environment.md" --append-system-prompt "%USERPROFILE%\.pi\planner.md" --name "plan"
 REM Full node path, as in pi-durable.cmd: a stray quote in PATH ("...\GitHub CLI"") hides node from cmd's PATH search
 REM goto instead of an if-block: a task text with ( ) in %* would break a block
 if not defined NEXTMODE goto plain

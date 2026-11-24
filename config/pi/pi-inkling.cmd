@@ -6,4 +6,4 @@ REM It always reasons a little. Usage: pi-inkling [pi args...]
 setlocal
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0ensure-server.ps1" -Alias inkling2-mini-113k
 if errorlevel 1 exit /b 1
-"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js" --model inkling/inkling2-mini-113k %*
+"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js" --model inkling/inkling2-mini-113k %*

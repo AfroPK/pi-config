@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import {
 	Editor,
 	type EditorTheme,
@@ -7,8 +7,8 @@ import {
 	matchesKey,
 	truncateToWidth,
 	wrapTextWithAnsi,
-} from "@mariozechner/pi-tui";
-import { Type } from "@sinclair/typebox";
+} from "@earendil-works/pi-tui";
+import { Type } from "typebox";
 
 interface AskOption {
 	label: string;
@@ -593,8 +593,8 @@ export default function askUserQuestion(pi: ExtensionAPI) {
 				return cancelledResult(params.question, mode, context);
 			}
 
-			if (!ctx.hasUI) {
-				return unavailableResult(params.question, mode, "ask_user_question requires interactive mode UI", context);
+			if (!ctx.hasUI || ctx.mode !== "tui") {
+				return unavailableResult(params.question, mode, "ask_user_question requires interactive TUI mode", context);
 			}
 
 			return withUILock(async () => {

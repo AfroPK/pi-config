@@ -1,0 +1,122 @@
+--- a/README.md
++++ b/README.md
+@@ -49,7 +49,7 @@
+ 9. Press **Shift+Tab** to choose the reasoning effort. Only tiers advertised by Antigravity are exposed. A model with a single tier (for example Argon Medium during rollout) remains a reasoning model with that tier; the provider does not invent Low/High variants.
+ 10. Send a prompt. The default permission mode is `yolo`, so Antigravity-native commands and edits can run without confirmation.
+ 
+-The provider first looks at `AGY_ACP_BIN`, then its verified managed `~/.local/opt/agy-acp/current/` release, `~/.local/bin/agy_acp_server.par`, and `PATH`. Set `AGY_ACP_BIN` to explicitly prefer an externally managed runtime. If absent, it installs the platform build published in the ACP registry. A global `agy` or `gemini` command is not required.
++The provider first looks at `AGY_ACP_BIN`, then its verified managed `~/.local/opt/agy-acp/current/` release, `~/.local/bin/agy_acp_server.par`, and `PATH`. Set `AGY_ACP_BIN` to explicitly prefer an externally managed runtime. It can point either to an `agy_acp_server` executable or to native `agy` 1.5+; for native `agy`, the provider adds the `acp` subcommand and maps Pi's `yolo` mode to the CLI's auto-approval launch flag. Native `agy` emits model thoughts as `agent_thought_chunk`, which Pi renders as thinking blocks. If `AGY_ACP_BIN` is absent, the provider installs the platform build published in the ACP registry. A global `agy` or `gemini` command is not required.
+ 
+ Loopback MCP traffic is exempted from proxies in the ACP child environment. Explicit `HTTP_PROXY`, `HTTPS_PROXY`, `ALL_PROXY` (and lowercase variants) are preserved. On macOS, when none are explicitly set, the provider probes enabled system HTTP proxy settings to avoid automatic SOCKS selection unsupported by the bundled Python runtime. Set `PI_ANTIGRAVITY_ACP_PROXY` to an absolute HTTP/HTTPS proxy URL to explicitly override child proxy settings; the provider does not log the override or change its parent environment. Existing `NO_PROXY` lists and TLS certificate overrides are retained.
+ 
+--- a/src/acp/antigravity.ts
++++ b/src/acp/antigravity.ts
+@@ -2,6 +2,7 @@
+ import os from "node:os";
+ import path from "node:path";
+ 
++import { loadConfig } from "../config.js";
+ import { AntigravityAcpError } from "./errors.js";
+ 
+ export interface AntigravityLaunch {
+@@ -14,7 +15,14 @@
+ 	const env = process.env.AGY_ACP_BIN?.trim();
+ 	if (env) {
+ 		const command = expandHome(env);
+-		if (executable(command)) return directOrWrapper(command, "env");
++		if (executable(command)) {
++			if (isNativeAntigravityCli(command)) {
++				const args = ["acp"];
++				if (loadConfig().permissions === "yolo") args.push("--dangerously-skip-permissions");
++				return { command, args, source: "env" };
++			}
++			return directOrWrapper(command, "env");
++		}
+ 	}
+ 
+ 	// Prefer the provider's verified active release over ambient executables.
+@@ -145,6 +153,20 @@
+ 	}
+ }
+ 
++export function isNativeAntigravityCli(command: string): boolean {
++	const name = path.basename(command).toLowerCase();
++	return name === "agy" || name === "agy.exe";
++}
++
++export function usesNativeAntigravityCli(): boolean {
++	try {
++		const launch = resolveAntigravityAcpLaunch();
++		return launch.source === "env" && launch.args[0] === "acp" && isNativeAntigravityCli(launch.command);
++	} catch {
++		return false;
++	}
++}
++
+ function directOrWrapper(command: string, source: AntigravityLaunch["source"]): AntigravityLaunch {
+ 	try {
+ 		const fd = fs.openSync(command, "r");
+--- a/src/runtime.ts
++++ b/src/runtime.ts
+@@ -22,6 +22,7 @@
+ 	clearAntigravityCredentials,
+ 	inspectAntigravityAuth,
+ 	removeConversation,
++	usesNativeAntigravityCli,
+ 	type AntigravityAuthHealth,
+ } from "./acp/antigravity.js";
+ import { AntigravityAcpConnection, type AntigravityConnectionOptions } from "./acp/connection.js";
+@@ -429,10 +430,17 @@
+ 			this.permissionMode = mode;
+ 			await Promise.all([...this.resolvedBindings].map(async (binding) => {
+ 				if (binding.mode === mode && this.confirmedMode(binding) === mode) return;
++				// Native agy enables yolo at process launch, so changing to or from it
++				// requires a fresh process with the corresponding auto-approval flag.
++				if (usesNativeAntigravityCli() && (mode === "yolo" || binding.mode === "yolo")) {
++					await this.invalidateBinding(binding);
++					return;
++				}
+ 				// Never change policy under an executing turn or leave an unsupported session alive.
+-				if (!binding.turnCompletion && supportsMode(binding.connection.getSessionState(binding.session.sessionId), mode)) {
++				const wireMode = this.wirePermissionMode(mode);
++				if (!binding.turnCompletion && supportsMode(binding.connection.getSessionState(binding.session.sessionId), wireMode)) {
+ 					try {
+-						await binding.connection.setMode(binding.session.sessionId, mode);
++						await binding.connection.setMode(binding.session.sessionId, wireMode);
+ 						if (this.confirmedMode(binding) === mode) { binding.mode = mode; return; }
+ 					} catch { /* Close below; the next turn must negotiate again. */ }
+ 				}
+@@ -927,12 +935,13 @@
+ 			session ??= await connection.newSession(cwd, signal, mcpServers);
+ 			this.assertSessionEpoch(key, epoch, sessionEpoch);
+ 			const mode = this.permissionMode;
+-			if (!supportsMode(session, mode)) {
++			const wireMode = this.wirePermissionMode(mode);
++			if (!supportsMode(session, wireMode)) {
+ 				if (piSessionId) this.sessionStore?.remove(piSessionId);
+-				throw new AntigravityAcpError("protocol", `Antigravity ${restored ? "restored" : "new"} session did not advertise permission mode '${mode}'; refusing to prompt`);
++				throw new AntigravityAcpError("protocol", `Antigravity ${restored ? "restored" : "new"} session did not advertise permission mode '${wireMode}'; refusing to prompt`);
+ 			}
+-			if (sessionModes(session)?.currentModeId !== mode) await connection.setMode(session.sessionId, mode, signal);
+-			if (sessionModes(connection.getSessionState(session.sessionId))?.currentModeId !== mode) {
++			if (sessionModes(session)?.currentModeId !== wireMode) await connection.setMode(session.sessionId, wireMode, signal);
++			if (sessionModes(connection.getSessionState(session.sessionId))?.currentModeId !== wireMode) {
+ 				throw new AntigravityAcpError("protocol", "Antigravity did not confirm the requested permission mode");
+ 			}
+ 			const currentModel = sessionModels(session)?.currentModelId;
+@@ -1181,8 +1190,14 @@
+ 		});
+ 	}
+ 
++	private wirePermissionMode(mode: PermissionMode): PermissionMode {
++		// agy acp exposes auto-approval as a launch flag, not as a yolo mode.
++		return mode === "yolo" && usesNativeAntigravityCli() ? "default" : mode;
++	}
++
+ 	private confirmedMode(binding: Binding): string | undefined {
+-		return sessionModes(binding.connection.getSessionState(binding.session.sessionId))?.currentModeId;
++		const actual = sessionModes(binding.connection.getSessionState(binding.session.sessionId))?.currentModeId;
++		return this.permissionMode === "yolo" && actual === "default" && usesNativeAntigravityCli() ? "yolo" : actual;
+ 	}
+ 
+ 	private noteContinuationInstructions(binding: Binding, context: Context): void {

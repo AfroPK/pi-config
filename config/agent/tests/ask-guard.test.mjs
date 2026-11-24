@@ -1,16 +1,33 @@
 // Test harness for ~/.pi/agent/extensions/ask-guard.ts
 // Run: node __PI_HOME__/.pi/agent/tests/ask-guard.test.mjs
 // Exit code 0 = all checks passed.
-import { createRequire } from 'module';
+import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+function resolvePiRoot() {
+  const candidates = [
+    process.env.PI_GLOBAL_NODE_MODULES,
+    process.env.APPDATA ? path.join(process.env.APPDATA, 'npm', 'node_modules') : '',
+  ].filter(Boolean);
+  for (const c of candidates) {
+    if (existsSync(path.join(c, '@earendil-works', 'pi-coding-agent'))) return c;
+  }
+  return execFileSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['root', '-g'], { encoding: 'utf8' }).trim();
+}
+
 const JITI_DIR =
   process.env.JITI_DIR ||
-  '__PI_HOME__/AppData/Roaming/npm/node_modules/@earendil-works/pi-coding-agent/node_modules/jiti';
+  path.join(resolvePiRoot(), '@earendil-works', 'pi-coding-agent', 'node_modules', 'jiti');
 const require = createRequire(JITI_DIR + '/');
 const jitiMod = require(JITI_DIR);
 const createJiti = jitiMod.createJiti || jitiMod.default || jitiMod;
 const jiti = createJiti(import.meta.url);
 
-const EXT = '__PI_HOME__/.pi/agent/extensions/ask-guard.ts';
+const AGENT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const EXT = path.join(AGENT_DIR, 'extensions', 'ask-guard.ts');
 const m = await jiti.import(EXT);
 const detect = m.detectPlainTextQuestion;
 const strip = m.stripNonProse;

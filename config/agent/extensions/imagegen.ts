@@ -1,3 +1,4 @@
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { spawn, execFileSync } from "child_process";
 import { existsSync, mkdirSync, openSync, writeFileSync, rmSync, statSync } from "fs";
@@ -72,7 +73,7 @@ function workflow(prompt: string, negative: string, seed: number, steps: number,
   };
 }
 
-export default function (pi) {
+export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "generate_image",
     label: "Generate image",

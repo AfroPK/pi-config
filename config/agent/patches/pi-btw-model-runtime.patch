@@ -1,0 +1,11 @@
+--- a/extensions/btw.ts
++++ b/extensions/btw.ts
+@@ -254,6 +254,8 @@
+ 		for (const message of seed) sessionManager.appendMessage(message);
+ 		const { session } = await createAgentSession({
+ 			model,
++			// Share the parent's runtime so extension-registered providers (e.g. claude-cli) resolve.
++			modelRuntime: (ctx.modelRegistry as any).runtime,
+ 			thinkingLevel: resolution.configured ? (resolution.thinking ?? pi.getThinkingLevel()) : pi.getThinkingLevel(),
+ 			tools: ["read", "grep", "find", "ls"],
+ 			sessionManager,

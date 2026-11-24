@@ -6,4 +6,4 @@ REM Usage: pi-kaggle-strata [pi args...]
 setlocal
 set "THINK=--thinking off"
 echo %* | findstr /i /c:"--thinking" >nul && set "THINK="
-"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js" --model kaggle-strata/gyro-s %THINK% --no-skills --exclude-tools "ssh-*,call_model" --append-system-prompt "%USERPROFILE%\.pi\kaggle-strata.md" %*
+"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js" --model kaggle-strata/gyro-s %THINK% --no-skills --exclude-tools "ssh-*,call_model" --append-system-prompt "%USERPROFILE%\.pi\kaggle-strata.md" %*

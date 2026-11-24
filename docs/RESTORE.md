@@ -63,7 +63,7 @@ The installer also makes its own per-file backup. Existing credentials in `~/.pi
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install.ps1
 ```
 
-This restores the Pi files, installs Pi and the `agent-desktop`/`playwright` global tools at captured versions, runs `npm ci --ignore-scripts --legacy-peer-deps` for the package-managed extensions and three local extension projects, and reapplies the ghost-text patch. Legacy peer resolution prevents npm from installing conflicting copies of Pi host packages that Pi itself supplies to extensions at runtime.
+This restores the Pi files, installs Pi and the `agent-desktop`/`playwright` global tools at captured versions, runs `npm ci --ignore-scripts --legacy-peer-deps` for the package-managed extensions and three local extension projects, and applies all local package patches plus `loop-police.json` via `manage-patches.mjs apply`. Legacy peer resolution prevents npm from installing conflicting copies of Pi host packages that Pi itself supplies to extensions at runtime.
 
 ### Files-only restore
 
@@ -156,12 +156,14 @@ to `~/.bashrc`. Open a new Git Bash window afterward. The file also prepends `~/
 
 ## 8. Verify the restore
 
-Run structural checks:
+Run structural and runtime compatibility checks:
 
 ```powershell
-python .\scripts\verify.py --installed-home $HOME
+python .\scripts\verify.py --installed-home $HOME --runtime
+node "$HOME\.pi\agent\patches\manage-patches.mjs" check
+node "$HOME\.pi\agent\tests\verify-pi-compat.mjs"
 pi --version                 # expected: 1.6.0
-pi list                      # lists the 12 configured user packages
+pi list                      # lists the 13 configured user packages
 pi config                    # inspect loaded resources and built-ins
 pi mcp list                  # checks configured servers; unavailable services may fail
 ```
@@ -175,21 +177,24 @@ Expected package declarations:
 - `pi-ssh`;
 - `pi-token-speed`;
 - `pi-skillful`;
-- `pi-loop-police@1.14.1`;
-- `pi-ghost-text`;
-- `@lanlance/pi-btw`;
+- `pi-loop-police@1.14.1` (pinned + patched);
+- `pi-ghost-text@0.1.2` (pinned + patched);
+- `@lanlance/pi-btw@0.2.0` (pinned + patched);
 - `@gwynnnplaine/pi-discord-presence` (Discord must run unelevated);
+- `pi-antigravity-acp-provider@0.1.22` (pinned + patched);
 - `pi-interactive-subagents` (git package; run Pi inside `tmux new -A -s pi pi` to use it).
 
-Run local extension tests after package installation:
+Run the local compatibility and unit tests individually if needed:
 
 ```powershell
+node "$HOME\.pi\agent\tests\verify-pi-compat.mjs"
 node "$HOME\.pi\agent\extensions\bash-guard\test\dialog-fit.test.mjs"
 node "$HOME\.pi\agent\extensions\bash-guard\test\agent-desktop.test.mjs"
 node --test "$HOME\.pi\agent\tests\ask-guard.test.mjs"
+node --test "$HOME\.pi\agent\tests\loop-police-provider-exemption.test.mjs"
 ```
 
-Then start Pi and check `/model`, `/settings`, `/hotkeys`, `/mcp`, and `/reload`. Do not treat a successful CLI load as proof every external model or MCP service works; test only the integrations you configured.
+Then start Pi and check `/model`, `/settings`, `/hotkeys`, `/mcp`, `/patch-status`, and `/reload`. Do not treat a successful CLI load as proof every external model or MCP service works; test only the integrations you configured.
 
 ## 9. Roll back
 
@@ -199,9 +204,11 @@ Every replaced file is copied to:
 ~/.pi-config-backups/<timestamp>/
 ```
 
-`backup-manifest.json` in that directory maps each original path to its backup. To roll back, close Pi and copy the listed backups back to their `original` paths. Files newly created by the installer are not in that manifest because there was no original to back up; remove those manually if desired.
+Runs of `pi-update.cmd` also create `pre-update-<timestamp>/` backups under `~/.pi-config-backups/` covering `settings.json`, `models.json`, `keybindings.json`, `npm/package.json`, `npm/package-lock.json`, and `loop-police.json`.
 
-The ghost-text patch also backs up the package's original `src/render.ts` before replacing it. Reinstalling `pi-ghost-text@0.1.2` is another way to remove that patch.
+`backup-manifest.json` in installer backup directories maps each original path to its backup. To roll back, close Pi and copy the listed backups back to their `original` paths. Files newly created by the installer are not in that manifest because there was no original to back up; remove those manually if desired.
+
+All local npm package patches (`pi-ghost-text`, `pi-loop-police`, `pi-antigravity-acp-provider`, `@lanlance/pi-btw`) are tracked as unified diffs under `~/.pi/agent/patches/`; running `npm ci --ignore-scripts --legacy-peer-deps` in `~/.pi/agent/npm` without running `manage-patches.mjs apply` returns those packages to clean upstream versions.
 
 ## Tested restore path
 

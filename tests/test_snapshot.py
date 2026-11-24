@@ -64,5 +64,25 @@ class CaptureTests(unittest.TestCase):
                 self.assertRegex(value, r"^\$\{[A-Z][A-Z0-9_]*\}$")
 
 
+class CompatTests(unittest.TestCase):
+    def test_static_compat_catches_crlf_agents_legacy_imports_and_bad_skills(self):
+        with tempfile.TemporaryDirectory() as td:
+            agent = Path(td)
+            (agent / "agents").mkdir()
+            (agent / "agents" / "scout.md").write_bytes(b"---\r\nname: scout\r\n---\r\n")
+            (agent / "extensions").mkdir()
+            (agent / "extensions" / "bad.ts").write_text('import "@mariozechner/pi-coding-agent";', encoding="utf-8")
+            (agent / "skills" / "demo-skill").mkdir(parents=True)
+            (agent / "skills" / "demo-skill" / "SKILL.md").write_text("---\nname: wrong-name\ndescription: ok\n---\n", encoding="utf-8")
+            (agent / "patches").mkdir()
+            (agent / "patches" / "patches-manifest.json").write_text('{"packages":[]}', encoding="utf-8")
+
+            errors = verify.check_pi_compat_static(agent)
+            joined = "\n".join(errors)
+            self.assertIn("CRLF line endings", joined)
+            self.assertIn("deprecated @mariozechner", joined)
+            self.assertIn("frontmatter name must match directory", joined)
+
+
 if __name__ == "__main__":
     unittest.main()

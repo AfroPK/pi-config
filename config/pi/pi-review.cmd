@@ -21,4 +21,4 @@ if not exist "%~1" goto run
 set "TASKARG=Review PLAN.md now. The task it was planned from is in %~1 - read it first."
 shift
 :run
-"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js" --model strata/qwen3.8-flash-next-gyro-s --thinking medium --no-skills --tools "read,grep,find,ls,edit,bash,firecrawl_search,firecrawl_scrape" --exclude-tools "ssh-*,call_model,mcp__*" --append-system-prompt "%USERPROFILE%\.pi\strata-local.md" --append-system-prompt "%USERPROFILE%\.pi\environment.md" --append-system-prompt "%USERPROFILE%\.pi\reviewer.md" --name "review" %1 %2 %3 %4 "%TASKARG%"
+"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js" --model strata/qwen3.8-flash-next-gyro-s --thinking medium --no-skills --tools "read,grep,find,ls,edit,bash,firecrawl_search,firecrawl_scrape" --exclude-tools "ssh-*,call_model,mcp__*" --append-system-prompt "%USERPROFILE%\.pi\strata-local.md" --append-system-prompt "%USERPROFILE%\.pi\environment.md" --append-system-prompt "%USERPROFILE%\.pi\reviewer.md" --name "review" %1 %2 %3 %4 %5 %6 %7 %8 %9 "%TASKARG%"

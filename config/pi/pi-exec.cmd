@@ -19,4 +19,4 @@ if not exist "PLAN.md" (
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0ensure-server.ps1" -Alias qwen3.6-iq3-local
 if errorlevel 1 exit /b 1
 REM Full node path, as in pi-durable.cmd: a stray quote in PATH ("...\GitHub CLI"") hides node from cmd's PATH search
-"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js" --model qwen36iq3/qwen3.6-iq3-local --thinking low --no-skills --exclude-tools "ssh-*,call_model" --append-system-prompt "%USERPROFILE%\.pi\bonsai-local.md" --append-system-prompt "%USERPROFILE%\.pi\environment.md" --append-system-prompt "%USERPROFILE%\.pi\executor.md" --name "exec" @PLAN.md "Execute PLAN.md now, step by step." %*
+"C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js" --model qwen36iq3/qwen3.6-iq3-local --thinking low --no-skills --exclude-tools "ssh-*,call_model" --append-system-prompt "%USERPROFILE%\.pi\bonsai-local.md" --append-system-prompt "%USERPROFILE%\.pi\environment.md" --append-system-prompt "%USERPROFILE%\.pi\executor.md" --name "exec" @PLAN.md "Execute PLAN.md now, step by step." %*

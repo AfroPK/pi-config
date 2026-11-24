@@ -13,7 +13,7 @@
 
 **`{ pi-config }`**: my whole Pi setup, sanitized and in one repo, with an installer that puts it back.
 
-218 captured files, 32 skills, 11 local extension entry points, 12 Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
+235 captured files, 33 skills, 13 local extension entry points, 13 declared Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
 
 > [!NOTE]
 > No keys, tokens, sessions or logs are committed. Provider keys in `models.json` are environment-variable references. Run the verification script before publishing.
@@ -26,13 +26,13 @@
 git clone https://github.com/AfroPK/pi-config.git
 cd pi-config
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install.ps1
-python .\scripts\verify.py --installed-home $HOME
+python .\scripts\verify.py --installed-home $HOME --runtime
 ```
 
 1. The installer backs up every file it would replace to `~/.pi-config-backups/<timestamp>/`.
 2. It restores `config/agent/` to `~/.pi/agent/` and `config/pi/` to `~/.pi/`, swapping `__PI_HOME__` for your home path.
 3. It installs Pi 1.6.0 and the core global tools, then installs exact package versions from each `package-lock.json`.
-4. It reapplies the local `pi-ghost-text` patch; `pi-interactive-subagents` installs from the AfroPK fork with its Windows fixes built in.
+4. It verifies and reapplies all local npm package patches (`pi-ghost-text`, `pi-loop-police`, `pi-antigravity-acp-provider`, `@lanlance/pi-btw`) plus `loop-police.json` via `manage-patches.mjs`; `pi-interactive-subagents` installs from the AfroPK fork with its Windows fixes built in.
 5. Restart the terminal, start Pi, run `/login` for OpenRouter.
 
 Files-only restore: add `-SkipPackages -SkipPiInstall`. Machine integrations (llama-swap, Strata, llama.cpp launchers): `-IncludeMachineIntegrations`. Test home: `-DestinationHome C:\Temp\pi-restore-test`.
@@ -41,20 +41,23 @@ Files-only restore: add `-SkipPackages -SkipPiInstall`. Machine integrations (ll
 
 | Area | Path | Contents |
 |---|---|---|
-| Core preferences | `config/agent/settings.json` | Theme, default/scoped models, thinking budgets, compaction, packages, MCP adapter |
+| Core preferences | `config/agent/settings.json` | Theme, default/scoped models, thinking budgets, compaction, pinned packages, MCP adapter |
 | Model endpoints | `config/agent/models.json` | OpenRouter overrides, OmniRoute, five local models, two Kaggle tunnels |
 | MCP | `config/agent/mcp.json` | Context7, Firecrawl, Aseprite, DaVinci Resolve, Retro Diffusion, Browse |
 | Global instructions | `config/agent/AGENTS.md` | Engineering rules, verification, safety, Git and tool conventions |
-| Extensions | `config/agent/extensions/` | Browser, web search/fetch, vision, image generation, Claude CLI, guards, snippets |
-| Skills | `config/agent/skills/` | All 32 active skills with scripts, references, tests and templates |
+| Extensions | `config/agent/extensions/` | Browser, web search/fetch, vision, image generation, Claude CLI, guards, patch-guard, snippets |
+| Skills | `config/agent/skills/` | All 33 active skills with scripts, references, tests and templates |
 | Subagent definitions | `config/agent/agents/` | `scout`, `researcher`, `worker` on DeepSeek v4.1 flash, `xhigh` |
-| Patches | `config/agent/patches/` | Both ghost-text patches and the patched renderer |
+| Patches & guards | `config/agent/patches/` | Unified diffs, `patches-manifest.json`, `manage-patches.mjs`, and `pi-loop-police.config.json` |
+| Compatibility tests | `config/agent/tests/` | `verify-pi-compat.mjs`, `ask-guard.test.mjs`, and `loop-police-provider-exemption.test.mjs` |
+| Safe update wrapper | `config/pi/pi-update.cmd` | Backs up live config, runs `pi update`, reapplies package patches, and runs `verify-pi-compat.mjs` |
 | Machine integration | `config/machine/` | llama-swap config, three model launch profiles, Strata config, process cleanup |
 
 <p><img src=".github/assets/section-everyday-commands.png" alt="04 Everyday commands" width="100%"></p>
 
 ```bash
 pi                    # default model
+pi-update             # safe Pi / extension update with config backup, patch reapply, and compat check
 pi-models strata      # local Strata Gyro-S, vision-capable
 pi-models qwen36      # local Qwen3.6 35B-A3B IQ3 executor
 pi-plan "task"        # scoped PLAN.md using Strata
@@ -64,7 +67,7 @@ pi-pe "task"          # plan -> review -> execute
 pi-loop TASK.md       # unattended plan/review/execute/code-review loop
 ```
 
-In-session: `/model`, `/thinking`, `/settings`, `/reload`, `/snippets`, `/browser on`, `/claude-cli`, `/mcp`. `pi config` lists loaded resources.
+In-session: `/model`, `/thinking`, `/settings`, `/reload`, `/snippets`, `/browser on`, `/claude-cli`, `/mcp`, `/patch-status`. `pi config` lists loaded resources.
 
 <p><img src=".github/assets/section-docs.png" alt="05 Docs" width="100%"></p>
 
@@ -79,8 +82,8 @@ In-session: `/model`, `/thinking`, `/settings`, `/reload`, `/snippets`, `/browse
 
 - The snapshot is Windows-specific. The `.cmd` launchers, PowerShell scripts, drive layout and ROCm settings need adapting for macOS or Linux.
 - Locked versions are for reproducibility, not a claim of zero vulnerabilities. `npm audit` reported 3 high in the Pi package tree, 1 critical in bash-guard's `shell-quote` and 1 low in web-fetch's `@mozilla/readability` at capture time. The installer never runs `npm audit fix`.
-- Verify before publishing: `python scripts/verify.py` and `python -m unittest discover -s tests -v`.
-- Captured 2026-11-21 · Pi 1.6.0 · Node 26.13.1.
+- Verify before publishing: `python scripts/verify.py --runtime` and `python -m unittest discover -s tests -v`.
+- Captured 2026-11-24 · Pi 1.6.0 · Node 26.13.1.
 
 <p align="center">
   <img src=".github/assets/footer.png" alt="play games · make games" width="100%">

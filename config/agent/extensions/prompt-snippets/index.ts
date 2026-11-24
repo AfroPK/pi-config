@@ -206,7 +206,7 @@ export default function (pi: ExtensionAPI) {
 			return {
 				render(width: number): string[] {
 					// Reserve lines for: top border, title, blank, blank, hints, bottom border.
-					const maxView = Math.max(5, tui.terminal.rows - 10);
+					const maxView = Math.max(5, (tui?.terminal?.rows ?? 24) - 10);
 
 					let content: string[];
 					let title: string;

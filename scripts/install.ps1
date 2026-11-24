@@ -49,9 +49,16 @@ function Backup-File([string]$Target) {
 function Write-PortableText([string]$Source, [string]$Target) {
     $extension = [System.IO.Path]::GetExtension($Target).ToLowerInvariant()
     $replacement = $HomeForward
-    if ($extension -in ".cmd", ".bat", ".ps1", ".vbs") { $replacement = $DestinationHome }
+    if ($extension -in ".cmd", ".bat", ".ps1", ".vbs", ".yaml", ".yml") { $replacement = $DestinationHome }
     $text = [System.IO.File]::ReadAllText($Source)
-    $text = $text.Replace("__PI_HOME__", $replacement)
+    if ($extension -eq ".json") {
+        $homeJson = $DestinationHome.Replace('\', '\\')
+        $text = $text.Replace("__PI_HOME__\\", "$homeJson\\").Replace("__PI_HOME__/", "$HomeForward/")
+        $text = $text.Replace("__PI_HOME__", $HomeForward)
+    } else {
+        $text = $text.Replace("__PI_HOME__\", "$DestinationHome\").Replace("__PI_HOME__/", "$HomeForward/")
+        $text = $text.Replace("__PI_HOME__", $replacement)
+    }
     $directory = Split-Path -Parent $Target
     New-Item -ItemType Directory -Force -Path $directory | Out-Null
     Backup-File $Target
@@ -140,12 +147,11 @@ if (-not $SkipPackages) {
         } finally { Pop-Location }
     }
 
-    $patchedRender = Join-Path $DestinationHome ".pi\agent\patches\render.patched.ts"
-    $installedRender = Join-Path $DestinationHome ".pi\agent\npm\node_modules\pi-ghost-text\src\render.ts"
-    if ((Test-Path -LiteralPath $patchedRender) -and (Test-Path -LiteralPath $installedRender)) {
-        Backup-File $installedRender
-        Copy-Item -LiteralPath $patchedRender -Destination $installedRender -Force
-        Write-Host "      Reapplied pi-ghost-text fake-cursor patch."
+    $patchManager = Join-Path $DestinationHome ".pi\agent\patches\manage-patches.mjs"
+    if (Test-Path -LiteralPath $patchManager) {
+        & node $patchManager apply --agent-dir (Join-Path $DestinationHome ".pi\agent") --home $DestinationHome
+        if ($LASTEXITCODE) { throw "Package patch application failed ($patchManager)" }
+        Write-Host "      Applied local package patches and loop-police config."
     }
 
 } else {

@@ -5,7 +5,8 @@
 //
 // The extension file itself is loaded through jiti (with the same module aliases
 // pi uses), so this exercises the real render code, not a copy of it.
-import { readFileSync, writeFileSync, mkdtempSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -24,9 +25,27 @@ function resolveFirst(candidates) {
 	throw new Error(`could not resolve any of: ${candidates.join(", ")}`);
 }
 
+function resolvePiPkg() {
+	const candidates = [
+		process.env.PI_GLOBAL_NODE_MODULES
+			? join(process.env.PI_GLOBAL_NODE_MODULES, "@earendil-works", "pi-coding-agent")
+			: "",
+		process.env.APPDATA
+			? join(process.env.APPDATA, "npm", "node_modules", "@earendil-works", "pi-coding-agent")
+			: "",
+	].filter(Boolean);
+	for (const c of candidates) {
+		if (existsSync(c)) return c;
+	}
+	const root = execFileSync(process.platform === "win32" ? "npm.cmd" : "npm", ["root", "-g"], {
+		encoding: "utf8",
+	}).trim();
+	return join(root, "@earendil-works", "pi-coding-agent");
+}
+
 // pi-tui + jiti live inside the global pi install when the extension is loaded
 // by pi itself; fall back to a normal resolution for a local install.
-const PI_PKG = "__PI_HOME__/AppData/Roaming/npm/node_modules/@earendil-works/pi-coding-agent";
+const PI_PKG = resolvePiPkg();
 const PI_TUI = resolveFirst([
 	"@earendil-works/pi-tui/dist/index.js",
 	`${PI_PKG}/node_modules/@earendil-works/pi-tui/dist/index.js`,
@@ -60,17 +79,18 @@ export class DynamicBorder {
 `,
 );
 
-// pi resolves the old @mariozechner names to its own modules; point them at local files.
+// Point pi imports at local stubs / resolved pi-tui for standalone execution.
 let source = readFileSync(SOURCE, "utf8");
 source = source.replace(/^import type \{ ExtensionAPI \}.*$/m, "");
-source = source.replaceAll('from "@mariozechner/pi-coding-agent"', `from ${JSON.stringify(url(STUB))}`);
-source = source.replaceAll('from "@mariozechner/pi-tui"', `from ${JSON.stringify(url(PI_TUI))}`);
+source = source.replaceAll('from "@earendil-works/pi-coding-agent"', `from ${JSON.stringify(url(STUB))}`);
+source = source.replaceAll('from "@earendil-works/pi-tui"', `from ${JSON.stringify(url(PI_TUI))}`);
 source = source.replaceAll('from "shell-quote"', `from ${JSON.stringify(url(SHELL_QUOTE))}`);
 source += "\nexport { promptRunOrAbort };\n";
 writeFileSync(PATCHED, source);
 
 const jiti = createJiti(import.meta.url, { interopDefault: true });
 const { promptRunOrAbort } = await jiti.import(PATCHED);
+rmSync(WORK, { recursive: true, force: true });
 
 const theme = { fg: (_color, text) => text, bold: (text) => text };
 

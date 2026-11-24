@@ -9,25 +9,25 @@ See `manifest.json` for the machine-readable source of truth. It records:
 - required provider/MCP environment references;
 - every captured file's size and SHA-256 hash.
 
-The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Python 3.12.10, and Git 2.56.0.windows.4. It contains 218 files (approximately 4.6 MB before repository documentation).
+The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Python 3.12.10, and Git 2.56.0.windows.4. It contains 235 files (approximately 4.7 MB before repository documentation).
 
 ## Included files
 
 | Area | Files | Notes |
 |---|---:|---|
-| Agent directory, total | 168 | Includes the categories below |
-| Agent top-level | 9 | AGENTS, settings, models, MCP, adapter, keybindings, suggestions, trust, Antigravity provider preferences |
-| Local extensions | 33 | Source, READMEs, manifests/lockfiles, snippets, shim, tests; no logs/profiles |
-| Skills | 118 | 32 skill directories and supporting source/assets; no venv/bytecode |
+| Agent directory, total | 183 | Includes the categories below |
+| Agent top-level & subagents | 12 | 9 top-level files (`AGENTS`, `settings`, `models`, `mcp`, `mcp-adapter`, `keybindings`, `prompt-suggestions`, `trust`, `antigravity-acp-provider/config.json`) + 3 `agents/*.md` |
+| Local extensions | 36 | Source (`13` entry points), READMEs, manifests/lockfiles, snippets, shim, `skillful-install.json`, `bash-guard` tests; no logs/profiles/`.lock` |
+| Skills | 119 | 33 skill directories and supporting source/assets; no venv/bytecode |
 | Package npm directory | 3 | `.gitignore`, package manifest, package lock |
-| Patches | 4 | README, two diffs, patched renderer |
-| Agent tests | 1 | ask-guard test |
-| `.pi` root | 39 | Active launchers, role prompts, notes, PowerShell helpers |
+| Patches | 10 | README, `patches-manifest.json`, `manage-patches.mjs`, 5 `.patch` diffs, `pi-loop-police.config.json`, `render.patched.ts` |
+| Agent tests | 3 | `ask-guard.test.mjs`, `loop-police-provider-exemption.test.mjs`, `verify-pi-compat.mjs` |
+| `.pi` root | 41 | Active launchers (`pi-update.*` included), role prompts, notes, PowerShell helpers |
 | Machine integrations | 9 | llama-swap, Strata, standalone model launchers, Hipfire Ornith launcher, pi-loop env |
 | Shell | 1 | Extracted Pi alias/PATH block |
 | Global package inventory | 1 | Exact global npm package versions |
 
-`config/agent` counts include its immediate files and all listed subdirectories; categories are not additional to the 168-file total.
+`config/agent` counts include its immediate files and all listed subdirectories; categories are not additional to the 183-file total (`12 + 36 + 119 + 3 + 10 + 3 = 183`).
 
 ## Deliberately excluded: credentials and private state
 
@@ -38,6 +38,7 @@ The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Py
 - session JSONL files and session indexes;
 - compact backups and smart-compaction cache/extractions;
 - logs, including MCP and Claude shim logs;
+- transient lock files (`*.lock`, such as `agent/extensions/skillful-install.json.lock`);
 - loop-police detection history;
 - prompt/session caches and other runtime state.
 

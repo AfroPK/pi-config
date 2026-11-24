@@ -10,10 +10,10 @@
     "npm:pi-token-speed",
     "npm:pi-skillful",
     "npm:pi-loop-police@1.14.1",
-    "npm:pi-ghost-text",
-    "npm:@lanlance/pi-btw",
+    "npm:pi-ghost-text@0.1.2",
+    "npm:@lanlance/pi-btw@0.2.0",
     "npm:@gwynnnplaine/pi-discord-presence",
-    "npm:pi-antigravity-acp-provider",
+    "npm:pi-antigravity-acp-provider@0.1.22",
     "git:github.com/AfroPK/pi-interactive-subagents"
   ],
   "defaultProvider": "openrouter",
@@ -32,14 +32,12 @@
     "claude-cli/claude-opus-5-5",
     "claude-cli/claude-sonnet-5-5",
     "claude-cli/claude-haiku-5-5",
-    "antigravity-acp/gemini-3.1-pro",
-    "antigravity-acp/gemini-3.6-flash",
-    "antigravity-acp/gemini-3.7-flash",
     "antigravity-acp/gemini-3.8-flash",
     "antigravity-acp/gemini-4-argon",
-    "antigravity-acp/gemini-4-hydrogen"
+    "antigravity-acp/gemini-4-hydrogen",
+    "antigravity-acp/gemini-4-neon"
   ],
-  "shellPath": "C:\\\\Users\\\\Freddy\\\\scoop\\\\apps\\\\git\\\\current\\\\bin\\\\bash.exe",
+  "shellPath": "__PI_HOME__\\scoop\\apps\\git\\current\\bin\\bash.exe",
   "compaction": {
     "enabled": true,
     "reserveTokens": 16384,

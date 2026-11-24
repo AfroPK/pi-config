@@ -1,0 +1,179 @@
+--- a/README.md
++++ b/README.md
+@@ -129,6 +129,7 @@
+ CONSECUTIVE_LOOP_LIMIT: 2   // looped turns in a row before the message escalates
+ TOOL_LOOP_BAN: 1            // 0 = off · 1 = block while repeated back-to-back · 2 = session ban
+ TOOL_LOOP_EXEMPT: ""        // tool names exempt from the tool call loop detector
++EXEMPT_PROVIDERS: ""        // provider IDs whose models bypass every detector (comma-separated)
+ REDERIVE_THRESHOLD: 0.85    // post-detection thinking this similar to the blocked plan is trimmed
+ HOOK_CMD: ""                // external command run on every detection (see Detection hooks)
+ HOOK_TIMEOUT_MS: 5000       // HOOK_CMD is killed after this many ms
+@@ -142,6 +143,7 @@
+ - Projects where re-reading files is normal → raise `FILE_SCAN_LIMIT` (total per file); monorepos → raise `SEARCH_EXPAND_LIMIT`.
+ - Workflows that legitimately re-read unchanged files (huge files paged repeatedly, reference docs consulted often) → raise `REREAD_RATIO` (0.4 → 0.5–0.6) or set `REREAD_WINDOW=0`.
+ - Loops caught too late → lower `SEMANTIC_THRESHOLD` to 2 (more sensitive, more false-positive prone).
++- Entire providers that should never be interrupted → set `EXEMPT_PROVIDERS` to a comma-separated, case-insensitive list such as `"antigravity-acp"`. This bypasses stream aborts, tool blocks, stagnation/re-derive handling, recovery turns, and tainted-context rewrites for every current and future model from that provider; all other providers remain protected.
+ 
+ ### Disabling individual detectors
+ 
+@@ -180,7 +182,7 @@
+ | `MSG_STUCK` | the same blocked plan re-derived `{count}` times in a row | `{count}` |
+ | `MSG_SUFFIX` | appended to **every** message above (empty by default) | — |
+ 
+-`{placeholder}` tokens are substituted at runtime; unknown tokens are left as-is so a typo stays visible. Messages are edited in `loop-police.json` only — `/loop-police set` handles numeric keys (plus `TOOL_LOOP_EXEMPT`) and will refuse a `MSG_*` key.
++`{placeholder}` tokens are substituted at runtime; unknown tokens are left as-is so a typo stays visible. Messages are edited in `loop-police.json` only — `/loop-police set` handles numeric keys (plus `TOOL_LOOP_EXEMPT` and `EXEMPT_PROVIDERS`) and will refuse a `MSG_*` key.
+ 
+ `MSG_SUFFIX` rides along with every detection without rewriting each template — the typical use is pointing the model at an advisor extension or tool to consult once a loop is caught:
+ 
+--- a/extensions/loop-police.ts
++++ b/extensions/loop-police.ts
+@@ -62,6 +62,9 @@
+ //              session cwd); one payload line is appended per detection.
+ const STRING_DEFAULTS = {
+   TOOL_LOOP_EXEMPT: "",
++  // Comma-separated provider IDs whose models bypass every detector and
++  // recovery/context rewrite. Matching is case-insensitive and exact.
++  EXEMPT_PROVIDERS: "",
+   HOOK_CMD: "",
+   HOOK_LOG: "",
+ };
+@@ -234,9 +237,29 @@
+   let rederiveStreak = 0;
+   let lastThinking = "";
+   let consecutiveLoopCount = 0;
++  // LOCAL PATCH (2026-10-31): sending the recovery message from message_end lands
++  // while Pi still counts the aborted run as streaming, so it becomes a steer into
++  // a run that is ending and is dropped — the session just stops. Hold it here and
++  // deliver it on agent_settled, which starts a fresh run; that run's agent_start
++  // must not wipe escalation/re-derive state, hence keepStateOnNextStart.
++  let pendingRecovery: string | null = null;
++  const RECOVERY_LIMIT = 5;
++  let keepStateOnNextStart = false;
+   let turnIndex = 0;
+   let hookWarned = false;
+   let logWarned = false;
++
++  // True when the active model's provider is explicitly exempt from every
++  // detector. Checks happen at each intervention boundary so switching models
++  // cannot carry an abort, block, recovery, or context rewrite into an exempt run.
++  function isExemptProvider(ctx: ExtensionContext): boolean {
++    const provider = ctx.model?.provider;
++    if (!provider) return false;
++    const target = provider.toLowerCase();
++    return String(cfg.EXEMPT_PROVIDERS ?? "")
++      .split(",")
++      .some((entry) => entry.trim().toLowerCase() === target);
++  }
+ 
+   // Per-stream detector state: stride checkpoints + incremental semantic scan.
+   // Reset whenever a new assistant message (or a new block) starts streaming.
+@@ -328,7 +351,32 @@
+     }
+   }
+ 
+-  pi.on("agent_start", reset);
++  pi.on("agent_start", () => {
++    if (keepStateOnNextStart) {
++      keepStateOnNextStart = false;
++      return;
++    }
++    pendingRecovery = null;
++    reset();
++  });
++
++  pi.on("agent_settled", (_event, ctx) => {
++    if (pendingRecovery === null) return;
++    if (isExemptProvider(ctx)) {
++      pendingRecovery = null;
++      return;
++    }
++    const content = pendingRecovery;
++    pendingRecovery = null;
++    // A task that can only be done by repeating text never converges; stop
++    // retrying after this many back-to-back loops and let the run end.
++    if (consecutiveLoopCount > RECOVERY_LIMIT) {
++      ctx.ui.notify(`loop-police: ${consecutiveLoopCount} loops in a row, recovery stopped`, "warning");
++      return;
++    }
++    keepStateOnNextStart = true;
++    pi.sendMessage({ customType: "loop-police", content, display: true }, { triggerTurn: true });
++  });
+ 
+   pi.on("turn_start", (event) => {
+     turnIndex = event.turnIndex;
+@@ -355,7 +403,7 @@
+   }
+ 
+   pi.on("message_update", (event, ctx) => {
+-    if (streamAborted || event.message.role !== "assistant") return;
++    if (isExemptProvider(ctx) || streamAborted || event.message.role !== "assistant") return;
+     const semanticOn = cfg.SEMANTIC_THRESHOLD > 0;
+ 
+     // Thinking stream: character-level + semantic
+@@ -432,6 +480,15 @@
+ 
+   pi.on("message_end", (event, ctx) => {
+     if (event.message.role !== "assistant") return;
++    if (isExemptProvider(ctx)) {
++      // Do not sanitize reasoning or deliver stale recovery after a provider switch.
++      pendingRecovery = null;
++      streamAborted = false;
++      cleanStreamPrefix = null;
++      loopContentIndex = null;
++      resetStreamState();
++      return;
++    }
+ 
+     if (streamAborted) {
+       const prefix = cleanStreamPrefix ?? "";
+@@ -483,10 +540,7 @@
+       }
+       const survivor = loopStream === "thinking" ? prefix : extractThinking(event.message);
+       if (survivor) lastThinking = survivor;
+-      pi.sendMessage(
+-        { customType: "loop-police", content: withSuffix(advice), display: true },
+-        { triggerTurn: true }
+-      );
++      pendingRecovery = withSuffix(advice); // delivered on agent_settled (see LOCAL PATCH)
+       return { message: cleaned };
+     }
+ 
+@@ -583,11 +637,15 @@
+ 
+   // Keep persisted transcripts available for postmortems, but never replay
+   // reasoning already identified as a doom loop into a future model request.
+-  pi.on("context", (event) => ({
+-    messages: event.messages.map((message: any) => sanitizeTaintedThinking(message, taintedThinking)),
+-  }));
++  pi.on("context", (event, ctx) => {
++    if (isExemptProvider(ctx)) return;
++    return {
++      messages: event.messages.map((message: any) => sanitizeTaintedThinking(message, taintedThinking)),
++    };
++  });
+ 
+   pi.on("tool_call", (event, ctx) => {
++    if (isExemptProvider(ctx)) return;
+     // Tool call sequence loop — checked before the read/search counters below,
+     // so a call it blocks never counts as a read or a search: a blocked call
+     // never ran. The repeated call is blocked *in place* and the warning handed
+--- a/skills/loop-police-help/SKILL.md
++++ b/skills/loop-police-help/SKILL.md
+@@ -52,6 +52,7 @@
+ | `CONSECUTIVE_LOOP_LIMIT` | `2` | Escalated warning after N stream-loop aborts in a row (across turns) |
+ | `TOOL_LOOP_BAN` | `1` | `0` = off; `1` = block identical call only while repeated back-to-back; `2` = ban that exact call for the rest of the session |
+ | `TOOL_LOOP_EXEMPT` | `""` | Comma-separated tool names exempt from the tool call loop detector (case-insensitive exact match, e.g. `bash,run_tests`); exempt calls are never blocked but still break adjacency for other tools |
++| `EXEMPT_PROVIDERS` | `""` | Comma-separated provider IDs exempt from every detector and recovery/context rewrite (case-insensitive exact match, e.g. `antigravity-acp`); applies to every current and future model from the provider |
+ | `REDERIVE_THRESHOLD` | `0.85` | After any detection, thinking this Jaccard-similar to the reasoning that led to it is trimmed from context (re-derived reasoning guard) |
+ | `HOOK_CMD` | `""` | External command per detection; `/set` preserves values such as `node /path/hook.mjs` (execution uses whitespace argv splitting, so paths containing spaces remain unsupported) |
+ | `HOOK_TIMEOUT_MS` | `5000` | `HOOK_CMD` is killed after this many ms |
+@@ -111,7 +112,8 @@
+ ```json
+ {
+   "FILE_SCAN_LIMIT": 30,
+-  "SEARCH_EXPAND_LIMIT": 4
++  "SEARCH_EXPAND_LIMIT": 4,
++  "EXEMPT_PROVIDERS": "antigravity-acp"
+ }
+ ```
+ 

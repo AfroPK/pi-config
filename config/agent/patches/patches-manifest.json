@@ -1,0 +1,103 @@
+{
+  "manifestVersion": 1,
+  "packages": [
+    {
+      "name": "pi-ghost-text",
+      "testedVersion": "0.1.2",
+      "packageDir": "pi-ghost-text",
+      "patches": [
+        {
+          "file": "pi-ghost-text-fake-cursor.patch",
+          "description": "Skip pi-tui >= 1.6 FAKE_CURSOR APC markers and return copied lines array",
+          "markers": [
+            { "file": "src/render.ts", "contains": "FAKE_CURSOR_START" },
+            { "file": "src/render.ts", "contains": "return [...lines]" }
+          ],
+          "hashes": {
+            "src/render.ts": "7de2e5c324e3081e50f8fe2ee9dc810c8d956ee60bde1ae3fff9a7aecc97266c"
+          }
+        },
+        {
+          "file": "pi-ghost-text-after-turn.patch",
+          "description": "Enable after-turn ghost suggestions on empty baseText without flashing NONE sentinel",
+          "markers": [
+            { "file": "src/client.ts", "contains": "Coding sessions almost always have an obvious next step" },
+            { "file": "src/editor.ts", "contains": "isNoneSentinelPrefix" },
+            { "file": "src/normalize.ts", "contains": "export function isNoneSentinelPrefix" }
+          ],
+          "hashes": {
+            "src/client.ts": "b5af7eacce74902abf9b0caea081384c2feaf1480db5163dd07f545fe2f3fae2",
+            "src/editor.ts": "7ed6b718cf78d8f3d8f0be5886dc13b4cc824a7c603d835a6838c7110c67f72a",
+            "src/normalize.ts": "6cea62e4e9d638960b9b6e1bb2cb3b3ac44d03dfd83ce14796a95d7038382e24"
+          }
+        }
+      ]
+    },
+    {
+      "name": "pi-loop-police",
+      "testedVersion": "1.14.1",
+      "packageDir": "pi-loop-police",
+      "patches": [
+        {
+          "file": "pi-loop-police-local.patch",
+          "description": "Defer recovery to agent_settled and add EXEMPT_PROVIDERS bypass",
+          "markers": [
+            { "file": "extensions/loop-police.ts", "contains": "pendingRecovery" },
+            { "file": "extensions/loop-police.ts", "contains": "function isExemptProvider" }
+          ],
+          "hashes": {
+            "extensions/loop-police.ts": "cc8391f2118c3fbd2e43515190f0d3fc7d049da9d4d407840c34a6a8c7a10a76",
+            "README.md": "16a7f674d40e2178f9da8905106ed251299dab4792caf03d332f05fa1e63a04d",
+            "skills/loop-police-help/SKILL.md": "6b966b4771f09cdb69ee3a151b53ec8937aab1aa81d77db25140d510d16dfd95"
+          }
+        }
+      ],
+      "configCopies": [
+        {
+          "source": "pi-loop-police.config.json",
+          "dest": "extensions/loop-police.json",
+          "requiredKeys": {
+            "EXEMPT_PROVIDERS": "antigravity-acp"
+          }
+        }
+      ]
+    },
+    {
+      "name": "pi-antigravity-acp-provider",
+      "testedVersion": "0.1.22",
+      "packageDir": "pi-antigravity-acp-provider",
+      "patches": [
+        {
+          "file": "pi-antigravity-acp-provider-native-agy.patch",
+          "description": "Support native agy 1.5+ CLI (agy acp --dangerously-skip-permissions for yolo mode)",
+          "markers": [
+            { "file": "src/acp/antigravity.ts", "contains": "isNativeAntigravityCli" },
+            { "file": "src/runtime.ts", "contains": "wirePermissionMode" }
+          ],
+          "hashes": {
+            "src/acp/antigravity.ts": "8f01616f2031026bc35f7e35409c3308a8b1602fbb5e8bf434f80d7d5f4d8519",
+            "src/runtime.ts": "3bba8e4154229191be6eaf7af4fa9326c6f89f8e79914654789f1010dc921016",
+            "README.md": "816d6ac11e5219366b6bf749d5a1e14ffb7d40477740d549dfe01ecb104f784f"
+          }
+        }
+      ]
+    },
+    {
+      "name": "@lanlance/pi-btw",
+      "testedVersion": "0.2.0",
+      "packageDir": "@lanlance/pi-btw",
+      "patches": [
+        {
+          "file": "pi-btw-model-runtime.patch",
+          "description": "Share parent modelRuntime with /btw side session so extension-registered providers resolve",
+          "markers": [
+            { "file": "extensions/btw.ts", "contains": "modelRuntime: (ctx.modelRegistry as any).runtime" }
+          ],
+          "hashes": {
+            "extensions/btw.ts": "5bd5325b8d8408b28f060f634fa61d1d34dd106e1a0a8a23fce78df9ae4efbb7"
+          }
+        }
+      ]
+    }
+  ]
+}

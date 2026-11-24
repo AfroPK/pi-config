@@ -9,7 +9,7 @@ REM   loop      - pi-loop: plan -> review -> exec -> code-review, unattended
 REM   kaggle / kaggle-strata - remote Kaggle notebooks (need the notebook running + kaggle-set / kaggle-strata-set)
 
 REM Full node path, as in pi-durable.cmd: a stray quote in PATH ("...\GitHub CLI"") hides node from cmd's PATH search
-set PI_CMD="C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js"
+set PI_CMD="C:\Program Files\nodejs\node.exe" "%APPDATA%\npm\node_modules\@earendil-works\pi-coding-agent\dist\bundle\cli.js"
 REM REST = all args after the first, quotes preserved ("shift" alone does not change %*)
 set "HERE=%~dp0"
 set "MODE=%~1"

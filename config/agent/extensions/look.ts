@@ -1,3 +1,4 @@
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { createHash } from "crypto";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "fs";
@@ -164,7 +165,7 @@ function imageToNote(block: any): any {
   return { type: "text", text: `[image saved at ${p} - you can't see images directly; call look with images=["${p}"] and your question]` };
 }
 
-export default function (pi) {
+export default function (pi: ExtensionAPI) {
   pi.on("context", async (event, ctx) => {
     if ((ctx.model?.input ?? ["text"]).includes("image")) return;
     let changed = false;

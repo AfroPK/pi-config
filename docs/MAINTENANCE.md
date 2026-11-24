@@ -19,12 +19,13 @@ python scripts/capture.py
 The capture script:
 
 - selects active agent configuration, extensions, skills, tests, patches, package lockfiles, `.pi` launchers/prompts, shell aliases, and known machine integrations;
-- skips `.bak` files, auth files, logs, bytecode, sessions, `node_modules`, and virtual environments;
+- skips `.bak` files, `.lock` files (`skillful-install.json.lock`), auth files, logs, bytecode, sessions, `node_modules`, and virtual environments;
+- prunes stale files previously captured inside `config/agent/` and `config/pi/`;
 - replaces the source home path with `__PI_HOME__`;
 - structurally replaces literal provider keys with environment references;
 - records current tool versions, global npm versions, environment requirements, file sizes, and SHA-256 hashes.
 
-The script updates files it manages but does not prune arbitrary stale files. After removing a live extension/skill, remove its old repository directory explicitly if it is no longer wanted, then inspect `git status`.
+Keep `agent/agents/*.md` saved with LF line endings (`.gitattributes` enforces this in Git, and `verify.py` / `verify-pi-compat.mjs` fail on CRLF).
 
 ## 2. Review the diff
 
@@ -41,12 +42,12 @@ Check for:
 - temporary Kaggle URLs you no longer want documented;
 - absolute paths that did not use the captured home prefix;
 - upstream package updates that need a changed patch or new documentation;
-- stale files left by removed resources.
+- stale files left in `config/machine/` if machine integrations changed.
 
 ## 3. Verify before publishing
 
 ```bash
-python scripts/verify.py
+python scripts/verify.py --runtime
 python -m unittest discover -s tests -v
 ```
 
@@ -59,9 +60,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install.ps1 `
 python .\scripts\verify.py --installed-home $testHome
 ```
 
-Use a new empty test directory for each run, or test the backup behavior intentionally. The verification does not make model calls, install global packages, or start services.
+Use a new empty test directory for each run, or test the backup behavior intentionally. `--runtime` checks live Pi (`verify-pi-compat.mjs`); the `--installed-home` test verifies restored files without making model calls or starting services.
 
-For changes to package versions or the ghost-text patch, also run a real package restore on a test account/machine and the extension tests. For launcher changes, test the affected command with a harmless task and a configured local model. Do not claim those integrations are verified by JSON checks alone.
+For changes to package versions or local package patches, run `node "$HOME\.pi\agent\patches\manage-patches.mjs" check` (or test `apply` against a fresh unpacked package tarball) and run `node "$HOME\.pi\agent\tests\verify-pi-compat.mjs"`. For launcher changes, test the affected command with a harmless task and a configured local model. Do not claim those integrations are verified by JSON checks alone.
 
 ## 4. Commit and push
 
@@ -77,16 +78,24 @@ Never use a broad add to bypass inspection of unexpected files. If GitHub secret
 
 ## Updating Pi or extensions
 
-The snapshot deliberately pins the installed CLI and uses lockfiles. To move versions intentionally:
+On the live PC, prefer the safe update wrapper:
 
-1. Upgrade the live setup using Pi's normal update flow.
-2. Test all local extensions against the new Pi API.
-3. Compare `pi-ghost-text`'s new renderer with `patches/render.patched.ts`; drop or adapt the patch rather than overwriting blindly.
-   `pi-interactive-subagents` comes from the AfroPK fork; merge upstream there, not in the installed copy.
-4. Recapture and update the version references in README/guides if needed.
-5. Run package/extension tests and the restore test.
+```powershell
+& "$HOME\.pi\pi-update.cmd"            # updates global Pi CLI, preserves & verifies patches
+& "$HOME\.pi\pi-update.cmd" --extensions  # updates unpinned/git extensions, skips pinned patched packages, verifies compat
+```
 
-`pi update --extensions` can install newer versions allowed by package ranges. The repository installer instead runs `npm ci` for an exact snapshot restore.
+What `pi-update.ps1` automates (and what to check when intentionally bumping a pinned package):
+
+1. Backs up `settings.json`, `models.json`, `keybindings.json`, `npm/package.json`, `npm/package-lock.json`, and `loop-police.json` into `~/.pi-config-backups/pre-update-<timestamp>/`.
+2. Runs `pi update` (with any flags such as `--extensions`). Pinned packages in `settings.json` (`pi-ghost-text@0.1.2`, `pi-loop-police@1.14.1`, `pi-antigravity-acp-provider@0.1.22`, `@lanlance/pi-btw@0.2.0`) are skipped by `pi update --extensions`; `pi-interactive-subagents` pulls from `AfroPK/pi-interactive-subagents`.
+3. Runs `node ~/.pi/agent/patches/manage-patches.mjs apply` to re-verify/reapply local diffs and restore `loop-police.json`. If you intentionally bump one of the four pinned packages, test each diff against the new upstream tarball before applying—`manage-patches.mjs` refuses blind overwrites on conflicts.
+4. Runs `node ~/.pi/agent/tests/verify-pi-compat.mjs` to check `SettingsManager`, `DefaultResourceLoader` (all extensions & skills), deprecated imports, LF `agents/*.md`, `pi --list-models`, and unit tests.
+5. Afterward, run `python scripts/capture.py`, `python scripts/verify.py --runtime`, and update docs if versions changed.
+
+If `pi-interactive-subagents` falls behind upstream, merge upstream in a clone of `AfroPK/pi-interactive-subagents`, run its tests, push, and run `pi update git:github.com/AfroPK/pi-interactive-subagents`.
+
+The repository installer (`install.ps1`) uses `npm ci --ignore-scripts --legacy-peer-deps` plus `manage-patches.mjs apply` for an exact reproducible restore.
 
 ## Adapting for another machine
 

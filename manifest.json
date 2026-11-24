@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-23T04:17:34.178676+00:00",
+  "capturedAt": "2026-11-24T01:13:56.313969+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -38,16 +38,16 @@
       "sha256": "955fd27edd6f518134e21132fa9112e515f7f83719d4b0d319ef4d4b171da22d"
     },
     "config/agent/extensions/ask-guard.ts": {
-      "bytes": 6459,
-      "sha256": "33e84486174b8df7d7744716a99270c62f1fb383c66e3b84829046356059abea"
+      "bytes": 6461,
+      "sha256": "bcee009e69c16c3c82d6a4ca133e2cf435e6996da0cbd240d27ffd89270c1f7f"
     },
     "config/agent/extensions/ask-user-question.ts": {
-      "bytes": 21567,
-      "sha256": "10ff7bfbe66e693fb85c1f4da65d25ed9e492af038f68c150dae72cfe0c83203"
+      "bytes": 21584,
+      "sha256": "bd03a805f41a89f7ed85dbfa4f84fc08552b83f4480ed8a14c2e4b67559ff043"
     },
     "config/agent/extensions/bash-guard/index.ts": {
-      "bytes": 30112,
-      "sha256": "173def65d3b9766b29e6e0b85f54d4a07c15ad785f2949374a5a01398c47d3d2"
+      "bytes": 30153,
+      "sha256": "76b22b9da42eb3b77d2ddfee4a376cda3872f18e402216aea7f53a77ce140c57"
     },
     "config/agent/extensions/bash-guard/package-lock.json": {
       "bytes": 656,
@@ -66,8 +66,8 @@
       "sha256": "f1ca5c543c13af8fa589b31d3c8b7f553f19c1dca217ecfdf5974561b85c382b"
     },
     "config/agent/extensions/bash-guard/test/dialog-fit.test.mjs": {
-      "bytes": 7224,
-      "sha256": "be949ac9b9656c2aad3275f33805681155189907147dd9b6fc7bd3a76d5ff69e"
+      "bytes": 7846,
+      "sha256": "78a17805a727073fdeba938925114b738a0e1de1106c0d8716d1ab944134d178"
     },
     "config/agent/extensions/browser/index.ts": {
       "bytes": 24233,
@@ -86,8 +86,8 @@
       "sha256": "0e995a4a3ce69c531d7366bdd3f436b75278c82364ea32302ae01be689f4a1d0"
     },
     "config/agent/extensions/claude-cli/index.ts": {
-      "bytes": 8657,
-      "sha256": "907aaf3af7de43c3f431367f938be7e4a91ebadc9afd25dbb1ad9940852c44a2"
+      "bytes": 8667,
+      "sha256": "044fe25448a1e1c912fef5769b4e0827d718c4d939baa4624c5dc2d8f85a74c5"
     },
     "config/agent/extensions/claude-cli/README.md": {
       "bytes": 2234,
@@ -98,28 +98,32 @@
       "sha256": "ba27def85267cd02416031c9401032e8a981ba219bf6436110b01781c5005ada"
     },
     "config/agent/extensions/custom-header.ts": {
-      "bytes": 3939,
-      "sha256": "5f4a14046948fe26dde8f65035c0a23e8aae6ede8d593d9a1e788b7bd423d454"
+      "bytes": 3908,
+      "sha256": "250a46a82c204e1e314ffc46c73bd1b8de9170100e630bf94223549a68ca7ec7"
     },
     "config/agent/extensions/dictate/index.ts": {
-      "bytes": 16572,
-      "sha256": "2d05dbb6b888602cad416ae26f2bc7ba3015f9ea3344c8e416759d8371b1c027"
+      "bytes": 16610,
+      "sha256": "48ae57978050940aa5d6801ea169a1ab0f530d53c665c194162cfe558bfefe37"
     },
     "config/agent/extensions/dictate/LICENSE": {
       "bytes": 1071,
       "sha256": "8363e1129a2f27108723c8e31b78eea3d360b8a8ff3b19bc3a6ea89576074cf8"
     },
     "config/agent/extensions/imagegen.ts": {
-      "bytes": 13961,
-      "sha256": "595f5826273744c991283c862052c00dd3e85f01dde8c08eb633bb0a527e9349"
+      "bytes": 14044,
+      "sha256": "f7dbb1d77c44b854c2713caeb2d70ddd77537ba920fa7ccab986d53e291056f2"
     },
     "config/agent/extensions/look.ts": {
-      "bytes": 13424,
-      "sha256": "0b3df4b09cc3032b16f85383156d692c2a0afeabb9f299bdee4049d3a8541a56"
+      "bytes": 13507,
+      "sha256": "1be28adbda8e7b368689b266296531adaa8aec8336c6b97b6cbf98018f694729"
+    },
+    "config/agent/extensions/patch-guard.ts": {
+      "bytes": 3908,
+      "sha256": "fb660b6d03fd700b4e9044bdb92b1275bba22b00022b86340b1a3310a99e7063"
     },
     "config/agent/extensions/prompt-snippets/index.ts": {
-      "bytes": 11789,
-      "sha256": "0baa9672dc1987014b0406f6f4152d74d564ce609a506f9cc8fb34b782bc74da"
+      "bytes": 11799,
+      "sha256": "2a033ebd47a14dfadec4225bda36475ad8a4964f4dbb86ce5cad16b86391a188"
     },
     "config/agent/extensions/prompt-snippets/README.md": {
       "bytes": 2143,
@@ -154,8 +158,8 @@
       "sha256": "b9367c45aaedf110b03b01bfba14b688bf5e4422013030079bf259b99c19f67d"
     },
     "config/agent/extensions/web-fetch/index.ts": {
-      "bytes": 19270,
-      "sha256": "34d77a7375b0b19138bab1cb32757522967ee8440355ccb51c32d93ba0238593"
+      "bytes": 19274,
+      "sha256": "70f059b7939a69afd0bb4194334e9a65ca3ffedf00fb65277c3781af834ba673"
     },
     "config/agent/extensions/web-fetch/package-lock.json": {
       "bytes": 7515,
@@ -170,8 +174,8 @@
       "sha256": "c6988e59be3fac0a07ec6d4694f1d6b2114a9e7aec5e9ba31ffdead72a761510"
     },
     "config/agent/extensions/web-search/index.ts": {
-      "bytes": 11192,
-      "sha256": "34bb0ce61eeee369e6738c2361efaf1bb1fd6931458c3ac6cac966d3c37e050e"
+      "bytes": 11236,
+      "sha256": "850589eac009fa3aa9c9d3ac13afc549ca233d69bd81055218ed3daf839d9ecb"
     },
     "config/agent/extensions/web-search/README.md": {
       "bytes": 1129,
@@ -198,12 +202,28 @@
       "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d"
     },
     "config/agent/npm/package-lock.json": {
-      "bytes": 102174,
-      "sha256": "1db1c453f9453d5cb28cd67e8ce91b39a437b7ac4b7ca561b86e65a914c9a552"
+      "bytes": 102170,
+      "sha256": "a5325d4d13aa2d24e160bb564baa36ac7148ec86572b5e82382241ca5f2f1835"
     },
     "config/agent/npm/package.json": {
-      "bytes": 530,
-      "sha256": "1bb2f58f4b7c9a60e821e3d8537ef5b531f747824f91c94a98f822b9f582cb01"
+      "bytes": 526,
+      "sha256": "bc09acd800e1c6f6f1ba831011119039034643930a0454bf2ded290685c82119"
+    },
+    "config/agent/patches/manage-patches.mjs": {
+      "bytes": 8040,
+      "sha256": "e635784a5d60e92697efed8af97db6a2acdf1cef7e2afb7d95c7517445298cf9"
+    },
+    "config/agent/patches/patches-manifest.json": {
+      "bytes": 4122,
+      "sha256": "6f2fea22d9c5e54bf75aebc4b2e8c5de2e623ce27743db2495c3be334698e69b"
+    },
+    "config/agent/patches/pi-antigravity-acp-provider-native-agy.patch": {
+      "bytes": 7152,
+      "sha256": "fe64423b97c27b561e00df81b85023af6e220c4e8c7c8dae66b46415dddd21fd"
+    },
+    "config/agent/patches/pi-btw-model-runtime.patch": {
+      "bytes": 526,
+      "sha256": "cb78d19165f3efbc5f0f05f7dad2c2f76f48ec29be739b1562930cac472f701f"
     },
     "config/agent/patches/pi-ghost-text-after-turn.patch": {
       "bytes": 2813,
@@ -211,11 +231,19 @@
     },
     "config/agent/patches/pi-ghost-text-fake-cursor.patch": {
       "bytes": 3172,
-      "sha256": "8a57cb9f1973b9a67a01df95886f86f125a03b3e30c6529a513d64bf6dfed93c"
+      "sha256": "afa28f0b24d7e7127a8600d3ad528af953489610f28a116c53a65a9dcadd8580"
+    },
+    "config/agent/patches/pi-loop-police-local.patch": {
+      "bytes": 8912,
+      "sha256": "4eb9a3eca21324b7f16296ce46325920c15753cde74d988d89dacc6e25f6bac7"
+    },
+    "config/agent/patches/pi-loop-police.config.json": {
+      "bytes": 3844,
+      "sha256": "60d63c19ffa44fb21e84e81fe055daa0e349670ef87d345e69448e3f572f5b67"
     },
     "config/agent/patches/README.md": {
-      "bytes": 2228,
-      "sha256": "616e992bfc78096f19788d63808f6c86efb5b26c8922431f8b212d37ee6af9ef"
+      "bytes": 3549,
+      "sha256": "d77d8bb21b331c7f249baf26d164fbb5e05b1c57807721168c095b70ab73d9b6"
     },
     "config/agent/patches/render.patched.ts": {
       "bytes": 3076,
@@ -226,8 +254,8 @@
       "sha256": "ca85a00c6714288b6adc8cfceb5b9581e07e320103fcc1125e5cd1f0e203ca29"
     },
     "config/agent/settings.json": {
-      "bytes": 2177,
-      "sha256": "0c4f34efe9da114209042c6c1e85e7988bda7b4a458809cd6fce6de0b0de6790"
+      "bytes": 2093,
+      "sha256": "8d5de220824b0bec20aae5e14c5b4bc8648f475e5b28532d07fa6a1a6e541d9e"
     },
     "config/agent/skills/afropk-github-repo/assets/fonts/Anton-Regular.ttf": {
       "bytes": 170812,
@@ -706,8 +734,16 @@
       "sha256": "1ee13def9252fe8bd50dd3d4300f0e03ec8b53e4d7428816e737d9cc5040cc0d"
     },
     "config/agent/tests/ask-guard.test.mjs": {
-      "bytes": 6346,
-      "sha256": "b7ba77c2c7a131c8b77e42646e7a3f7bc064074e4720fb312498b1d630425d0f"
+      "bytes": 7045,
+      "sha256": "f3e44ec65b106e9b6ca0b6e1d5a8bdc37ce4b2077c7f2479175bbf7f031275d1"
+    },
+    "config/agent/tests/loop-police-provider-exemption.test.mjs": {
+      "bytes": 7182,
+      "sha256": "f83318ea1da6244128955f4aba58f17c97bec30fa546f2b2004f6b27694d93f4"
+    },
+    "config/agent/tests/verify-pi-compat.mjs": {
+      "bytes": 8010,
+      "sha256": "e8906d104eeffadb7f6b3709b64d7c88a7a5bd67eb906c5a64deb4c437624274"
     },
     "config/agent/trust.json": {
       "bytes": 30,
@@ -830,64 +866,72 @@
       "sha256": "53587e50fc5118d19876acf9bee13b9159286a95b587d1e960b4ee41545aca45"
     },
     "config/pi/pi-exec.cmd": {
-      "bytes": 2520,
-      "sha256": "0e14b9b6a1a67ff79687827acc55928edbbf176fc6f3ad4eb9582d70dd61b585"
+      "bytes": 2527,
+      "sha256": "0c5d945c4d22bc939e22a421422068465f0c45f9de5ddf55c6d142774e0ac825"
     },
     "config/pi/pi-inkling.cmd": {
-      "bytes": 673,
-      "sha256": "f9cff52e06d8ffa5eaaefb2f2a9e000572a879033b38e83fbc87aa9227279666"
+      "bytes": 680,
+      "sha256": "336b505f88c677e874d8e75f3c859f7473d7c2272ebe79b92eb71743b35bec46"
     },
     "config/pi/pi-kaggle-strata.cmd": {
-      "bytes": 782,
-      "sha256": "b91743395d0ad2ccba10db88f65d7104054032dd66f8c400f49908133ae0865e"
+      "bytes": 789,
+      "sha256": "c4aabb3c766c3e7db041b2684dd95062f3017650a1af8857ebc3ae3008a32a31"
     },
     "config/pi/pi-kaggle.cmd": {
-      "bytes": 663,
-      "sha256": "75faa3a28948e7b63c0a4344f4df8c518edefccbff6c34e479595bfba8361d02"
+      "bytes": 670,
+      "sha256": "d65602aeadc1b985bc54753981a91c0b96b0bbca350566ebf6478928a67465f2"
     },
     "config/pi/pi-loop.cmd": {
       "bytes": 625,
       "sha256": "ff41c37a72e8aac755c699dfbd13022b9dd512b200be0b2d47a5fa75988e0baf"
     },
     "config/pi/pi-models.cmd": {
-      "bytes": 2067,
-      "sha256": "1aaa2a7b4ace1ef11c43d2f539b84e9e570eedfff78efba554ce67207a460656"
+      "bytes": 2074,
+      "sha256": "9e1749611e7d9fae70b58b3b57098d32af52f595612b8aa7ea72487e6f423028"
     },
     "config/pi/pi-models.sh": {
       "bytes": 653,
       "sha256": "1e3d764121ed239181e28599734bf55e7ea05679fc6ad271c2f3c49eb0df51e1"
     },
     "config/pi/pi-ornith.cmd": {
-      "bytes": 396,
-      "sha256": "da53a464b881613a65c84398a48ee19db3fd4023f2cec48b825db3cd13a4027f"
+      "bytes": 403,
+      "sha256": "55202d6567e04d776ac10e79bc80bbadd4cf88bc4964e6ac561fec6ade6be4ae"
     },
     "config/pi/pi-pe.cmd": {
       "bytes": 1674,
       "sha256": "e7a90d6f34a20b22eb842390657acf52537204934d26835a657fee3e6dc7823d"
     },
     "config/pi/pi-plan-swift.cmd": {
-      "bytes": 5126,
-      "sha256": "e0ee03444151f5e93bf630d4993b9d3c64235ed69ab401eb6f9716e342574c61"
+      "bytes": 5133,
+      "sha256": "73f322e71707004fb3c11dbe4cf70baef87ef1920888286585216af8c736ab5a"
     },
     "config/pi/pi-plan.cmd": {
-      "bytes": 5118,
-      "sha256": "f0e7d661767eb60fe83863bf0d28eb6d63ee115b0ed86c514eb37b4bca7cfd5c"
+      "bytes": 5125,
+      "sha256": "a22e5d67bd77f133917da1e39f502321a6987a57dd91f1c2ae83ee63d6f1f20e"
     },
     "config/pi/pi-qwen36.cmd": {
-      "bytes": 938,
-      "sha256": "2a1ed80a09b1f162f9563509d1e7b45c5248f57fd5c8aa39a18c181770e808e9"
+      "bytes": 945,
+      "sha256": "5fc955d4b8e6a2e3272241c1b5b96fec3b5c99cd38ed6a759797703a5fdb2889"
     },
     "config/pi/pi-review.cmd": {
-      "bytes": 2134,
-      "sha256": "240c07e6edb2e19f649300f10fee0ebdb18b26e5f8a480908985901085b81ceb"
+      "bytes": 2156,
+      "sha256": "4b2b965a0490a533f8bd974e76435a0fe2d6d4f848239d1831a38bdc5e358709"
     },
     "config/pi/pi-stop.cmd": {
       "bytes": 541,
       "sha256": "92c4ea66c358f04e4ee389af3bc1dfbc2c64919da040b3b92f4cb5c409a8b7e6"
     },
     "config/pi/pi-strata.cmd": {
-      "bytes": 1234,
-      "sha256": "60fd91cf88644ef7ba74f724bf05017251725043f4e5c1f3f246bdf10e0a60a1"
+      "bytes": 1241,
+      "sha256": "ddab86b1a31b0c1fbd7c567a9e21c4ea87798b818af12f4a32a02eb055485411"
+    },
+    "config/pi/pi-update.cmd": {
+      "bytes": 295,
+      "sha256": "e57221fa8b8627eabed475eaf2010ea5512f4971519e4998d51630213aa53bd1"
+    },
+    "config/pi/pi-update.ps1": {
+      "bytes": 2508,
+      "sha256": "aa50259a432ce8d8c0e230fc072a830076b782a78588b36563f3afa8f85acc9b"
     },
     "config/pi/planner.md": {
       "bytes": 12487,

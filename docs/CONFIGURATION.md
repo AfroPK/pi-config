@@ -37,17 +37,15 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 6. `qwen3.6-iq3-local` (local executor)
 7. `hipfire/ornith-1.5-9b.mq6` (local, Hipfire)
 8. `qwen27/swift27-xs-64k` (local fallback planner)
-9. `inkling/inkling2-mini-64k` (local, Unsloth llama.cpp build)
+9. `inkling/inkling2-mini-113k` (local, Unsloth llama.cpp build)
 10. `claude-cli/claude-fable-5-2`
 11. `claude-cli/claude-opus-5-5`
 12. `claude-cli/claude-sonnet-5-5`
 13. `claude-cli/claude-haiku-5-5`
-14. `antigravity-acp/gemini-3.1-pro`
-15. `antigravity-acp/gemini-3.6-flash`
-16. `antigravity-acp/gemini-3.7-flash`
-17. `antigravity-acp/gemini-3.8-flash`
-18. `antigravity-acp/gemini-4-argon`
-19. `antigravity-acp/gemini-4-hydrogen`
+14. `antigravity-acp/gemini-3.8-flash`
+15. `antigravity-acp/gemini-4-argon`
+16. `antigravity-acp/gemini-4-hydrogen`
+17. `antigravity-acp/gemini-4-neon`
 
 The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`; its `sessions.json` is not captured) and need a signed-in Antigravity install.
 
@@ -63,9 +61,9 @@ Source: `config/agent/models.json`.
 | `qwen27` | `127.0.0.1:8080/v1` | `swift27-xs-64k`; text | 49,152 / 32,768 | dummy `local` |
 | `qwen36iq3` | `127.0.0.1:8080/v1` | `qwen3.6-iq3-local`; text | 131,072 / 16,384 | dummy `local` |
 | `hipfire` | `127.0.0.1:8080/v1` | `ornith-1.5-9b.mq6`; text | 73,728 / 16,384 | dummy `local` |
-| `inkling` | `127.0.0.1:8080/v1` | `inkling2-mini-64k`; text | 65,536 / 16,384 | dummy `local` |
+| `inkling` | `127.0.0.1:8080/v1` | `inkling2-mini-113k`; text | 115,712 / 16,384 | dummy `local` |
 | `kaggle` | Captured temporary Cloudflare tunnel | `qwen27-q6-mtp` | 131,072 / 16,384 | `${KAGGLE_API_KEY}` |
-| `kaggle-strata` | Captured temporary Cloudflare tunnel | `gyro-s` | 65,536 / 16,384 | `${KAGGLE_STRATA_API_KEY}` |
+| `kaggle-strata` | Captured temporary Cloudflare tunnel | `qwen3.8-flash-next-coder-iq1_m` (or `gyro-s` when set) | 131,072 / 16,384 | `${KAGGLE_STRATA_API_KEY}` |
 
 The local model costs are set to zero. Compatibility settings include the exact reasoning format, token fields, chat-template arguments, thinking-level maps, and streaming behavior used by each endpoint. OpenRouter's GLM 5.3 Flash override requests FP8/BF16, price sorting, and fallbacks.
 
@@ -90,7 +88,7 @@ OAuth state and MCP caches/logs are deliberately excluded.
 
 ## Pi packages
 
-Declared in `settings.json`; exact installed dependency trees are locked in `config/agent/npm/package-lock.json`.
+Declared in `settings.json`; exact installed dependency trees are locked in `config/agent/npm/package-lock.json`. Packages with local patches are exact-pinned in both `settings.json` and `npm/package.json` so `pi update --extensions` skips them instead of overwriting local modifications.
 
 | Package | Captured version | Purpose |
 |---|---:|---|
@@ -101,28 +99,30 @@ Declared in `settings.json`; exact installed dependency trees are locked in `con
 | `pi-ssh` | 0.4.0 | Local model with remote SSH workspace execution |
 | `pi-token-speed` | 0.13.1 | Sliding-window tokens/second display |
 | `pi-skillful` | 0.5.2 | Skill invocation and visibility improvements |
-| `pi-loop-police` | 1.14.1 | Detect/interrupt thinking and tool-call loops |
-| `pi-ghost-text` | 0.1.2 + local patch | Inline and next-prompt ghost suggestions |
-| `@lanlance/pi-btw` | 0.2.0 | Side questions in an overlay while the main agent runs |
+| `pi-loop-police` | `1.14.1` (pinned + patched) | Detect/interrupt thinking and tool-call loops |
+| `pi-ghost-text` | `0.1.2` (pinned + patched) | Inline and next-prompt ghost suggestions |
+| `@lanlance/pi-btw` | `0.2.0` (pinned + patched) | Side questions in an overlay while the main agent runs |
 | `@gwynnnplaine/pi-discord-presence` | 0.1.1 | Discord Rich Presence: live activity, project · model, session timer; `/presence on\|off\|status` |
-| `git:github.com/AfroPK/pi-interactive-subagents` | 3.7.2 fork (`7c8f10b`) | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
+| `pi-antigravity-acp-provider` | `0.1.22` (pinned + patched) | Antigravity ACP provider with native `agy` CLI support |
+| `git:github.com/AfroPK/pi-interactive-subagents` | 3.7.2 fork (`0d0dd21`) | Async subagents in tmux (psmux) panes: `subagent`, `subagent_message`, `subagents_list`, `/subagent` |
 
 `@shog-lab/pi-toolkit` 0.6.1 is also present in the npm manifest/lockfile as a supporting dependency. `skillful-install.json` records its last reported version.
 
-The installer uses `npm ci --ignore-scripts --legacy-peer-deps` rather than an unpinned update. Legacy peer resolution is required because Pi supplies host packages at runtime and the managed packages declare different compatible host ranges. Running `pi update --extensions` later may move versions allowed by semver ranges.
+The installer uses `npm ci --ignore-scripts --legacy-peer-deps` rather than an unpinned update. Legacy peer resolution is required because Pi supplies host packages at runtime and the managed packages declare different compatible host ranges. Running `pi update --extensions` later updates unpinned npm packages and git packages while leaving the four pinned packages untouched.
 
 ## Local extensions
 
-Source: `config/agent/extensions/`; Pi auto-discovers this directory.
+Source: `config/agent/extensions/`; Pi auto-discovers this directory. Local extensions import `@earendil-works/pi-coding-agent`, `@earendil-works/pi-tui`, and `typebox` directly rather than deprecated `@mariozechner/*` / `@sinclair/typebox` aliases.
 
 | Extension | Main behavior | Dependencies/notes |
 |---|---|---|
 | `ask-guard.ts` | Guardrails around question/confirmation flows | Local test in `agent/tests/` |
-| `ask-user-question.ts` | Structured interactive questions | Used by global workflow instructions |
+| `ask-user-question.ts` | Structured interactive questions | Used by global workflow instructions; TUI-guarded for non-TUI modes |
 | `dictate/` | Voice dictation: `alt+m` start/stop, `alt+n` cancel; `/dictate-check` | Adapted from amosblomqvist/pi-dictate; ffmpeg capture from the Focusrite, transcribed by HomeLab faster-whisper `http://192.168.0.117:8020` (`DICTATE_*` env vars override) |
-| `custom-header.ts` | Custom Pi header | UI customization |
+| `custom-header.ts` | Custom Pi header | UI customization; uses `tui.editor.deleteToLineEnd` keyhint |
 | `imagegen.ts` | `generate_image` through ComfyUI SDXL + pixel-art LoRA | ComfyUI, ImageMagick, llama-swap GPU handoff |
 | `look.ts` | Vision answers and real-browser page measurements | Chrome, global Playwright, OpenRouter or custom vision endpoint |
+| `patch-guard.ts` | Checks local package patches & `loop-police.json` on `session_start`; `/patch-status`, `/patch-apply` | Uses `agent/patches/manage-patches.mjs` and `patches-manifest.json` |
 | `bash-guard/` | Shell-aware destructive-command confirmation and subagent hard blocks | `shell-quote`; tests included; local behavior changes documented |
 | `browser/` | Opt-in Playwright browser navigation, JS, console/network, forms, screenshots | `playwright-core`; `/browser on`; persistent profile excluded |
 | `claude-cli/` | Claude subscription models through official CLI and DirectSDK shim | Claude Code, Hermes venv/plugin; log excluded |
@@ -130,7 +130,7 @@ Source: `config/agent/extensions/`; Pi auto-discovers this directory.
 | `web-fetch/` | Readable web/PDF extraction | Readability, linkedom, Turndown, unpdf lockfile |
 | `web-search/` | Google Custom Search with Firecrawl fallback | Optional Google credentials; example auth only |
 
-Old `.bak` variants, browser profiles, dependency directories, and `claude-cli/shim.log` are not captured.
+Old `.bak` variants, transient `*.lock` files (such as `skillful-install.json.lock`), browser profiles, dependency directories, and `claude-cli/shim.log` are not captured.
 
 ## Global instructions and small preferences
 
@@ -144,10 +144,10 @@ No `SYSTEM.md`, `APPEND_SYSTEM.md`, custom `prompts/`, or custom `themes/` exist
 
 ## Skills
 
-All 32 active directories are in `config/agent/skills/`:
+All 33 active directories are in `config/agent/skills/`:
 
 - **Agent/workflow:** `afropk-github-repo`, `agent-desktop`, `analyze-sessions`, `local-spec`, `node-project`, `python-project`, `spec-writer`, `web-debug`, `web-design`.
-- **Games/art:** `animated-sprites`, `ayo-rules`, `game-dev`, `game-ui`, `love2d`, `love2d-core`, `pixel-art`, `pixel-art-animator`, `roguelike-design`, `threejs-gltf-loading`, `threejs-materials-lighting`, `threejs-scene-setup`.
+- **Games/art:** `animated-sprites`, `ayo-rules`, `balatro-llm`, `game-dev`, `game-ui`, `love2d`, `love2d-core`, `pixel-art`, `pixel-art-animator`, `roguelike-design`, `threejs-gltf-loading`, `threejs-materials-lighting`, `threejs-scene-setup`.
 - **Local AI:** `local-llm-rocm`.
 - **Media/content:** `clip-factory`, `clip-hunter`, `davinci-resolve`, `duofecta-thumbnail`, `gta-reel-editor`, `saber-cutout`, `vice-clips-review`, `youtube-transcript`.
 - **Documents/platform:** `apple-emoji-windows`, `pdf-reader`.
@@ -167,10 +167,11 @@ Sources: `config/pi/planner.md`, `reviewer.md`, `executor.md`, role-specific loc
 | `pi-pe "task"` | Above sequence | Saves task, runs non-interactive plan/review, then executor |
 | `pi-loop TASK.md` | Same role assignments | External pi-loop unattended workflow; optional code review |
 
-The role prompts are appended with `--append-system-prompt`; they do not replace Pi's base system prompt. These launchers intentionally use `--no-skills` for tightly scoped local-model contexts. `environment.md` supplies machine facts.
+The role prompts are appended with `--append-system-prompt`; they do not replace Pi's base system prompt. These launchers intentionally use `--no-skills` for tightly scoped local-model contexts and invoke Pi's official CLI bundle entrypoint (`dist\bundle\cli.js`). `environment.md` supplies machine facts.
 
 ## Other launchers and helpers
 
+- `pi-update.cmd` / `pi-update.ps1`: safe update wrapper that backs up settings, models, keybindings, npm manifests, and `loop-police.json`, runs `pi update`, reapplies/verifies local package patches, and runs `verify-pi-compat.mjs`.
 - `pi-models.cmd`: menu/dispatcher for Strata, Qwen3.6, plan/review/exec, fallback planner, loop, and Kaggle.
 - `pi-strata.cmd`, `pi-qwen36.cmd`, `pi-ornith.cmd`, `pi-inkling.cmd`: call `ensure-server.ps1` and start Pi with role-specific local prompts.
 - `pi-kaggle.cmd`, `pi-kaggle-strata.cmd`: use remote Kaggle providers.
@@ -194,16 +195,21 @@ These files are captured as active source, including their historical comments. 
 - `llama/start-qwen36-iq3.bat`: 128K Qwen3.6 MoE configuration;
 - `llama/start-swift27-xs-64k.bat`: 48K Swift 27B fallback configuration (legacy 64K alias retained);
 - `hipfire-test/serve-ornith.cmd`: Hipfire server for Ornith 1.5 9B MQ6 (MTP K=2, 72K), started by llama-swap. Hipfire itself, its ROCm path and the model are external;
-- the `inkling2-mini-64k` llama-swap entry needs Unsloth's ROCm gfx103X llama.cpp prebuilt (`rocm-unsloth` macro), which is not captured;
+- the `inkling2-mini-113k` llama-swap entry needs Unsloth's ROCm gfx103X llama.cpp prebuilt (`rocm-unsloth` macro), which is not captured;
 - `pi-local/env`: pi-loop role model, swap ID, tools, thinking, and timeout settings.
 
 The model binaries and engines are external. The included `local-llm-rocm` skill contains the detailed build/download/tuning guide and measured hardware notes.
 
-## Ghost-text patch
+## Local package patches and update protection
 
-`config/agent/patches/` preserves two diffs, the patched `render.ts`, and a README. Pi 1.6.0's fake-cursor APC markers prevented `pi-ghost-text` 0.1.2 from rendering suggestions. The patch skips those markers and avoids mutating the render lines.
+Four npm packages carry local patches inside `agent/npm/node_modules/`. Rather than relying on ad-hoc edits that an update or reinstall would erase, `config/agent/patches/` tracks unified diffs, checksum markers, and runtime config:
 
-The installer copies `render.patched.ts` over the installed package after `npm ci`. Reapply it after reinstalling/upgrading that package; first compare the new upstream renderer rather than blindly overwriting a different version.
+- `pi-ghost-text@0.1.2`: `pi-ghost-text-fake-cursor.patch` (skips Pi >= 1.6 `FAKE_CURSOR` APC markers without mutating line arrays) and `pi-ghost-text-after-turn.patch` (after-turn suggestions on empty input without flashing `NONE`); `render.patched.ts` is kept for reference.
+- `pi-loop-police@1.14.1`: `pi-loop-police-local.patch` (defers recovery until `agent_settled` and adds `EXEMPT_PROVIDERS` bypass) plus `pi-loop-police.config.json` (restores `extensions/loop-police.json` with `EXEMPT_PROVIDERS: "antigravity-acp"` and sanitized `HOOK_LOG`).
+- `pi-antigravity-acp-provider@0.1.22`: `pi-antigravity-acp-provider-native-agy.patch` (supports native `agy 1.5+` CLI `acp --dangerously-skip-permissions`).
+- `@lanlance/pi-btw@0.2.0`: `pi-btw-model-runtime.patch` (passes parent `modelRuntime` to `/btw` side sessions so extension-registered providers resolve).
+
+`patches-manifest.json` records patch descriptors, required code markers, and normalized SHA-256 hashes; `manage-patches.mjs` (`status` / `check` / `apply`) uses `git apply --ignore-whitespace --check` and refuses blind overwrites if upstream code conflicts. At runtime, `extensions/patch-guard.ts` verifies markers on `session_start` and provides `/patch-status` and `/patch-apply`.
 
 ## Interactive subagents
 

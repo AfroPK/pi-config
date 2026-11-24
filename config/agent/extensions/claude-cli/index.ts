@@ -1,7 +1,8 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { spawn } from "child_process";
 import { existsSync } from "fs";
-import { join } from "path";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
 /**
  * claude-cli: Claude models in Pi through the official Claude Code CLI, on Freddy's Claude subscription.
@@ -23,7 +24,7 @@ const PORT = Number(process.env.PI_CLAUDE_CLI_PORT || 18766);
 const BASE = `http://127.0.0.1:${PORT}`;
 const HERMES_HOME = process.env.HERMES_HOME || join(process.env.LOCALAPPDATA || "", "hermes");
 const PYTHON = process.env.PI_CLAUDE_CLI_PYTHON || join(HERMES_HOME, "hermes-agent", "venv", "Scripts", "python.exe");
-const HERE = join(process.env.USERPROFILE || process.env.HOME || "", ".pi", "agent", "extensions", "claude-cli");
+const HERE = dirname(fileURLToPath(import.meta.url));
 const SHIM = join(HERE, "shim.py");
 
 // All four take a 1M context through the CLI. Thinking is mandatory on these models, so "off" sends the lowest effort.
@@ -193,12 +194,12 @@ export default function (pi: ExtensionAPI) {
     if (ctx?.model?.provider === PROVIDER) ensureServer().then(() => refreshFooter(ctx)).catch(() => {});
   });
 
-  // Footer: plan usage after each Claude run (fresh, since the run just used some), and on model switch.
-  pi.on("agent_end", async (_event, ctx: any) => {
-    refreshFooter(ctx, true);
+  // Footer: plan usage after each Claude run settles (fresh, since the run just used some), and on model switch.
+  pi.on("agent_settled", async (_event, ctx: any) => {
+    await refreshFooter(ctx, true);
   });
   pi.on("model_select", async (_event, ctx: any) => {
-    refreshFooter(ctx);
+    await refreshFooter(ctx);
   });
 
   pi.registerCommand("claude-usage", {

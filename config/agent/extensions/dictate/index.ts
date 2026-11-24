@@ -244,7 +244,7 @@ export default function (pi: ExtensionAPI) {
   let lastCtx: ExtensionContext | null = null;
 
   const resolveTarget = (): Target | null => {
-    const focused = tuiHandle?.focusedComponent;
+    const focused = tuiHandle?.getFocusedComponent?.() ?? tuiHandle?.focusedComponent;
     if (!focused) return null;
     const editor = asEditorLike(focused) ?? asEditorLike(focused.editor);
     if (editor) return { kind: "editor", editor };

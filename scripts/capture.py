@@ -142,7 +142,7 @@ def copy_tree(source: Path, destination: Path, source_home: Path) -> list[Path]:
     for path in sorted(source.rglob("*")):
         if not path.is_file() or any(part in SKIP_DIRS for part in path.parts):
             continue
-        if ".bak" in path.name or path.suffix.lower() in {".log", ".pyc"}:
+        if ".bak" in path.name or path.suffix.lower() in {".log", ".pyc", ".lock"}:
             continue
         if path.name == "auth.json":  # auth.example.json remains eligible.
             continue
@@ -169,6 +169,16 @@ def hash_file(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def prune_stale_files(root: Path, keep: set[Path]) -> None:
+    if not root.is_dir():
+        return
+    for existing in sorted(root.rglob("*"), reverse=True):
+        if existing.is_file() and existing not in keep:
+            existing.unlink()
+        elif existing.is_dir() and not any(existing.iterdir()):
+            existing.rmdir()
 
 
 def capture(source_home: Path, repo: Path) -> dict[str, Any]:
@@ -198,11 +208,15 @@ def capture(source_home: Path, repo: Path) -> dict[str, Any]:
         copied.extend(copy_tree(agent / name, config / "agent" / name, source_home))
 
     for source in sorted((source_home / ".pi").iterdir()):
-        if not source.is_file() or ".bak" in source.name or source.suffix == ".jsonl":
+        if not source.is_file() or ".bak" in source.name or source.suffix.lower() in {".jsonl", ".lock"}:
             continue
         target = config / "pi" / source.name
         copy_file(source, target, source_home)
         copied.append(target)
+
+    copied_set = set(copied)
+    prune_stale_files(config / "agent", copied_set)
+    prune_stale_files(config / "pi", copied_set)
 
     aliases = [
         "# Pi local-model launchers. Source this file from ~/.bashrc after adding ~/.pi to PATH.",
