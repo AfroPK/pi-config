@@ -47,7 +47,7 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 16. `antigravity-acp/gemini-4-hydrogen`
 17. `antigravity-acp/gemini-4-neon`
 
-The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`, set to `permissions: "yolo"` for native `agy.exe` via User env var `AGY_ACP_BIN` so model thoughts stream as Pi thinking blocks; its `sessions.json` is not captured) and need a signed-in Antigravity install.
+The first nine are configured directly or through OpenRouter. The `claude-cli` entries are registered by the local `claude-cli` extension and require its external dependencies. The `antigravity-acp` entries come from the `pi-antigravity-acp-provider` package (preferences in `agent/antigravity-acp-provider/config.json`, set to `permissions: "yolo"` because `agy_acp_server` otherwise gates `pi-bridge` MCP calls behind confirmation prompts; its `sessions.json` is not captured) and need a signed-in Antigravity install. Leaving `AGY_ACP_BIN` unset keeps the managed `agy_acp_server` runtime with `pi-bridge` so `antigravity-acp` models use Pi's tools (`antigravity-prefer-pi-tools.ts`).
 
 ## Model providers
 
