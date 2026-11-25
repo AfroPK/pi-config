@@ -13,7 +13,7 @@
 
 **`{ pi-config }`**: my whole Pi setup, sanitized and in one repo, with an installer that puts it back.
 
-237 captured files, 33 skills, 14 local extension entry points, 13 declared Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
+239 captured files, 33 skills, 14 local extension entry points, 14 declared Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
 
 > [!NOTE]
 > No keys, tokens, sessions or logs are committed. Provider keys in `models.json` are environment-variable references. Run the verification script before publishing.
@@ -49,7 +49,7 @@ Files-only restore: add `-SkipPackages -SkipPiInstall`. Machine integrations (ll
 | Skills | `config/agent/skills/` | All 33 active skills with scripts, references, tests and templates |
 | Subagent definitions | `config/agent/agents/` | `scout`, `researcher`, `worker` on DeepSeek v4.1 flash, `xhigh` |
 | Patches & guards | `config/agent/patches/` | Unified diffs, `patches-manifest.json`, `manage-patches.mjs`, and `pi-loop-police.config.json` |
-| Compatibility tests | `config/agent/tests/` | `verify-pi-compat.mjs`, `antigravity-prefer-pi-tools.test.mjs`, `ask-guard.test.mjs`, and `loop-police-provider-exemption.test.mjs` |
+| Compatibility tests | `config/agent/tests/` | `verify-pi-compat.mjs`, `antigravity-continuation-steer.test.mjs`, `antigravity-prefer-pi-tools.test.mjs`, `ask-guard.test.mjs`, and `loop-police-provider-exemption.test.mjs` |
 | Safe update wrapper | `config/pi/pi-update.cmd` | Backs up live config, runs `pi update`, reapplies package patches, and runs `verify-pi-compat.mjs` |
 | Machine integration | `config/machine/` | llama-swap config, three model launch profiles, Strata config, process cleanup |
 

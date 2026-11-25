@@ -107,8 +107,25 @@
           ],
           "hashes": {
             "src/acp/antigravity.ts": "8f01616f2031026bc35f7e35409c3308a8b1602fbb5e8bf434f80d7d5f4d8519",
-            "src/runtime.ts": "620846d086048fd1af2cc913c2f93e3f7c9a8a711d620966e90b51da8771da40",
+            "src/runtime.ts": "7f57adadc92d66ae75ecd98150ecee0d469fcac6c2a04ef8b3c86573abdcf3aa",
             "README.md": "816d6ac11e5219366b6bf749d5a1e14ffb7d40477740d549dfe01ecb104f784f"
+          }
+        },
+        {
+          "file": "pi-antigravity-acp-provider-continuation-steer.patch",
+          "description": "Deliver mid-turn Pi steering/custom messages (e.g. subagent_question / subagent_result) during tool continuations instead of swallowing them",
+          "markers": [
+            {
+              "file": "src/runtime.ts",
+              "contains": "findContinuationSteerMessages"
+            },
+            {
+              "file": "src/runtime.ts",
+              "contains": "undeliverableSteer"
+            }
+          ],
+          "hashes": {
+            "src/runtime.ts": "7f57adadc92d66ae75ecd98150ecee0d469fcac6c2a04ef8b3c86573abdcf3aa"
           }
         }
       ]

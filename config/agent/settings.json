@@ -14,7 +14,8 @@
     "npm:@lanlance/pi-btw@0.2.0",
     "npm:@gwynnnplaine/pi-discord-presence",
     "npm:pi-antigravity-acp-provider@0.1.22",
-    "git:github.com/AfroPK/pi-interactive-subagents"
+    "git:github.com/AfroPK/pi-interactive-subagents",
+    "npm:@capdiem/pi-todo"
   ],
   "defaultProvider": "openrouter",
   "defaultModel": "deepseek/deepseek-v4.1-flash-1017",
@@ -65,7 +66,7 @@
   },
   "extensionChangelogVersions": {
     "{\"source\":\"npm:pi-mcp-adapter\",\"scope\":\"user\"}": "7.0.1",
-    "{\"source\":\"npm:pi-skillful\",\"scope\":\"user\"}": "0.5.2"
+    "{\"source\":\"npm:pi-skillful\",\"scope\":\"user\"}": "0.5.3"
   },
   "skills": [
     "!**/.agents/skills/**"

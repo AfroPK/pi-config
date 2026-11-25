@@ -1,0 +1,224 @@
+diff --git a/src/runtime.ts b/src/runtime.ts
+index 081124d..ff346fe 100644
+--- a/src/runtime.ts
++++ b/src/runtime.ts
+@@ -14,6 +14,7 @@ import {
+ 	type Model,
+ 	type SimpleStreamOptions,
+ 	type ToolResultMessage,
++	type UserMessage,
+ } from "@earendil-works/pi-ai";
+ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+ import { createHash } from "node:crypto";
+@@ -590,14 +591,30 @@ export class AntigravityRuntime {
+ 			}
+ 			if (binding.permission || binding.pendingTools.size > 0) {
+ 				const permission = binding.permission;
+-				const permissionResult = permission ? findPermissionResult(context, permission.id) : undefined;
+-				const results = [...binding.pendingTools.values()].map((pending) => ({
+-					pending,
+-					message: findToolResult(context, pending.invocation.id, pending.invocation.name),
+-				}));
+-				if ((permission && !permissionResult) || results.some((result) => result.message === undefined)) {
++				const permissionMatch = permission ? findPermissionResultEntry(context, permission.id) : undefined;
++				const permissionResult = permissionMatch?.result;
++				const results = [...binding.pendingTools.values()].map((pending) => {
++					const match = findToolResultEntry(context, pending.invocation.id, pending.invocation.name);
++					return {
++						pending,
++						message: match?.message,
++						index: match?.index,
++					};
++				});
++				const matchedIndices = [
++					...(permissionMatch ? [permissionMatch.index] : []),
++					...results.flatMap((result) => (result.index !== undefined ? [result.index] : [])),
++				];
++				const steerMessages = findContinuationSteerMessages(context, matchedIndices);
++				const undeliverableSteer = steerMessages.length > 0 && results.length === 0;
++				if ((permission && !permissionResult) || results.some((result) => result.message === undefined) || undeliverableSteer) {
+ 					cancelPermission(binding);
+-					cancelPiTools(binding, "Pi continued without returning every requested tool result");
++					cancelPiTools(
++						binding,
++						undeliverableSteer
++							? "Pi delivered a mid-turn steering message without an active MCP tool result"
++							: "Pi continued without returning every requested tool result",
++					);
+ 					await this.dropBinding(key, binding);
+ 					this.assertSessionEpoch(key, epoch, sessionEpoch);
+ 					binding = await this.getBinding(key, model, acpModelId, options.apiKey, writer, tools, options.signal);
+@@ -608,9 +625,11 @@ export class AntigravityRuntime {
+ 					binding.pendingContextCount = context.messages.length;
+ 					binding.pendingContextFingerprint = messagesFingerprint(context.messages);
+ 					this.commitProgress(binding);
+-					for (const { pending, message } of results) {
++					for (let index = 0; index < results.length; index++) {
++						const { pending, message } = results[index]!;
+ 						binding.pendingTools.delete(pending.invocation.id);
+-						pending.resolve(toMcpToolResult(message as ToolResultMessage));
++						const extraSteers = index === results.length - 1 ? steerMessages : [];
++						pending.resolve(toMcpToolResult(message as ToolResultMessage, extraSteers));
+ 					}
+ 					if (permission && permissionResult) {
+ 						binding.permission = undefined;
+@@ -1330,7 +1349,10 @@ function permissionView(permission: PendingPermission): PermissionView {
+ 	};
+ }
+ 
+-function findPermissionResult(context: Context, requestId: string): PermissionToolResult | undefined {
++function findPermissionResultEntry(
++	context: Context,
++	requestId: string,
++): { index: number; result: PermissionToolResult } | undefined {
+ 	for (let index = context.messages.length - 1; index >= 0; index--) {
+ 		const message = context.messages[index];
+ 		if (
+@@ -1346,19 +1368,26 @@ function findPermissionResult(context: Context, requestId: string): PermissionTo
+ 			details.requestId === requestId &&
+ 			typeof details.cancelled === "boolean"
+ 		) {
+-			return details as PermissionToolResult;
++			return { index, result: details as PermissionToolResult };
+ 		}
+ 		// A missing/disabled tool or malformed output is an immediate denial,
+ 		// never an implicit approval and never a hung ACP request.
+ 		return {
+-			kind: PERMISSION_RESULT_KIND,
+-			requestId,
+-			cancelled: true,
++			index,
++			result: {
++				kind: PERMISSION_RESULT_KIND,
++				requestId,
++				cancelled: true,
++			},
+ 		};
+ 	}
+ 	return undefined;
+ }
+ 
++function findPermissionResult(context: Context, requestId: string): PermissionToolResult | undefined {
++	return findPermissionResultEntry(context, requestId)?.result;
++}
++
+ function messagesFingerprint(messages: Context["messages"]): string {
+ 	const fingerprints = messages.map(messageFingerprint);
+ 	return createHash("sha256").update(fingerprints.join("\n")).digest("hex");
+@@ -1407,11 +1436,11 @@ function canonicalJson(value: unknown): string {
+ 	return JSON.stringify(value) ?? "null";
+ }
+ 
+-function findToolResult(
++function findToolResultEntry(
+ 	context: Context,
+ 	toolCallId: string,
+ 	toolName: string,
+-): ToolResultMessage | undefined {
++): { index: number; message: ToolResultMessage } | undefined {
+ 	for (let index = context.messages.length - 1; index >= 0; index--) {
+ 		const message = context.messages[index];
+ 		if (
+@@ -1419,19 +1448,95 @@ function findToolResult(
+ 			message.toolCallId === toolCallId &&
+ 			message.toolName === toolName
+ 		) {
+-			return message;
++			return { index, message };
+ 		}
+ 	}
+ 	return undefined;
+ }
+ 
+-function toMcpToolResult(message: ToolResultMessage): CallToolResult {
++function findToolResult(
++	context: Context,
++	toolCallId: string,
++	toolName: string,
++): ToolResultMessage | undefined {
++	return findToolResultEntry(context, toolCallId, toolName)?.message;
++}
++
++function hasRenderableSteerContent(message: UserMessage): boolean {
++	if (typeof message.content === "string") return message.content.trim().length > 0;
++	return message.content.some(
++		(block) => (block.type === "text" && block.text.trim().length > 0) || block.type === "image",
++	);
++}
++
++/**
++ * Find mid-turn steering / custom messages (converted to `role: "user"` by Pi)
++ * appended after the assistant turn that issued the pending tool/permission calls.
++ */
++export function findContinuationSteerMessages(
++	context: Context,
++	matchedResultIndices: readonly number[],
++): UserMessage[] {
++	if (matchedResultIndices.length === 0) return [];
++	const earliestResultIndex = Math.min(...matchedResultIndices);
++	let assistantIndex = earliestResultIndex;
++	for (let index = earliestResultIndex - 1; index >= 0; index--) {
++		if (context.messages[index]?.role === "assistant") {
++			assistantIndex = index;
++			break;
++		}
++	}
++	const steers: UserMessage[] = [];
++	for (let index = assistantIndex + 1; index < context.messages.length; index++) {
++		const message = context.messages[index];
++		if (message?.role === "user" && hasRenderableSteerContent(message)) {
++			steers.push(message);
++		}
++	}
++	return steers;
++}
++
++const CONTINUATION_STEER_HEADER =
++	"[Pi mid-turn steering message delivered while this tool was running — " +
++	"NOT part of the tool output above; respond to or incorporate this immediately:]";
++
++export function toMcpToolResult(
++	message: ToolResultMessage,
++	steerMessages: readonly UserMessage[] = [],
++): CallToolResult {
++	const content: CallToolResult["content"] = message.content.map((block) =>
++		block.type === "text"
++			? { type: "text" as const, text: block.text }
++			: { type: "image" as const, data: block.data, mimeType: block.mimeType },
++	);
++	for (const steer of steerMessages) {
++		if (typeof steer.content === "string") {
++			if (steer.content.trim().length > 0) {
++				content.push({ type: "text", text: `${CONTINUATION_STEER_HEADER}\n\n${steer.content}` });
++			}
++			continue;
++		}
++		let prependedHeader = false;
++		for (const block of steer.content) {
++			if (block.type === "text") {
++				if (block.text.trim().length === 0) continue;
++				if (!prependedHeader) {
++					content.push({ type: "text", text: `${CONTINUATION_STEER_HEADER}\n\n${block.text}` });
++					prependedHeader = true;
++				} else {
++					content.push({ type: "text", text: block.text });
++				}
++			} else if (block.type === "image") {
++				if (!prependedHeader) {
++					content.push({ type: "text", text: CONTINUATION_STEER_HEADER });
++					prependedHeader = true;
++				}
++				content.push({ type: "image", data: block.data, mimeType: block.mimeType });
++			}
++		}
++	}
+ 	return {
+-		content: message.content.map((block) =>
+-			block.type === "text"
+-				? { type: "text" as const, text: block.text }
+-				: { type: "image" as const, data: block.data, mimeType: block.mimeType },
+-		),
++		content,
+ 		isError: message.isError,
+ 	};
+ }

@@ -19,11 +19,11 @@ Source: `config/agent/settings.json` → `~/.pi/agent/settings.json`.
 | Swift/Ornith compaction override | 10240 / 10000 | Reserve/recent tokens for `qwen27/swift27-xs-64k` and `hipfire/ornith-1.5-9b.mq6` |
 | `hideThinkingBlock` | `false` | Thinking blocks are shown |
 | `shellPath` | Scoop Git Bash under the home directory | Shell used by Pi's bash tool; installer rewrites the home prefix |
-| `packages` | 12 npm declarations (adds `@gwynnnplaine/pi-discord-presence`, `pi-antigravity-acp-provider`) plus the `AfroPK/pi-interactive-subagents` git fork | Pi-managed extensions/resources |
+| `packages` | 13 npm declarations (adds `@gwynnnplaine/pi-discord-presence`, `pi-antigravity-acp-provider`, `@capdiem/pi-todo`) plus the `AfroPK/pi-interactive-subagents` git fork | Pi-managed extensions/resources |
 | `extensions` | `-builtin:mcp` | Disables built-in MCP because `pi-mcp-adapter` supplies `/mcp` |
 | `skills` | `!**/.agents/skills/**` | Excludes nested `.agents` skill trees from discovery |
 | `lastChangelogVersion` | `1.6.0` | UI changelog state |
-| Extension changelog state | pi-mcp-adapter 7.0.1, pi-skillful 0.5.2 | Prevents already-seen changelogs from repeating |
+| Extension changelog state | pi-mcp-adapter 7.0.1, pi-skillful 0.5.3 | Prevents already-seen changelogs from repeating |
 
 ### Scoped model cycle
 
@@ -61,7 +61,7 @@ Source: `config/agent/models.json`.
 | `qwen27` | `127.0.0.1:8080/v1` | `swift27-xs-64k`; text | 49,152 / 32,768 | dummy `local` |
 | `qwen36iq3` | `127.0.0.1:8080/v1` | `qwen3.6-iq3-local`; text | 131,072 / 16,384 | dummy `local` |
 | `hipfire` | `127.0.0.1:8080/v1` | `ornith-1.5-9b.mq6`; text | 73,728 / 16,384 | dummy `local` |
-| `inkling` | `127.0.0.1:8080/v1` | `inkling2-mini-113k`; text | 115,712 / 16,384 | dummy `local` |
+| `inkling` | `127.0.0.1:8080/v1` | `inkling2-mini-113k`; text | 98,304 / 16,384 | dummy `local` |
 | `kaggle` | Captured temporary Cloudflare tunnel | `qwen27-q6-mtp` | 131,072 / 16,384 | `${KAGGLE_API_KEY}` |
 | `kaggle-strata` | Captured temporary Cloudflare tunnel | `qwen3.8-flash-next-coder-iq1_m` (or `gyro-s` when set) | 131,072 / 16,384 | `${KAGGLE_STRATA_API_KEY}` |
 
@@ -207,7 +207,7 @@ Four npm packages carry local patches inside `agent/npm/node_modules/`. Rather t
 
 - `pi-ghost-text@0.1.2`: `pi-ghost-text-fake-cursor.patch` (skips Pi >= 1.6 `FAKE_CURSOR` APC markers without mutating line arrays) and `pi-ghost-text-after-turn.patch` (after-turn suggestions on empty input without flashing `NONE`); `render.patched.ts` is kept for reference.
 - `pi-loop-police@1.14.1`: `pi-loop-police-local.patch` (defers recovery until `agent_settled` and adds `EXEMPT_PROVIDERS` bypass) plus `pi-loop-police.config.json` (restores `extensions/loop-police.json` with `EXEMPT_PROVIDERS: "antigravity-acp"` and sanitized `HOOK_LOG`).
-- `pi-antigravity-acp-provider@0.1.22`: `pi-antigravity-acp-provider-native-agy.patch` (supports native `agy 1.5+` CLI `acp --dangerously-skip-permissions` and enables HTTP `pi-bridge` MCP tools alongside streamed thinking blocks).
+- `pi-antigravity-acp-provider@0.1.22`: `pi-antigravity-acp-provider-native-agy.patch` (supports native `agy 1.5+` CLI `acp --dangerously-skip-permissions` and enables HTTP `pi-bridge` MCP tools alongside streamed thinking blocks) and `pi-antigravity-acp-provider-continuation-steer.patch` (attaches mid-turn steering/custom messages such as `subagent_result` and `subagent_question` onto resolved `pi-bridge` MCP tool results instead of skipping them, with prompt-replay fallback for permission-only continuations).
 - `@lanlance/pi-btw@0.2.0`: `pi-btw-model-runtime.patch` (passes parent `modelRuntime` to `/btw` side sessions so extension-registered providers resolve).
 
 `patches-manifest.json` records patch descriptors, required code markers, and normalized SHA-256 hashes; `manage-patches.mjs` (`status` / `check` / `apply`) uses `git apply --ignore-whitespace --check` and refuses blind overwrites if upstream code conflicts. At runtime, `extensions/patch-guard.ts` verifies markers on `session_start` and provides `/patch-status` and `/patch-apply`.

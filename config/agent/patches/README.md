@@ -46,10 +46,19 @@ Two patches are applied:
 
 ## 3. `pi-antigravity-acp-provider@0.1.22`
 
-- **`pi-antigravity-acp-provider-native-agy.patch`**:
-  - Patches `src/acp/antigravity.ts`, `src/runtime.ts`, and `README.md` so `AGY_ACP_BIN` pointing
-    to native `agy` / `agy.exe` (1.5+) launches `agy acp [--dangerously-skip-permissions]` when
-    `permissions === "yolo"` and maps `wirePermissionMode` / `confirmedMode` cleanly.
+Two patches are applied:
+
+1. **`pi-antigravity-acp-provider-native-agy.patch`**:
+   - Patches `src/acp/antigravity.ts`, `src/runtime.ts`, and `README.md` so `AGY_ACP_BIN` pointing
+     to native `agy` / `agy.exe` (1.5+) launches `agy acp [--dangerously-skip-permissions]` when
+     `permissions === "yolo"` and maps `wirePermissionMode` / `confirmedMode` cleanly.
+2. **`pi-antigravity-acp-provider-continuation-steer.patch`**:
+   - Patches `src/runtime.ts` (`findContinuationSteerMessages` / `toMcpToolResult`) so mid-turn Pi
+     steering and custom messages (`subagent_question`, `subagent_result`, user steers) that arrive
+     during a `pi-bridge` tool continuation are attached to the resolved MCP tool result (or trigger
+     a clean prompt replay on permission-only continuations) instead of being skipped past by
+     `commitProgress(binding)`.
+   - Tested by `~/.pi/agent/tests/antigravity-continuation-steer.test.mjs`.
 
 ## 4. `@lanlance/pi-btw@0.2.0`
 

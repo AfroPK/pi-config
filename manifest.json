@@ -1,6 +1,6 @@
 {
   "snapshotVersion": 1,
-  "capturedAt": "2026-11-24T23:43:02.192840+00:00",
+  "capturedAt": "2026-11-25T01:20:30.337056+00:00",
   "sourceHomeToken": "__PI_HOME__",
   "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
@@ -8,7 +8,7 @@
     "node": "v26.13.1",
     "npm": "12.2.3",
     "python": "Python 3.12.10",
-    "git": "git version 2.56.0.windows.4"
+    "git": "git version 2.56.1.windows.1"
   },
   "requiredEnvironment": [
     "KAGGLE_API_KEY",
@@ -159,7 +159,7 @@
     },
     "config/agent/extensions/skillful-install.json": {
       "bytes": 37,
-      "sha256": "b9367c45aaedf110b03b01bfba14b688bf5e4422013030079bf259b99c19f67d"
+      "sha256": "d35f9a611711d4cc6251465e977dbe5c878203bdd1d2df41d50c8f3941176124"
     },
     "config/agent/extensions/web-fetch/index.ts": {
       "bytes": 19274,
@@ -198,28 +198,32 @@
       "sha256": "9301d593f69f3b8431656437eff9ddee8e51e378455f5625aca90aa3e25a9760"
     },
     "config/agent/models.json": {
-      "bytes": 10248,
-      "sha256": "07a83dc33116574d748f3356cb069a1552e5cf088704412f9b29e60aaf1323ec"
+      "bytes": 10246,
+      "sha256": "7f0ccb57ce20ec4d0103bf2df94fb7c8798f866fddf1caad0a6f8f42e948e9a0"
     },
     "config/agent/npm/.gitignore": {
       "bytes": 14,
       "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d"
     },
     "config/agent/npm/package-lock.json": {
-      "bytes": 102170,
-      "sha256": "a5325d4d13aa2d24e160bb564baa36ac7148ec86572b5e82382241ca5f2f1835"
+      "bytes": 102691,
+      "sha256": "582a409d772c3d2ad43a464a062c59051041a9f01ee3bdeeb9dc4c4f7b88c746"
     },
     "config/agent/npm/package.json": {
-      "bytes": 526,
-      "sha256": "bc09acd800e1c6f6f1ba831011119039034643930a0454bf2ded290685c82119"
+      "bytes": 560,
+      "sha256": "dc5d006a47055cb1234bb084a23bdd77ab8a94d20d839f22b813ca4c5dc3abab"
     },
     "config/agent/patches/manage-patches.mjs": {
       "bytes": 8040,
       "sha256": "e635784a5d60e92697efed8af97db6a2acdf1cef7e2afb7d95c7517445298cf9"
     },
     "config/agent/patches/patches-manifest.json": {
-      "bytes": 4663,
-      "sha256": "8b6891a4aa92d74b794c49e45b08f8750ba16835eeb3c2f83bf008f3be29c85f"
+      "bytes": 5336,
+      "sha256": "f417c9c278457ffb88afeaa89e7dd9d4d8d296b3dac66ca72ad945eee8d0e607"
+    },
+    "config/agent/patches/pi-antigravity-acp-provider-continuation-steer.patch": {
+      "bytes": 8645,
+      "sha256": "bbd6a60ea5dc6e4213dfd9c90027486379f1d49371fdad60c596675b302887d0"
     },
     "config/agent/patches/pi-antigravity-acp-provider-native-agy.patch": {
       "bytes": 9432,
@@ -246,8 +250,8 @@
       "sha256": "60d63c19ffa44fb21e84e81fe055daa0e349670ef87d345e69448e3f572f5b67"
     },
     "config/agent/patches/README.md": {
-      "bytes": 3549,
-      "sha256": "d77d8bb21b331c7f249baf26d164fbb5e05b1c57807721168c095b70ab73d9b6"
+      "bytes": 4144,
+      "sha256": "13c258c82619c5cd6108d46f710db356fb3dddf7aae1ad22b5ab7b16ba979d00"
     },
     "config/agent/patches/render.patched.ts": {
       "bytes": 3076,
@@ -258,8 +262,8 @@
       "sha256": "ca85a00c6714288b6adc8cfceb5b9581e07e320103fcc1125e5cd1f0e203ca29"
     },
     "config/agent/settings.json": {
-      "bytes": 2093,
-      "sha256": "8d5de220824b0bec20aae5e14c5b4bc8648f475e5b28532d07fa6a1a6e541d9e"
+      "bytes": 2121,
+      "sha256": "c20aebd1e9c4a1423cc4f6f550a8936c6703200e90a5086046410c46386c3f37"
     },
     "config/agent/skills/afropk-github-repo/assets/fonts/Anton-Regular.ttf": {
       "bytes": 170812,
@@ -737,6 +741,10 @@
       "bytes": 1421,
       "sha256": "1ee13def9252fe8bd50dd3d4300f0e03ec8b53e4d7428816e737d9cc5040cc0d"
     },
+    "config/agent/tests/antigravity-continuation-steer.test.mjs": {
+      "bytes": 16535,
+      "sha256": "372f4dc19a6531a99d26f3908f0700cd9d7fac75ad186d895a313f587909e2a8"
+    },
     "config/agent/tests/antigravity-prefer-pi-tools.test.mjs": {
       "bytes": 8704,
       "sha256": "3eda347678fab27678b61407ce22f3ef16deb674eac4b3465ace457552e2297b"
@@ -750,8 +758,8 @@
       "sha256": "f83318ea1da6244128955f4aba58f17c97bec30fa546f2b2004f6b27694d93f4"
     },
     "config/agent/tests/verify-pi-compat.mjs": {
-      "bytes": 8086,
-      "sha256": "00be90afe01980235a0c2ae1e80f57036a68117856d323629e92c15b29cf656c"
+      "bytes": 8165,
+      "sha256": "0d774020206b0d427f9efaba2cf86ccdc0f85f9e1ee315eb49512d568b92bfff"
     },
     "config/agent/trust.json": {
       "bytes": 30,
@@ -759,7 +767,7 @@
     },
     "config/global-npm-packages.json": {
       "bytes": 419,
-      "sha256": "c0db1a544e03bb464b720e9441ea2f1045341d376da7282d47fa17a7f18374df"
+      "sha256": "a6c9c195ccab3b6b01d726f4ad6bfbef019fe58951474a81210f778e186f63e7"
     },
     "config/machine/hipfire-test/serve-ornith.cmd": {
       "bytes": 537,
@@ -774,8 +782,8 @@
       "sha256": "406ce167f891e43dcaa9b22e10b3f0afbb6edd7e996a76adbb677aab07717a4c"
     },
     "config/machine/llama-swap/config.yaml": {
-      "bytes": 5073,
-      "sha256": "17a0d1c369ccbd4b3aca769c7541261d7a99159de5a80343b10fa1fc880aa1dd"
+      "bytes": 5058,
+      "sha256": "79ee9d745538d5f2af026c001bb8251bd008fa1e277ea05b5fa87f2b262d8b6b"
     },
     "config/machine/llama-swap/kill-tree.ps1": {
       "bytes": 553,
