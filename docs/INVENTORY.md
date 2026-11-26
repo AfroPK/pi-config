@@ -25,6 +25,7 @@ The snapshot was taken on Windows 11 with Pi 1.6.0, Node 26.13.1, npm 12.2.3, Py
 | `.pi` root | 41 | Active launchers (`pi-update.*` included), role prompts, notes, PowerShell helpers |
 | Machine integrations | 9 | llama-swap, Strata, standalone model launchers, Hipfire Ornith launcher, pi-loop env |
 | Shell | 1 | Extracted Pi alias/PATH block |
+| psmux | 1 | `~/.tmux.conf` (psmux 3.4.0 config; `~/.psmux/` runtime state excluded) |
 | Global package inventory | 1 | Exact global npm package versions |
 
 `config/agent` counts include its immediate files and all listed subdirectories; categories are not additional to the 185-file total (`12 + 37 + 119 + 3 + 10 + 4 = 185`).

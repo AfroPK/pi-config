@@ -56,6 +56,18 @@ class CaptureTests(unittest.TestCase):
         self.assertNotIn("Example", replaced)
         self.assertEqual(replaced.count(capture.HOME_TOKEN), 3)
 
+    def test_psmux_config_is_captured_under_home_relative_path(self):
+        with tempfile.TemporaryDirectory() as td:
+            home, repo = Path(td) / "home", Path(td) / "repo"
+            (home / ".pi" / "agent").mkdir(parents=True)
+            (home / ".tmux.conf").write_text("set -g mouse on\n", encoding="utf-8")
+            (home / ".psmux").mkdir()
+            (home / ".psmux" / "0.pid").write_text("123", encoding="utf-8")
+            manifest = capture.capture(home, repo)
+            self.assertIn("config/psmux/.tmux.conf", manifest["files"])
+            self.assertEqual((repo / "config" / "psmux" / ".tmux.conf").read_text(encoding="utf-8"), "set -g mouse on\n")
+            self.assertFalse(any("0.pid" in name for name in manifest["files"]))
+
     def test_captured_models_have_no_literal_remote_keys(self):
         models = json.loads((ROOT / "config" / "agent" / "models.json").read_text(encoding="utf-8"))
         for provider in models["providers"].values():

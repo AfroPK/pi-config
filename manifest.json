@@ -17,6 +17,10 @@
     "RD_API_KEY"
   ],
   "files": {
+    "config/agent/AGENTS.md": {
+      "bytes": 9258,
+      "sha256": "612719d6d0b453e0f5d5cd35776e1bca90f03f5e2ac8780e3501e63bb86c5826"
+    },
     "config/agent/agents/researcher.md": {
       "bytes": 2015,
       "sha256": "75b9dcaf6499335e4dda222e509e81b876c2faf0d0d7c3a5f845dc8578ff856a"
@@ -28,10 +32,6 @@
     "config/agent/agents/worker.md": {
       "bytes": 4680,
       "sha256": "3fd08a22240070e05127d0d8024ae5ab5ea89d18d46f3e62c9f22a8be35986eb"
-    },
-    "config/agent/AGENTS.md": {
-      "bytes": 9258,
-      "sha256": "612719d6d0b453e0f5d5cd35776e1bca90f03f5e2ac8780e3501e63bb86c5826"
     },
     "config/agent/antigravity-acp-provider/config.json": {
       "bytes": 90,
@@ -49,6 +49,10 @@
       "bytes": 21584,
       "sha256": "bd03a805f41a89f7ed85dbfa4f84fc08552b83f4480ed8a14c2e4b67559ff043"
     },
+    "config/agent/extensions/bash-guard/README.md": {
+      "bytes": 5679,
+      "sha256": "acd757c9e5a76ef7e9860f435cab440f12462f3951e9d3f4f0be2bc8e22c2c40"
+    },
     "config/agent/extensions/bash-guard/index.ts": {
       "bytes": 30153,
       "sha256": "76b22b9da42eb3b77d2ddfee4a376cda3872f18e402216aea7f53a77ce140c57"
@@ -61,10 +65,6 @@
       "bytes": 181,
       "sha256": "846928fac079c990bfb630c265c172bbed680922272ca24255e096fdafa62044"
     },
-    "config/agent/extensions/bash-guard/README.md": {
-      "bytes": 5679,
-      "sha256": "acd757c9e5a76ef7e9860f435cab440f12462f3951e9d3f4f0be2bc8e22c2c40"
-    },
     "config/agent/extensions/bash-guard/test/agent-desktop.test.mjs": {
       "bytes": 3584,
       "sha256": "f1ca5c543c13af8fa589b31d3c8b7f553f19c1dca217ecfdf5974561b85c382b"
@@ -72,6 +72,10 @@
     "config/agent/extensions/bash-guard/test/dialog-fit.test.mjs": {
       "bytes": 7846,
       "sha256": "78a17805a727073fdeba938925114b738a0e1de1106c0d8716d1ab944134d178"
+    },
+    "config/agent/extensions/browser/README.md": {
+      "bytes": 7670,
+      "sha256": "0e995a4a3ce69c531d7366bdd3f436b75278c82364ea32302ae01be689f4a1d0"
     },
     "config/agent/extensions/browser/index.ts": {
       "bytes": 24233,
@@ -85,17 +89,13 @@
       "bytes": 339,
       "sha256": "f41caa057d76f9b2a567f30beea2cd3cc2f4a0c6046ae951f75a115c3d9c7d02"
     },
-    "config/agent/extensions/browser/README.md": {
-      "bytes": 7670,
-      "sha256": "0e995a4a3ce69c531d7366bdd3f436b75278c82364ea32302ae01be689f4a1d0"
+    "config/agent/extensions/claude-cli/README.md": {
+      "bytes": 2234,
+      "sha256": "8f42b1d84bbae6c168286dd9078da84b40b10a4756c146b480fab3ca0db99657"
     },
     "config/agent/extensions/claude-cli/index.ts": {
       "bytes": 8667,
       "sha256": "044fe25448a1e1c912fef5769b4e0827d718c4d939baa4624c5dc2d8f85a74c5"
-    },
-    "config/agent/extensions/claude-cli/README.md": {
-      "bytes": 2234,
-      "sha256": "8f42b1d84bbae6c168286dd9078da84b40b10a4756c146b480fab3ca0db99657"
     },
     "config/agent/extensions/claude-cli/shim.py": {
       "bytes": 13803,
@@ -105,13 +105,13 @@
       "bytes": 3908,
       "sha256": "250a46a82c204e1e314ffc46c73bd1b8de9170100e630bf94223549a68ca7ec7"
     },
-    "config/agent/extensions/dictate/index.ts": {
-      "bytes": 16610,
-      "sha256": "48ae57978050940aa5d6801ea169a1ab0f530d53c665c194162cfe558bfefe37"
-    },
     "config/agent/extensions/dictate/LICENSE": {
       "bytes": 1071,
       "sha256": "8363e1129a2f27108723c8e31b78eea3d360b8a8ff3b19bc3a6ea89576074cf8"
+    },
+    "config/agent/extensions/dictate/index.ts": {
+      "bytes": 16610,
+      "sha256": "48ae57978050940aa5d6801ea169a1ab0f530d53c665c194162cfe558bfefe37"
     },
     "config/agent/extensions/imagegen.ts": {
       "bytes": 14044,
@@ -125,13 +125,13 @@
       "bytes": 3908,
       "sha256": "fb660b6d03fd700b4e9044bdb92b1275bba22b00022b86340b1a3310a99e7063"
     },
-    "config/agent/extensions/prompt-snippets/index.ts": {
-      "bytes": 11799,
-      "sha256": "2a033ebd47a14dfadec4225bda36475ad8a4964f4dbb86ce5cad16b86391a188"
-    },
     "config/agent/extensions/prompt-snippets/README.md": {
       "bytes": 2143,
       "sha256": "cb5275b34bd4a31b6a7fe142495004d1b8ac0c9105821a6b8a19631a3e7a6af8"
+    },
+    "config/agent/extensions/prompt-snippets/index.ts": {
+      "bytes": 11799,
+      "sha256": "2a033ebd47a14dfadec4225bda36475ad8a4964f4dbb86ce5cad16b86391a188"
     },
     "config/agent/extensions/prompt-snippets/snippets/ask-questions.md": {
       "bytes": 264,
@@ -173,6 +173,10 @@
       "bytes": 251,
       "sha256": "be23a5d9b841c0663d1704e55dc3551874834de3ad7e53f7b1fb0e770686274e"
     },
+    "config/agent/extensions/web-search/README.md": {
+      "bytes": 1129,
+      "sha256": "0e09bbe2689d682fbbac1deda5cafc8d8de759df2375be2f5fd763e5e3a585a4"
+    },
     "config/agent/extensions/web-search/auth.example.json": {
       "bytes": 129,
       "sha256": "c6988e59be3fac0a07ec6d4694f1d6b2114a9e7aec5e9ba31ffdead72a761510"
@@ -180,10 +184,6 @@
     "config/agent/extensions/web-search/index.ts": {
       "bytes": 11236,
       "sha256": "850589eac009fa3aa9c9d3ac13afc549ca233d69bd81055218ed3daf839d9ecb"
-    },
-    "config/agent/extensions/web-search/README.md": {
-      "bytes": 1129,
-      "sha256": "0e09bbe2689d682fbbac1deda5cafc8d8de759df2375be2f5fd763e5e3a585a4"
     },
     "config/agent/keybindings.json": {
       "bytes": 42,
@@ -212,6 +212,10 @@
     "config/agent/npm/package.json": {
       "bytes": 560,
       "sha256": "dc5d006a47055cb1234bb084a23bdd77ab8a94d20d839f22b813ca4c5dc3abab"
+    },
+    "config/agent/patches/README.md": {
+      "bytes": 4144,
+      "sha256": "13c258c82619c5cd6108d46f710db356fb3dddf7aae1ad22b5ab7b16ba979d00"
     },
     "config/agent/patches/manage-patches.mjs": {
       "bytes": 8040,
@@ -249,10 +253,6 @@
       "bytes": 3844,
       "sha256": "60d63c19ffa44fb21e84e81fe055daa0e349670ef87d345e69448e3f572f5b67"
     },
-    "config/agent/patches/README.md": {
-      "bytes": 4144,
-      "sha256": "13c258c82619c5cd6108d46f710db356fb3dddf7aae1ad22b5ab7b16ba979d00"
-    },
     "config/agent/patches/render.patched.ts": {
       "bytes": 3076,
       "sha256": "7de2e5c324e3081e50f8fe2ee9dc810c8d956ee60bde1ae3fff9a7aecc97266c"
@@ -264,6 +264,10 @@
     "config/agent/settings.json": {
       "bytes": 2121,
       "sha256": "c20aebd1e9c4a1423cc4f6f550a8936c6703200e90a5086046410c46386c3f37"
+    },
+    "config/agent/skills/afropk-github-repo/SKILL.md": {
+      "bytes": 7161,
+      "sha256": "630d27be9abae2c2052da11ede5e903645fc1ac6c7bbc7d3a39dce624ff2e6ee"
     },
     "config/agent/skills/afropk-github-repo/assets/fonts/Anton-Regular.ttf": {
       "bytes": 170812,
@@ -309,10 +313,6 @@
       "bytes": 10556,
       "sha256": "81b438486419306c50805728547535a0dcc4c4a80efa88f56295b09eabddb6d8"
     },
-    "config/agent/skills/afropk-github-repo/SKILL.md": {
-      "bytes": 7161,
-      "sha256": "630d27be9abae2c2052da11ede5e903645fc1ac6c7bbc7d3a39dce624ff2e6ee"
-    },
     "config/agent/skills/afropk-github-repo/templates/README.md": {
       "bytes": 2174,
       "sha256": "5d1e1a36fbbf132d3ec16ff3b2453bf73edfe8d01487d1c338c89006d0bf74bb"
@@ -324,6 +324,10 @@
     "config/agent/skills/analyze-sessions/.gitignore": {
       "bytes": 22,
       "sha256": "e1341adf6a7dc54e81a546bf99ff0bee26c509f3327d334688e7286fa90f5d83"
+    },
+    "config/agent/skills/analyze-sessions/SKILL.md": {
+      "bytes": 6675,
+      "sha256": "62944d33311ed143038ee1facf8b30e2764459a21588aaf2a8d9c70568437470"
     },
     "config/agent/skills/analyze-sessions/scripts/cost.py": {
       "bytes": 7718,
@@ -345,9 +349,9 @@
       "bytes": 8945,
       "sha256": "3637bc037e201aa1c684345a31e6a19760f4665e476129278be9a900c147c096"
     },
-    "config/agent/skills/analyze-sessions/SKILL.md": {
-      "bytes": 6675,
-      "sha256": "62944d33311ed143038ee1facf8b30e2764459a21588aaf2a8d9c70568437470"
+    "config/agent/skills/animated-sprites/SKILL.md": {
+      "bytes": 4389,
+      "sha256": "9ce05a7e3e20875423c4ef9e9852d797e863aaf98456037653c3dd0582feaaf4"
     },
     "config/agent/skills/animated-sprites/references/art-direction-and-generation.md": {
       "bytes": 8630,
@@ -361,17 +365,17 @@
       "bytes": 5225,
       "sha256": "09ef5d0ab0563fb02db9f8a028313486a86fdce92062a0ea1379f7f213775945"
     },
-    "config/agent/skills/animated-sprites/SKILL.md": {
-      "bytes": 4389,
-      "sha256": "9ce05a7e3e20875423c4ef9e9852d797e863aaf98456037653c3dd0582feaaf4"
+    "config/agent/skills/apple-emoji-windows/SKILL.md": {
+      "bytes": 7768,
+      "sha256": "e5a580d580fe07ebffd6f97c491fc507764ddb1d39603fa9e479b8ea77b17bf2"
     },
     "config/agent/skills/apple-emoji-windows/scripts/apply-apple-emoji-elevated.ps1": {
       "bytes": 2710,
       "sha256": "2cb864c060baa4dc9f8ec01f5091d70757d56b2581d15de74a35ff81f7246686"
     },
-    "config/agent/skills/apple-emoji-windows/SKILL.md": {
-      "bytes": 7768,
-      "sha256": "e5a580d580fe07ebffd6f97c491fc507764ddb1d39603fa9e479b8ea77b17bf2"
+    "config/agent/skills/ayo-rules/SKILL.md": {
+      "bytes": 4575,
+      "sha256": "4a17ad9c55698363bc62d85dccd367485859ff6e5de4d3c4444fb1be3ad96746"
     },
     "config/agent/skills/ayo-rules/ayo.lua": {
       "bytes": 4064,
@@ -380,10 +384,6 @@
     "config/agent/skills/ayo-rules/ayo_test.lua": {
       "bytes": 3938,
       "sha256": "32db2a786f17d3f160432c5dfa8e9d80a89f9c1e0f3317cf94300fe830a10b3a"
-    },
-    "config/agent/skills/ayo-rules/SKILL.md": {
-      "bytes": 4575,
-      "sha256": "4a17ad9c55698363bc62d85dccd367485859ff6e5de4d3c4444fb1be3ad96746"
     },
     "config/agent/skills/balatro-llm/SKILL.md": {
       "bytes": 4475,
@@ -397,17 +397,21 @@
       "bytes": 3336,
       "sha256": "c515bd577b51450e0f34d410f5d51ede5b40ff5da9a0d8e27b093db683a52b0b"
     },
-    "config/agent/skills/clip-hunter/scripts/clip.py": {
-      "bytes": 35781,
-      "sha256": "8759fd3b0099fee28191f3bc2ee143fa7c4ed341bb80e9568066711045af2101"
-    },
     "config/agent/skills/clip-hunter/SKILL.md": {
       "bytes": 6234,
       "sha256": "f2beb96080014667f621cbb85038a6ced6aab2028d5ee6dc46516bd80017f894"
     },
+    "config/agent/skills/clip-hunter/scripts/clip.py": {
+      "bytes": 35781,
+      "sha256": "8759fd3b0099fee28191f3bc2ee143fa7c4ed341bb80e9568066711045af2101"
+    },
     "config/agent/skills/davinci-resolve/SKILL.md": {
       "bytes": 6310,
       "sha256": "df7b3b20314175294c93b08fe2a0b8526fbb173d3906cbd952d2b3325e47982f"
+    },
+    "config/agent/skills/duofecta-thumbnail/SKILL.md": {
+      "bytes": 4308,
+      "sha256": "66cbc0ea887fe987a093180c4189ca35adcd7508761c1a2e051568eada655d5f"
     },
     "config/agent/skills/duofecta-thumbnail/models/face_detection_yunet_2023mar.onnx": {
       "bytes": 232589,
@@ -425,13 +429,13 @@
       "bytes": 294,
       "sha256": "0fa8b757eb15d77b49833b325e3837642c9fba33be1ad21f4302be26c7f16374"
     },
-    "config/agent/skills/duofecta-thumbnail/SKILL.md": {
-      "bytes": 4308,
-      "sha256": "66cbc0ea887fe987a093180c4189ca35adcd7508761c1a2e051568eada655d5f"
-    },
     "config/agent/skills/game-dev/SKILL.md": {
       "bytes": 5152,
       "sha256": "d8f9e41fd1d035c5d0c0ddc1faa99c7db44cbf0c76f2345988fecdbb1e7ad907"
+    },
+    "config/agent/skills/game-ui/SKILL.md": {
+      "bytes": 4394,
+      "sha256": "0708ff3f4892d2ac85370d3b01c9eac24e3328b5296f79b80fd66d1f15137c89"
     },
     "config/agent/skills/game-ui/anim_test.lua": {
       "bytes": 1767,
@@ -489,37 +493,49 @@
       "bytes": 8411,
       "sha256": "6a476520cbbd5c878e949f365e535508f84aef4424643ee9c2b7b40b36dc4c3f"
     },
-    "config/agent/skills/game-ui/SKILL.md": {
-      "bytes": 4394,
-      "sha256": "0708ff3f4892d2ac85370d3b01c9eac24e3328b5296f79b80fd66d1f15137c89"
-    },
     "config/agent/skills/gta-reel-editor/SKILL.md": {
       "bytes": 20193,
       "sha256": "e994d7249d8e41b2db0c095793fd1bd2374843f279c9313070e9d07a661c1645"
-    },
-    "config/agent/skills/local-llm-rocm/models.md": {
-      "bytes": 8827,
-      "sha256": "096f8a247e451d32f00ab1be987970e545b5c5342e3126511b69f6655b80bb6a"
     },
     "config/agent/skills/local-llm-rocm/SKILL.md": {
       "bytes": 18555,
       "sha256": "688a5ca93b280f2272ec41d7d27aba9103db265ae4a60c1f60c921cda4ff2dac"
     },
+    "config/agent/skills/local-llm-rocm/models.md": {
+      "bytes": 8827,
+      "sha256": "096f8a247e451d32f00ab1be987970e545b5c5342e3126511b69f6655b80bb6a"
+    },
     "config/agent/skills/local-llm-rocm/templates.md": {
       "bytes": 5495,
       "sha256": "0d65f4f6966f87599560fdf0645ef1b29a6ba4be86ebb8a7a0d716fba5787aee"
-    },
-    "config/agent/skills/local-spec/executors/qwen36-iq3.md": {
-      "bytes": 3214,
-      "sha256": "e8ed504c346ebbc3461c0b42ad17ef65103377d283e7032c8e1bf5b82eee094a"
     },
     "config/agent/skills/local-spec/SKILL.md": {
       "bytes": 8634,
       "sha256": "8f6c9e07af3ca7140c965cf9b9554c9fd2825d58c80aaff06247fd9a81aa81c8"
     },
+    "config/agent/skills/local-spec/executors/qwen36-iq3.md": {
+      "bytes": 3214,
+      "sha256": "e8ed504c346ebbc3461c0b42ad17ef65103377d283e7032c8e1bf5b82eee094a"
+    },
     "config/agent/skills/local-spec/templates/TASKS.md": {
       "bytes": 747,
       "sha256": "3384637eb58e397713d42274d2724f1964108d85489506c21562c9c77ddc19c6"
+    },
+    "config/agent/skills/love2d-core/LICENSE": {
+      "bytes": 11395,
+      "sha256": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c"
+    },
+    "config/agent/skills/love2d-core/NOTICE": {
+      "bytes": 883,
+      "sha256": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
+    },
+    "config/agent/skills/love2d-core/SKILL.md": {
+      "bytes": 7423,
+      "sha256": "dbaac29685a07b8410eea9ac4a7b41708abc264c71fb7be414d0c525455b779b"
+    },
+    "config/agent/skills/love2d-core/references/state-stack.md": {
+      "bytes": 4640,
+      "sha256": "848e3d1957e3ab6e83bd403323aec21b4516ce761d552813f7ebce3c76d8fbd6"
     },
     "config/agent/skills/love2d/SKILL.md": {
       "bytes": 7129,
@@ -581,25 +597,13 @@
       "bytes": 1278,
       "sha256": "8085f3274dfc3d23b89ace4ca2cc2ae85f6cefe6630cd50cb74351e3834542f7"
     },
-    "config/agent/skills/love2d-core/LICENSE": {
-      "bytes": 11395,
-      "sha256": "6f82dcfeb95a1c0a0452180a3b16f21bf82111780018fed59d95a052b5b75f6c"
-    },
-    "config/agent/skills/love2d-core/NOTICE": {
-      "bytes": 883,
-      "sha256": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
-    },
-    "config/agent/skills/love2d-core/references/state-stack.md": {
-      "bytes": 4640,
-      "sha256": "848e3d1957e3ab6e83bd403323aec21b4516ce761d552813f7ebce3c76d8fbd6"
-    },
-    "config/agent/skills/love2d-core/SKILL.md": {
-      "bytes": 7423,
-      "sha256": "dbaac29685a07b8410eea9ac4a7b41708abc264c71fb7be414d0c525455b779b"
-    },
     "config/agent/skills/node-project/SKILL.md": {
       "bytes": 2250,
       "sha256": "4dc269640ed0468fa1046848970619bbbab646ed45aca6381b906977ad1f05e5"
+    },
+    "config/agent/skills/pdf-reader/SKILL.md": {
+      "bytes": 5719,
+      "sha256": "ae88f8f7ad38ea9c5cfeec0c3410068043735e8207f57f80a199ef14441e089b"
     },
     "config/agent/skills/pdf-reader/requirements.txt": {
       "bytes": 19,
@@ -621,13 +625,9 @@
       "bytes": 1901,
       "sha256": "f7f1a996031b530f70d1d1b861678ba1aa72f44fc8ac7fb4f87f5215b619417e"
     },
-    "config/agent/skills/pdf-reader/SKILL.md": {
-      "bytes": 5719,
-      "sha256": "ae88f8f7ad38ea9c5cfeec0c3410068043735e8207f57f80a199ef14441e089b"
-    },
-    "config/agent/skills/pixel-art/SKILL.md": {
-      "bytes": 5760,
-      "sha256": "b47d8d7c73e08681c1a14914000fa3b95156f84e2cc914be76b130f104cef72c"
+    "config/agent/skills/pixel-art-animator/SKILL.md": {
+      "bytes": 10280,
+      "sha256": "5b8b51ca6f4210f64aea8eff745437661e8ccad2e07617fe37d4e0a3f123f4e4"
     },
     "config/agent/skills/pixel-art-animator/examples.md": {
       "bytes": 25614,
@@ -637,13 +637,17 @@
       "bytes": 6393,
       "sha256": "9e2d36219f681adc92f79eae3dd5945a2b5a4c79acdb4b497e93674c5dabdabf"
     },
-    "config/agent/skills/pixel-art-animator/SKILL.md": {
-      "bytes": 10280,
-      "sha256": "5b8b51ca6f4210f64aea8eff745437661e8ccad2e07617fe37d4e0a3f123f4e4"
+    "config/agent/skills/pixel-art/SKILL.md": {
+      "bytes": 5760,
+      "sha256": "b47d8d7c73e08681c1a14914000fa3b95156f84e2cc914be76b130f104cef72c"
     },
     "config/agent/skills/python-project/SKILL.md": {
       "bytes": 2551,
       "sha256": "1580dc3acb0ae3367781ba1e1b56980acec1a5ab55a7d12cb912989e2fba9e92"
+    },
+    "config/agent/skills/roguelike-design/SKILL.md": {
+      "bytes": 5931,
+      "sha256": "353e33007bff721775ba25dc342ef093a8c54e36ab0a3886da7b83ee2d8ce75f"
     },
     "config/agent/skills/roguelike-design/scoring.lua": {
       "bytes": 2464,
@@ -653,9 +657,9 @@
       "bytes": 2513,
       "sha256": "8b0ff56fea675f27bbb2cf10b85fdab347584486c676f24cb07b695120e843b9"
     },
-    "config/agent/skills/roguelike-design/SKILL.md": {
-      "bytes": 5931,
-      "sha256": "353e33007bff721775ba25dc342ef093a8c54e36ab0a3886da7b83ee2d8ce75f"
+    "config/agent/skills/saber-cutout/SKILL.md": {
+      "bytes": 5274,
+      "sha256": "6cde8ff973e203df2e041d5dc48b8d1eac1d8b9baf84d946a31563cd464c3e29"
     },
     "config/agent/skills/saber-cutout/scripts/check_cutout.py": {
       "bytes": 4880,
@@ -664,10 +668,6 @@
     "config/agent/skills/saber-cutout/scripts/saber_cutout.py": {
       "bytes": 6178,
       "sha256": "14858e28265a3957abf1170283009c2627910d72ff4993719147787824eb6648"
-    },
-    "config/agent/skills/saber-cutout/SKILL.md": {
-      "bytes": 5274,
-      "sha256": "6cde8ff973e203df2e041d5dc48b8d1eac1d8b9baf84d946a31563cd464c3e29"
     },
     "config/agent/skills/spec-writer/SKILL.md": {
       "bytes": 8063,
@@ -681,13 +681,13 @@
       "bytes": 883,
       "sha256": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
     },
-    "config/agent/skills/threejs-gltf-loading/references/loaders-and-animation.md": {
-      "bytes": 5403,
-      "sha256": "733d9df9b6a9f5ef9af5826ba80bdff14f6627c123db86abae0ddb41c2ee1f4a"
-    },
     "config/agent/skills/threejs-gltf-loading/SKILL.md": {
       "bytes": 8540,
       "sha256": "6ead2c9e21cff45ebf244f16bc1b815771f95f14d6479f5aae21d4ee3702a3f6"
+    },
+    "config/agent/skills/threejs-gltf-loading/references/loaders-and-animation.md": {
+      "bytes": 5403,
+      "sha256": "733d9df9b6a9f5ef9af5826ba80bdff14f6627c123db86abae0ddb41c2ee1f4a"
     },
     "config/agent/skills/threejs-materials-lighting/LICENSE": {
       "bytes": 11395,
@@ -697,13 +697,13 @@
       "bytes": 883,
       "sha256": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
     },
-    "config/agent/skills/threejs-materials-lighting/references/materials-lights-table.md": {
-      "bytes": 6066,
-      "sha256": "b35eb1e9f194e871f9f79965f947928efa9b5626d41facac1b53fcf539113909"
-    },
     "config/agent/skills/threejs-materials-lighting/SKILL.md": {
       "bytes": 7912,
       "sha256": "51451f53c44b9bb3ee87b8f12fcc0d8c8f5b44d9426686cec4090636d7580784"
+    },
+    "config/agent/skills/threejs-materials-lighting/references/materials-lights-table.md": {
+      "bytes": 6066,
+      "sha256": "b35eb1e9f194e871f9f79965f947928efa9b5626d41facac1b53fcf539113909"
     },
     "config/agent/skills/threejs-scene-setup/LICENSE": {
       "bytes": 11395,
@@ -713,13 +713,13 @@
       "bytes": 883,
       "sha256": "2dcb65b1c5be24e5ba11e937f3996100f4e980d8cf8ac5b30ba1d70dae6c40f8"
     },
-    "config/agent/skills/threejs-scene-setup/references/scene-graph.md": {
-      "bytes": 4859,
-      "sha256": "ab2f19b3f2425d3e6f67ba26faa6e76fd67290fff977b410feef8aaab088c82e"
-    },
     "config/agent/skills/threejs-scene-setup/SKILL.md": {
       "bytes": 10475,
       "sha256": "4f229f27bc84eba0ba9197a775245cf8ddc1ba9959798d6caf9a9f59b4706c17"
+    },
+    "config/agent/skills/threejs-scene-setup/references/scene-graph.md": {
+      "bytes": 4859,
+      "sha256": "ab2f19b3f2425d3e6f67ba26faa6e76fd67290fff977b410feef8aaab088c82e"
     },
     "config/agent/skills/vice-clips-review/SKILL.md": {
       "bytes": 8637,
@@ -733,13 +733,13 @@
       "bytes": 6365,
       "sha256": "d415ebc2d1c333bab280b2cca0405fde74bb7f88551f0cc2e7dee21d302b8e9a"
     },
-    "config/agent/skills/youtube-transcript/fetch_transcript.py": {
-      "bytes": 3960,
-      "sha256": "23cae41b68a9aae6b446d8bea04e3b926e29a950a694196799acb372ffbb88b9"
-    },
     "config/agent/skills/youtube-transcript/SKILL.md": {
       "bytes": 1421,
       "sha256": "1ee13def9252fe8bd50dd3d4300f0e03ec8b53e4d7428816e737d9cc5040cc0d"
+    },
+    "config/agent/skills/youtube-transcript/fetch_transcript.py": {
+      "bytes": 3960,
+      "sha256": "23cae41b68a9aae6b446d8bea04e3b926e29a950a694196799acb372ffbb88b9"
     },
     "config/agent/tests/antigravity-continuation-steer.test.mjs": {
       "bytes": 16535,
@@ -769,17 +769,17 @@
       "bytes": 419,
       "sha256": "a6c9c195ccab3b6b01d726f4ad6bfbef019fe58951474a81210f778e186f63e7"
     },
+    "config/machine/Strata/start-strata-pi.bat": {
+      "bytes": 345,
+      "sha256": "8e9af3689ff30d2be00d5d908516fbbb86d04fde4841dc4960df06ae7499e828"
+    },
+    "config/machine/Strata/strata-gyro-gyro-s.json": {
+      "bytes": 2293,
+      "sha256": "54ff203af91d31012964139d417e4e9a02ec9ebdce38d34111b574a5d996b6bf"
+    },
     "config/machine/hipfire-test/serve-ornith.cmd": {
       "bytes": 537,
       "sha256": "f9e303b8d89e3336d8c574a96f72d9b2f1ca5b9fb4e94975d6cee0344189f4de"
-    },
-    "config/machine/llama/start-qwen36-iq3.bat": {
-      "bytes": 1527,
-      "sha256": "8a24ecf3a63f8889cd4e33f52dc9d159c2b4fbe82e4db18ecb2f73209baae947"
-    },
-    "config/machine/llama/start-swift27-xs-64k.bat": {
-      "bytes": 2855,
-      "sha256": "406ce167f891e43dcaa9b22e10b3f0afbb6edd7e996a76adbb677aab07717a4c"
     },
     "config/machine/llama-swap/config.yaml": {
       "bytes": 5058,
@@ -793,17 +793,17 @@
       "bytes": 363,
       "sha256": "27817e4cf558de9d3aefe3764bb82cdf52b495d0af24fd5f047115cb3c83ffd8"
     },
+    "config/machine/llama/start-qwen36-iq3.bat": {
+      "bytes": 1527,
+      "sha256": "8a24ecf3a63f8889cd4e33f52dc9d159c2b4fbe82e4db18ecb2f73209baae947"
+    },
+    "config/machine/llama/start-swift27-xs-64k.bat": {
+      "bytes": 2855,
+      "sha256": "406ce167f891e43dcaa9b22e10b3f0afbb6edd7e996a76adbb677aab07717a4c"
+    },
     "config/machine/pi-local/env": {
       "bytes": 1486,
       "sha256": "9d8779ae868d6c6c1ce404c218e5f06c818466e1e05ae7f5ab25e1ee5017cff8"
-    },
-    "config/machine/Strata/start-strata-pi.bat": {
-      "bytes": 345,
-      "sha256": "8e9af3689ff30d2be00d5d908516fbbb86d04fde4841dc4960df06ae7499e828"
-    },
-    "config/machine/Strata/strata-gyro-gyro-s.json": {
-      "bytes": 2293,
-      "sha256": "54ff203af91d31012964139d417e4e9a02ec9ebdce38d34111b574a5d996b6bf"
     },
     "config/pi/bonsai-local.md": {
       "bytes": 153,
@@ -968,6 +968,10 @@
     "config/pi/xestrata-local.md": {
       "bytes": 372,
       "sha256": "ee1310906bd45bb2fd5822056f2b52e17e6f5ab831dbe712e17dd6074cbb1857"
+    },
+    "config/psmux/.tmux.conf": {
+      "bytes": 682,
+      "sha256": "ebf74a6d8ecff01847c9177cff80d297d021657979bc32bd88dccfd6ec9ad94d"
     },
     "config/shell/pi-aliases.sh": {
       "bytes": 653,

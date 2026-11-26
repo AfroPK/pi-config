@@ -220,6 +220,19 @@ Four npm packages carry local patches inside `agent/npm/node_modules/`. Rather t
 tmux new -A -s pi pi
 ```
 
+### psmux config
+
+`config/psmux/.tmux.conf` is restored to `~/.tmux.conf` (psmux reads the first of `~/.psmux.conf`, `~/.tmux.conf`, `~/.config/psmux/psmux.conf`; capture takes whichever exist). Install psmux with `winget install marlocarlo.psmux`; the installer warns if `tmux` is missing.
+
+| Setting | Why it matters to Pi |
+|---|---|
+| `default-shell pwsh` | Subagent panes open PowerShell 7 (faster start than 5.1); the fork then types the Git Bash command into it |
+| `warm off` | No background `__warm__` standby server, so closing the session leaves no stray processes |
+| `mouse on` | Scroll and pick subagent panes with the mouse |
+| `extended-keys on` + `extended-keys-format csi-u` | Lets Pi receive Shift/Ctrl+Enter. psmux 3.4.0 logs `unknown option` for both in `~/.psmux/config-warnings.log`; harmless, kept for the version that implements them |
+
+`~/.psmux/` itself (pids, ports, session keys, `killed/`, logs) is runtime state and is not captured.
+
 Agent definitions in `config/agent/agents/` override the three bundled agents (global beats bundled and survives `pi update`). All three run `openrouter/deepseek/deepseek-v4.1-flash-1017` with `thinking: xhigh`; Pi clamps that to the model's top level, `max`.
 
 | Agent | Tools | Role |

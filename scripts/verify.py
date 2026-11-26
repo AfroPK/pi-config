@@ -23,11 +23,12 @@ REQUIRED = (
     "config/agent/skills/game-dev/SKILL.md",
     "config/pi/pi-plan.cmd",
     "config/pi/pi-exec.cmd",
+    "config/psmux/.tmux.conf",
     "manifest.json",
 )
 DISALLOWED_PARTS = {"node_modules", ".venv", "__pycache__", "sessions"}
 TEXT_SUFFIXES = {
-    ".bat", ".cmd", ".env", ".gitignore", ".js", ".json", ".lua", ".md",
+    ".bat", ".cmd", ".conf", ".env", ".gitignore", ".js", ".json", ".lua", ".md",
     ".mjs", ".patch", ".ps1", ".py", ".sh", ".ts", ".txt", ".yaml", ".yml", "",
 }
 SECRET_PATTERNS = (
@@ -224,6 +225,8 @@ def check_installation(home: Path) -> list[str]:
         errors.append("installed file missing: .pi/pi-plan.cmd")
     if not (home / ".pi" / "pi-update.cmd").is_file():
         errors.append("installed file missing: .pi/pi-update.cmd")
+    if not (home / ".tmux.conf").is_file():
+        errors.append("installed file missing: .tmux.conf (psmux config)")
     errors.extend(check_json(agent))
     errors.extend(check_pi_compat_static(agent))
     for path in text_files(home / ".pi"):

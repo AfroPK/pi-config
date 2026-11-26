@@ -67,7 +67,7 @@ function Write-PortableText([string]$Source, [string]$Target) {
 
 function Copy-PortableTree([string]$Source, [string]$Target) {
     if (-not (Test-Path -LiteralPath $Source -PathType Container)) { return }
-    $textExtensions = ".bat", ".cmd", ".css", ".env", ".gitignore", ".glsl", ".html", ".js", ".json", ".lua", ".md", ".mjs", ".patch", ".ps1", ".py", ".sh", ".ts", ".txt", ".vbs", ".xml", ".yaml", ".yml", ""
+    $textExtensions = ".bat", ".cmd", ".conf", ".css", ".env", ".gitignore", ".glsl", ".html", ".js", ".json", ".lua", ".md", ".mjs", ".patch", ".ps1", ".py", ".sh", ".ts", ".txt", ".vbs", ".xml", ".yaml", ".yml", ""
     foreach ($file in Get-ChildItem -LiteralPath $Source -Recurse -File) {
         $relative = $file.FullName.Substring($Source.Length).TrimStart('\')
         $destination = Join-Path $Target $relative
@@ -90,6 +90,16 @@ Write-Host "[1/5] Restoring Pi agent configuration and ~/.pi launchers..."
 Copy-PortableTree (Join-Path $Config "agent") (Join-Path $DestinationHome ".pi\agent")
 Copy-PortableTree (Join-Path $Config "pi") (Join-Path $DestinationHome ".pi")
 Copy-PortableTree (Join-Path $Config "shell") (Join-Path $DestinationHome ".pi")
+
+# pi-interactive-subagents spawns its panes through tmux, which on Windows is psmux.
+Copy-PortableTree (Join-Path $Config "psmux") $DestinationHome
+if (-not (Get-Command "tmux" -ErrorAction SilentlyContinue)) {
+    Write-Warning "psmux (tmux) not found; subagents need it. Install: winget install marlocarlo.psmux"
+}
+$psmuxOverride = Join-Path $DestinationHome ".psmux.conf"
+if ((Test-Path -LiteralPath $psmuxOverride) -and -not (Test-Path -LiteralPath (Join-Path $Config "psmux\.psmux.conf"))) {
+    Write-Warning "$psmuxOverride exists and psmux reads it before the restored .tmux.conf."
+}
 
 if ($IncludeMachineIntegrations) {
     Write-Host "[2/5] Restoring optional llama-swap, Strata, and pi-loop configuration..."

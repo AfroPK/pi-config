@@ -182,7 +182,7 @@ Expected package declarations:
 - `@lanlance/pi-btw@0.2.0` (pinned + patched);
 - `@gwynnnplaine/pi-discord-presence` (Discord must run unelevated);
 - `pi-antigravity-acp-provider@0.1.22` (pinned + patched);
-- `pi-interactive-subagents` (git package; run Pi inside `tmux new -A -s pi pi` to use it).
+- `pi-interactive-subagents` (git package; needs psmux, `winget install marlocarlo.psmux`; the installer restores `~/.tmux.conf`; run Pi inside `tmux new -A -s pi pi` to use it).
 
 Run the local compatibility and unit tests individually if needed:
 

@@ -13,7 +13,7 @@
 
 **`{ pi-config }`**: my whole Pi setup, sanitized and in one repo, with an installer that puts it back.
 
-239 captured files, 33 skills, 14 local extension entry points, 14 declared Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
+240 captured files, 33 skills, 14 local extension entry points, 14 declared Pi packages and the llama-swap/Strata profiles they run on. It's the active configuration, not old backups. Restore it on a fresh Windows box and you get the same agent back.
 
 > [!NOTE]
 > No keys, tokens, sessions or logs are committed. Provider keys in `models.json` are environment-variable references. Run the verification script before publishing.
@@ -30,7 +30,7 @@ python .\scripts\verify.py --installed-home $HOME --runtime
 ```
 
 1. The installer backs up every file it would replace to `~/.pi-config-backups/<timestamp>/`.
-2. It restores `config/agent/` to `~/.pi/agent/` and `config/pi/` to `~/.pi/`, swapping `__PI_HOME__` for your home path.
+2. It restores `config/agent/` to `~/.pi/agent/`, `config/pi/` to `~/.pi/` and `config/psmux/` to `~/` (psmux's `.tmux.conf`), swapping `__PI_HOME__` for your home path.
 3. It installs Pi 1.6.0 and the core global tools, then installs exact package versions from each `package-lock.json`.
 4. It verifies and reapplies all local npm package patches (`pi-ghost-text`, `pi-loop-police`, `pi-antigravity-acp-provider`, `@lanlance/pi-btw`) plus `loop-police.json` via `manage-patches.mjs`; `pi-interactive-subagents` installs from the AfroPK fork with its Windows fixes built in.
 5. Restart the terminal, start Pi, run `/login` for OpenRouter.
@@ -48,6 +48,7 @@ Files-only restore: add `-SkipPackages -SkipPiInstall`. Machine integrations (ll
 | Extensions | `config/agent/extensions/` | Browser, web search/fetch, vision, image generation, Claude CLI, Antigravity Pi-tools routing, guards, patch-guard, snippets |
 | Skills | `config/agent/skills/` | All 33 active skills with scripts, references, tests and templates |
 | Subagent definitions | `config/agent/agents/` | `scout`, `researcher`, `worker` on DeepSeek v4.1 flash, `xhigh` |
+| psmux (tmux) | `config/psmux/.tmux.conf` | Restored to `~/.tmux.conf`: pwsh panes, mouse, no warm server, extended keys. Subagents run in these panes |
 | Patches & guards | `config/agent/patches/` | Unified diffs, `patches-manifest.json`, `manage-patches.mjs`, and `pi-loop-police.config.json` |
 | Compatibility tests | `config/agent/tests/` | `verify-pi-compat.mjs`, `antigravity-continuation-steer.test.mjs`, `antigravity-prefer-pi-tools.test.mjs`, `ask-guard.test.mjs`, and `loop-police-provider-exemption.test.mjs` |
 | Safe update wrapper | `config/pi/pi-update.cmd` | Backs up live config, runs `pi update`, reapplies package patches, and runs `verify-pi-compat.mjs` |

@@ -30,7 +30,7 @@ AGENT_FILES = (
     "antigravity-acp-provider/config.json",
 )
 TEXT_SUFFIXES = {
-    ".bat", ".cmd", ".css", ".env", ".gitignore", ".glsl", ".html", ".js",
+    ".bat", ".cmd", ".conf", ".css", ".env", ".gitignore", ".glsl", ".html", ".js",
     ".json", ".lua", ".md", ".mjs", ".patch", ".ps1", ".py", ".sh", ".ts",
     ".txt", ".vbs", ".xml", ".yaml", ".yml", "",
 }
@@ -45,6 +45,9 @@ LOCAL_FILES = (
     ("llama/start-swift27-xs-64k.bat", "llama/start-swift27-xs-64k.bat"),
     ("hipfire-test/serve-ornith.cmd", "hipfire-test/serve-ornith.cmd"),
 )
+# psmux (the Windows tmux that pi-interactive-subagents drives) loads the first of
+# these it finds, so every candidate is captured under its home-relative path.
+PSMUX_CONFIGS = (".psmux.conf", ".tmux.conf", ".config/psmux/psmux.conf")
 
 
 def command_version(command: list[str]) -> str | None:
@@ -214,9 +217,17 @@ def capture(source_home: Path, repo: Path) -> dict[str, Any]:
         copy_file(source, target, source_home)
         copied.append(target)
 
+    for relative in PSMUX_CONFIGS:
+        source = source_home / relative
+        if source.is_file():
+            target = config / "psmux" / relative
+            copy_file(source, target, source_home)
+            copied.append(target)
+
     copied_set = set(copied)
     prune_stale_files(config / "agent", copied_set)
     prune_stale_files(config / "pi", copied_set)
+    prune_stale_files(config / "psmux", copied_set)
 
     aliases = [
         "# Pi local-model launchers. Source this file from ~/.bashrc after adding ~/.pi to PATH.",
